@@ -1,5 +1,6 @@
 // dllmain.cpp : Define el punto de entrada de la aplicación DLL.
 #include "pch.h"
+#include <iostream>
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -17,3 +18,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
+extern "C" __declspec(dllexport) int InitJuego()
+{
+    std::cout << "im so bored morty im im gonna kill you" << std::endl;
+    return 0;
+}
