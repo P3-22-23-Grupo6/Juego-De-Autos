@@ -1,0 +1,15 @@
+[Tt]emp/
+[Bb]in/*.exe
+[Bb]in/*.pdb
+[Bb]in/*.dll
+[Bb]in/*.log
+[Bb]in/*.lib
+[Ll]ib/
+!Dependecies/FMod/core/lib/
+[Oo]bj/
+
+.vs/
+
+*.user
+*.obj
+*.tlog
