@@ -18,8 +18,12 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
-extern "C" __declspec(dllexport) int InitJuego()
+extern "C" __declspec(dllexport) const char* InitJuego()
 {
     std::cout << "im so bored morty im im gonna kill you" << std::endl;
-    return 0;
+
+#ifdef _DEBUG
+    return "Juego de autos: Running in DEBUG";
+#endif // _DEBUG
+    return "Juego de autos: Running in RELEASE";
 }
