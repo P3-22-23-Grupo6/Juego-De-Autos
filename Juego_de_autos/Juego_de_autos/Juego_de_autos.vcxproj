@@ -19,12 +19,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\include\framework.h" />
-    <ClInclude Include="src\include\pch.h" />
+    <ClInclude Include="..\src\include\framework.h" />
+    <ClInclude Include="..\src\include\GameScene.h" />
+    <ClInclude Include="..\src\include\pch.h" />
+    <ClInclude Include="..\src\include\PlayerController.h" />
+    <ClInclude Include="..\src\include\RaceManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cpp\dllmain.cpp" />
-    <ClCompile Include="src\cpp\pch.cpp" />
+    <ClCompile Include="..\src\cpp\dllmain.cpp" />
+    <ClCompile Include="..\src\cpp\GameScene.cpp" />
+    <ClCompile Include="..\src\cpp\pch.cpp" />
+    <ClCompile Include="..\src\cpp\PlayerController.cpp" />
+    <ClCompile Include="..\src\cpp\RaceManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -125,7 +131,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;JUEGODEAUTOS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;JUEGODEAUTOS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_JUEGODLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -145,7 +151,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;JUEGODEAUTOS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;JUEGODEAUTOS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_JUEGODLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
