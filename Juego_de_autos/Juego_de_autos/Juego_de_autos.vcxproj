@@ -23,12 +23,14 @@
     <ClInclude Include="..\src\include\GameScene.h" />
     <ClInclude Include="..\src\include\pch.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
+    <ClInclude Include="..\src\include\RaceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\cpp\dllmain.cpp" />
     <ClCompile Include="..\src\cpp\GameScene.cpp" />
     <ClCompile Include="..\src\cpp\pch.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
+    <ClCompile Include="..\src\cpp\RaceManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
