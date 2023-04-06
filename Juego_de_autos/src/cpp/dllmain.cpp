@@ -24,7 +24,6 @@ extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
 {
     std::cout << "Ya no se" << std::endl;
 
-    // motor = new MotorApi();
     motor->RegisterGame("Juego de autos");
 
 #ifdef _DEBUG

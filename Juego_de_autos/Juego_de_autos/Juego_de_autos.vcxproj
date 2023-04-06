@@ -20,14 +20,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\include\framework.h" />
-    <ClInclude Include="..\src\include\GameScene.h" />
     <ClInclude Include="..\src\include\pch.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
     <ClInclude Include="..\src\include\RaceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\cpp\dllmain.cpp" />
-    <ClCompile Include="..\src\cpp\GameScene.cpp" />
     <ClCompile Include="..\src\cpp\pch.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
     <ClCompile Include="..\src\cpp\RaceManager.cpp" />
@@ -135,7 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\src\include;$(SolutionDir)Motor\src\LocoMotor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\include;$(SolutionDir)Motor\src\LocoMotor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,7 +153,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\src\include;$(SolutionDir)Motor\src\LocoMotor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\include;$(SolutionDir)Motor\src\LocoMotor;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

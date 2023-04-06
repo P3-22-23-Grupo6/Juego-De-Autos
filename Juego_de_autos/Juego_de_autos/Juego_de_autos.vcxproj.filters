@@ -30,9 +30,6 @@
     <ClInclude Include="..\src\include\PlayerController.h">
       <Filter>Archivos de encabezado\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\include\GameScene.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\RaceManager.h">
       <Filter>Archivos de encabezado\Components</Filter>
     </ClInclude>
@@ -46,9 +43,6 @@
     </ClCompile>
     <ClCompile Include="..\src\cpp\PlayerController.cpp">
       <Filter>Archivos de origen\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\cpp\GameScene.cpp">
-      <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="..\src\cpp\RaceManager.cpp">
       <Filter>Archivos de origen\Components</Filter>
