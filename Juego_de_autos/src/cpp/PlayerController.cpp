@@ -2,7 +2,7 @@
 #include "PlayerController.h"
 #include <iostream>
 
-std::string PlayerController::name = "PlayerController";
+//std::string PlayerController::name = "PlayerController";
 
 PlayerController::PlayerController()
 {

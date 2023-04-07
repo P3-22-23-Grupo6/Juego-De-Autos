@@ -26,7 +26,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
 {
     std::cout << "Ya no se" << std::endl;
-    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<PlayerController>();
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<PlayerController>("PlayerController");
     motor->RegisterGame("Juego de autos");
     
 

@@ -6,10 +6,9 @@
 #define JUEGO_API  __declspec(dllimport)
 #endif // _JUEGODLL
 
-class PlayerController : public LocoMotor::Component
+ class PlayerController : public LocoMotor::Component
 {
 public:
-	static std::string name;
 	PlayerController();
 	virtual ~PlayerController();
 	void Init(std::vector<std::pair<std::string, std::string>>& params) override;
