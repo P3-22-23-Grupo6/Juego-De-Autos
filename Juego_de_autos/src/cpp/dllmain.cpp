@@ -2,6 +2,9 @@
 #include "pch.h"
 #include <iostream>
 #include "MotorApi.h"
+#include "ComponentsFactory.h"
+#include "PlayerController.h"
+
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -23,8 +26,9 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
 {
     std::cout << "Ya no se" << std::endl;
-
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<PlayerController>();
     motor->RegisterGame("Juego de autos");
+    
 
 #ifdef _DEBUG
     return "Juego de autos: Running in DEBUG";
