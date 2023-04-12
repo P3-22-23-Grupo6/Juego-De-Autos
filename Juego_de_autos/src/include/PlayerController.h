@@ -1,10 +1,6 @@
 #pragma once
 #include "Component.h"
-#ifdef _JUEGODLL
-#define JUEGO_API  __declspec(dllexport)
-#else
-#define JUEGO_API  __declspec(dllimport)
-#endif // _JUEGODLL
+#include "LMVector.h"
 
  class PlayerController : public LocoMotor::Component
 {

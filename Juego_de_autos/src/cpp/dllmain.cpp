@@ -4,6 +4,8 @@
 #include "MotorApi.h"
 #include "ComponentsFactory.h"
 #include "PlayerController.h"
+#include "Checkpoint.h"
+#include "RaceManager.h"
 
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -27,6 +29,9 @@ extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
 {
     std::cout << "Ya no se" << std::endl;
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<PlayerController>("PlayerController");
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Checkpoint>("CheckPoint");
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<RaceManager>("RaceManager");
+
     motor->RegisterGame("Juego de autos");
     
 
