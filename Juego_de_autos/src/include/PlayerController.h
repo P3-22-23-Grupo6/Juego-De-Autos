@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "LMVector.h"
+#include "InputManager.h"
 
  class PlayerController : public LocoMotor::Component
 {
