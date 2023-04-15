@@ -29,7 +29,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
 {
     std::cout << "Ya no se" << std::endl;
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<PlayerController>("PlayerController");
-    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Checkpoint>("CheckPoint");
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Checkpoint>("Checkpoint");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<RaceManager>("RaceManager");
 
     motor->RegisterGame("Juego de autos");

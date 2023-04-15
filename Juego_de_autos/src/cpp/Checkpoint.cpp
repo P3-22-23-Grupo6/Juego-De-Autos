@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "GameObject.h"
 #include "RaceManager.h"
+#include "PlayerController.h"
 //#include "Node.h"
 
 #include "pch.h"
@@ -12,33 +13,41 @@ using namespace LocoMotor;
 
 const std::string Checkpoint::name = "CheckPoint";
 
+int Checkpoint::numCheckpoints = 0;
+
 Checkpoint::Checkpoint() {
-	_player = nullptr;
-	_checkpointIndex = 0;
+
+	_checkpointIndex = numCheckpoints;
+	numCheckpoints++;
+
 	checked = false;
 
 	
 	raceManager = RaceManager::GetInstance();
+	//_player_gObj = PlayerController::GetInstance()->gameObject;
+	//_player_gObj = PlayerController::GetInstance()->gameObject;
 }
 
-//LocoMotor::Checkpoint::Checkpoint(GameObject* player, int checkpointIndex) {
+//void Checkpoint::Start(LocoMotor::GameObject* player, int checkpointIndex) {
 //
 //	_player = player;
 //	_checkpointIndex = checkpointIndex;
-//	_rb = nullptr;
 //	checked = false;
+//
+//	////// Acceder al componente Rigidbody
+//	////_rb = gameObject->GetComponent<RigidBodyComponent>();
+//	////if (_rb == nullptr)
+//	////	std::cout << "[ERROR] : Rigidbody needed for Checkpoint";
 //}
 
-void Checkpoint::Start(LocoMotor::GameObject* player, int checkpointIndex) {
+void Checkpoint::InitComponent() {
 
-	_player = player;
-	_checkpointIndex = checkpointIndex;
-	checked = false;
+	raceManager = RaceManager::GetInstance();
+	//_player = PlayerController::GetInstance();
+	_player_gObj = PlayerController::GetInstance()->gameObject;
 
-	////// Acceder al componente Rigidbody
-	////_rb = gameObject->GetComponent<RigidBodyComponent>();
-	////if (_rb == nullptr)
-	////	std::cout << "[ERROR] : Rigidbody needed for Checkpoint";
+
+	raceManager->RegisterCheckpointPosition(gameObject->GetTransform().position);
 }
 
 void Checkpoint::Update(float dt) {
@@ -50,12 +59,15 @@ void Checkpoint::Update(float dt) {
 	//	std::cout << "COLLISION" << "\n" << "\n";
 
 
+
 	// DISTANCIAS
-	float distance = (_player->GetTransform().position - gameObject->GetTransform().position).Magnitude();
+	//float distance = (_player_gObj->GetTransform().position - gameObject->GetTransform().position).Magnitude();
+	//float distance = (PlayerController::GetInstance()->gameObject->GetTransform().position - gameObject->GetTransform().position).Magnitude();
 
-	if (distance < 40)
-		checked = true;
+	//if (distance < 40) {
 
+	//	raceManager->CheckpointReached("player");
+	//}
 
-	std::cout << "DISTANCE = " << distance << "\n";
+	//std::cout << "CHECKPOINT NUMBER " << _checkpointIndex << "\n";
 }

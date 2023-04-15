@@ -4,10 +4,10 @@
 #include "Component.h"
 
 class LMVector3;
-class CheckPoint;
+class Checkpoint;
 struct CarInfo {
 	int rounds;
-	int checkpoints;
+	int currentCheckpoint;
 	LMVector3* position;
 };
 //bool operator<(CarInfo const& a, CarInfo const& b) {
@@ -21,12 +21,12 @@ public:
 	~RaceManager();
 	static RaceManager* GetInstance();
 	/// @brief Sets the initial position of the listener to the gameobject's
-	void Start() override;
+	void InitComponent() override;
 	/// @brief Updates the listener's world attributes to be the same as the gameobject's
 	/// @param dt DeltaTime used to calculate the velocity
 	void Update(float dt) override;
 	// 
-	void RegisterCheckpoint(CheckPoint* cp);
+	void RegisterCheckpointPosition(LMVector3 checkpointPos);
 	// 
 	void RegisterPlayerCar(std::string carId);
 	void RegisterNPCCar(std::string carId);
@@ -43,7 +43,7 @@ private:
 	// The total number of checkpoint per round
 	int _totalCheckpointsPerRound;
 	// The checkpoints in the circuit
-	std::vector<CheckPoint*>_checkpoints;
+	std::vector<LMVector3>_checkpoints;
 	// 
 	//std::vector<CarInfo>carinfo;
 	std::map<std::string, CarInfo> carinfo;
