@@ -21,12 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\include\framework.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\include\pch.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\include\PlayerController.h">
       <Filter>Archivos de encabezado\Components</Filter>
     </ClInclude>
@@ -39,9 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\cpp\dllmain.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\cpp\pch.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="..\src\cpp\PlayerController.cpp">
