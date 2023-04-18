@@ -33,7 +33,6 @@ extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<RaceManager>("RaceManager");
 
     motor->RegisterGame("Juego de autos");
-    
 
 #ifdef _DEBUG
     return "Juego de autos: Running in DEBUG";

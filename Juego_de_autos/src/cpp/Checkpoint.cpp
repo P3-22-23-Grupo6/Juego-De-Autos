@@ -2,11 +2,11 @@
 //#include "RenderScene.h"
 #include "Scene.h"
 #include "GameObject.h"
+#include "Transform.h"
 #include "RaceManager.h"
 #include "PlayerController.h"
 //#include "Node.h"
 
-#include "pch.h"
 #include "RigidBodyComponent.h"
 
 using namespace LocoMotor;
@@ -47,7 +47,7 @@ void Checkpoint::InitComponent() {
 	_player_gObj = PlayerController::GetInstance()->gameObject;
 
 
-	raceManager->RegisterCheckpointPosition(gameObject->GetTransform().position);
+	raceManager->RegisterCheckpointPosition(gameObject->GetTransform()->GetPosition());
 }
 
 void Checkpoint::Update(float dt) {

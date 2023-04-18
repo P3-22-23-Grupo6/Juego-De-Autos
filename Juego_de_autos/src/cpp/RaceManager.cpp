@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "RaceManager.h"
 #include "GameObject.h"
 #include "Checkpoint.h"

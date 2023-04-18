@@ -1,6 +1,6 @@
-#include "pch.h"
 #include "PlayerController.h"
 #include "GameObject.h"
+#include "Transform.h"
 #include "RaceManager.h"
 #include <iostream>
 
@@ -26,10 +26,8 @@ void PlayerController::Init(std::vector<std::pair<std::string, std::string>>& pa
 
 void PlayerController::Update(float dt)
 {
-	std::cout << "PLayer Controller I am \n\n\n\n\n";
-
 	// Actualizar las posiciones del raceManager
-	LMVector3 pos = gameObject->GetTransform().position;
+	LMVector3 pos = gameObject->GetTransform()->GetPosition();
 
 	raceManager->UpdateCarPosition("player", pos.GetX(), pos.GetY(), pos.GetZ());
 }
