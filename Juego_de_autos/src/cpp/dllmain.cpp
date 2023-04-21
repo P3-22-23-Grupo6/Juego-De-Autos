@@ -6,6 +6,7 @@
 #include "PlayerController.h"
 #include "Checkpoint.h"
 #include "RaceManager.h"
+#include "ScriptManager.h"
 
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -33,6 +34,8 @@ extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<RaceManager>("RaceManager");
 
     motor->RegisterGame("Juego de autos");
+
+    LocoMotor::ScriptManager::Init()->LoadSceneFromFile("a");
 
 #ifdef _DEBUG
     return "Juego de autos: Running in DEBUG";
