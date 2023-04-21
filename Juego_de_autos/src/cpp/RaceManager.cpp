@@ -18,6 +18,9 @@ RaceManager::RaceManager()
 
 RaceManager::~RaceManager()
 {
+	for (auto& cInfo : carinfo) {
+		delete cInfo.second.position;
+	}
 }
 
 RaceManager* RaceManager::GetInstance()
