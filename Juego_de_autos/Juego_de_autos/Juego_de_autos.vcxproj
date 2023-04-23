@@ -132,7 +132,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Motor\src\LocoMotor_Utils;$(SolutionDir)src\include;$(SolutionDir)Motor\src\LocoMotor\include;$(SolutionDir)Motor\src\LocoMotor;$(SolutionDir)Motor\Dependecies\Ogre\Src\OgreMain\include;$(SolutionDir)Motor\src\LocoMotor_Ogre\include;$(SolutionDir)Motor\Dependecies\FMod\core\inc;$(SolutionDir)Motor\Dependecies\Bullet\Src\src;$(SolutionDir)Motor\Dependecies\Ogre\Build\include;$(SolutionDir)Motor\src\LocoMotor_Bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Motor\src\LocoMotor\;$(SolutionDir)src\include\;$(SolutionDir)Motor\src\LocoMotor_Utils\;$(SolutionDir)Motor\src\LocoMotor\include\;$(SolutionDir)Motor\src\LocoMotor_Ogre\include\;$(SolutionDir)Motor\src\LocoMotor_Lua\include\;$(SolutionDir)Motor\src\LocoMotor_Bullet\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,7 +152,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Motor\src\LocoMotor_Utils;$(SolutionDir)src\include;$(SolutionDir)Motor\src\LocoMotor\include;$(SolutionDir)Motor\src\LocoMotor;$(SolutionDir)Motor\Dependecies\Ogre\Src\OgreMain\include;$(SolutionDir)Motor\src\LocoMotor_Ogre\include;$(SolutionDir)Motor\Dependecies\FMod\core\inc;$(SolutionDir)Motor\Dependecies\Bullet\Src\src;$(SolutionDir)Motor\Dependecies\Ogre\Build\include;$(SolutionDir)Motor\src\LocoMotor_Bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Motor\src\LocoMotor_Utils;$(SolutionDir)src\include;$(SolutionDir)Motor\src\LocoMotor\include;$(SolutionDir)Motor\src\LocoMotor;$(SolutionDir)Motor\Dependecies\Ogre\Src\OgreMain\include;$(SolutionDir)Motor\src\LocoMotor_Ogre\include;$(SolutionDir)Motor\Dependecies\FMod\core\inc;$(SolutionDir)Motor\Dependecies\Bullet\Src\src;$(SolutionDir)Motor\Dependecies\Ogre\Build\include;$(SolutionDir)Motor\src\LocoMotor_Lua\include\;$(SolutionDir)Motor\src\LocoMotor_Bullet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
