@@ -28,18 +28,6 @@ Checkpoint::Checkpoint() {
 	//_player_gObj = PlayerController::GetInstance()->gameObject;
 }
 
-//void Checkpoint::Start(LocoMotor::GameObject* player, int checkpointIndex) {
-//
-//	_player = player;
-//	_checkpointIndex = checkpointIndex;
-//	checked = false;
-//
-//	////// Acceder al componente Rigidbody
-//	////_rb = gameObject->GetComponent<RigidBodyComponent>();
-//	////if (_rb == nullptr)
-//	////	std::cout << "[ERROR] : Rigidbody needed for Checkpoint";
-//}
-
 void Checkpoint::InitComponent() {
 
 	raceManager = RaceManager::GetInstance();

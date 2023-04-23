@@ -18,6 +18,9 @@ RaceManager::RaceManager()
 
 RaceManager::~RaceManager()
 {
+	for (auto& cInfo : carinfo) {
+		delete cInfo.second.position;
+	}
 }
 
 RaceManager* RaceManager::GetInstance()
@@ -109,7 +112,6 @@ void RaceManager::CheckpointReached(std::string carId)
 			raceCompleted = true;
 		}
 	}
-
 	// Actualizar el siguiente checkpoint
 }
 
@@ -119,12 +121,18 @@ void RaceManager::UpdateRanking()
 	for (int i = 1; i < ranking.size(); i++) {
 		if (carinfo.at(ranking[i]).rounds < _totalRounds) { // Check if the car has completed the race
 			if (carinfo.at(ranking[i]).rounds > carinfo.at(ranking[i - 1]).rounds ||
-				(carinfo.at(ranking[i]).rounds == carinfo.at(ranking[i - 1]).rounds && carinfo.at(ranking[i]).currentCheckpoint > carinfo.at(ranking[i - 1]).currentCheckpoint)) {
+				(carinfo.at(ranking[i]).rounds == carinfo.at(ranking[i - 1]).rounds 
+					&& carinfo.at(ranking[i]).currentCheckpoint > carinfo.at(ranking[i - 1]).currentCheckpoint)) {
 				std::string aux = ranking[i - 1];
 				ranking[i - 1] = ranking[i];
 				ranking[i] = aux;
 			}
 		}
-
 	}
+
+	// Posicion del jugador respecto al resto de coches en la carrera
+	int playerPos;
+	for (int i = 0; i < ranking.size(); i++)
+		if (ranking[i] == _playerId)
+			playerPos = i;
 }

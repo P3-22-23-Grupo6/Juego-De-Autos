@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include "RaceManager.h"
 #include <iostream>
+#include "RigidBodyComponent.h"
 
 //std::string PlayerController::name = "PlayerController";
 
@@ -26,9 +27,18 @@ void PlayerController::Init(std::vector<std::pair<std::string, std::string>>& pa
 
 void PlayerController::Update(float dt)
 {
+	// Mover el coche
+
+	LocoMotor::RigidBodyComponent* rbComp = gameObject->GetComponent<LocoMotor::RigidBodyComponent>();
+
+	//rbComp->useGravity(LMVector3(0, 0, 0));
+
+	//rbComp->addForce(LMVector3(1, 1, 1));
+
+
+
 	// Actualizar las posiciones del raceManager
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();
-
 	raceManager->UpdateCarPosition("player", pos.GetX(), pos.GetY(), pos.GetZ());
 }
 
