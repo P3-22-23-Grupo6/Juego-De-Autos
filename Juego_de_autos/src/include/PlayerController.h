@@ -4,7 +4,7 @@
 
 class RaceManager;
 
- class PlayerController : public LocoMotor::Component
+class PlayerController : public LocoMotor::Component
 {
 public:
 	PlayerController();

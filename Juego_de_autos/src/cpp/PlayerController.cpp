@@ -3,7 +3,10 @@
 #include "Transform.h"
 #include "RaceManager.h"
 #include <iostream>
+
 #include "RigidBodyComponent.h"
+#include "InputManager.h"
+#include "LMInputs.h"
 
 //std::string PlayerController::name = "PlayerController";
 
@@ -31,11 +34,14 @@ void PlayerController::Update(float dt)
 
 	LocoMotor::RigidBodyComponent* rbComp = gameObject->GetComponent<LocoMotor::RigidBodyComponent>();
 
-	//rbComp->useGravity(LMVector3(0, 0, 0));
+	LocoMotor::InputManager* inputMng = LocoMotor::InputManager::GetInstance();
+
+	rbComp->useGravity(LMVector3(0, 0, 0));
+
+	bool b = inputMng->GetKey(LMKS_W);
+	std::cout << "dvbsdb = " << b;
 
 	//rbComp->addForce(LMVector3(1, 1, 1));
-
-
 
 	// Actualizar las posiciones del raceManager
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();
