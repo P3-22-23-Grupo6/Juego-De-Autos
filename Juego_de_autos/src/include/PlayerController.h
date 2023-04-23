@@ -19,5 +19,7 @@ private:
 	static PlayerController* _instance;
 
 	RaceManager* raceManager;
+
+
 };
 
