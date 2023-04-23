@@ -2,6 +2,12 @@
 #include "Component.h"
 #include "LMVector.h"
 
+using namespace LocoMotor;
+namespace LocoMotor {
+	class RigidBodyComponent;
+	class InputManager;
+}
+
 class RaceManager;
 
 class PlayerController : public LocoMotor::Component
@@ -13,13 +19,10 @@ public:
 	void Update(float dt)override;
 	void InitComponent() override;
 
-	static PlayerController* GetInstance();
-
 private:
-	static PlayerController* _instance;
-
 	RaceManager* raceManager;
 
-
+	RigidBodyComponent* rbComp;
+	InputManager* inputMng;
 };
 

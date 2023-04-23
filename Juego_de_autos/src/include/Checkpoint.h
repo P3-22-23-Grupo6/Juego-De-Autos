@@ -26,6 +26,4 @@ private:
 	static int numCheckpoints;
 	int _checkpointIndex;
 	bool checked; // Si el jugador ya ha alcanzado este checkpoint en esta vuelta
-
-	LocoMotor::GameObject* _player_gObj;
 };

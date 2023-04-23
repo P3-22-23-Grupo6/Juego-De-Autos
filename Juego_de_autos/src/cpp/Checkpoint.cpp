@@ -32,7 +32,6 @@ void Checkpoint::InitComponent() {
 
 	raceManager = RaceManager::GetInstance();
 	//_player = PlayerController::GetInstance();
-	_player_gObj = PlayerController::GetInstance()->gameObject;
 
 
 	raceManager->RegisterCheckpointPosition(gameObject->GetTransform()->GetPosition());
