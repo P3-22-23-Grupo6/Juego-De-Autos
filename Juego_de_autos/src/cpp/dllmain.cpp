@@ -35,7 +35,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
 
     motor->RegisterGame("Juego de autos");
 
-    LocoMotor::ScriptManager::Init()->LoadSceneFromFile("a");
+    LocoMotor::ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
 
 #ifdef _DEBUG
     return "Juego de autos: Running in DEBUG";

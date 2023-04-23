@@ -139,7 +139,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)Motor\Bin\;$(SolutionDir)Motor\Lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>LocoMotor_d.lib;LocoMotor_Lua_d.lib;LocoMotor_Utils_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>LocoMotor_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
