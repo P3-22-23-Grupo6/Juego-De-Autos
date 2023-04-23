@@ -36,14 +36,14 @@ RaceManager* RaceManager::GetInstance()
 //
 void RaceManager::InitComponent()
 {
-	std::cout << "RaceManager START" << "\n" << "\n" << "\n" << "\n" << "\n";
+	//std::cout << "RaceManager START" << "\n" << "\n" << "\n" << "\n" << "\n";
 
 	RegisterPlayerCar("player");
 }
 
 void RaceManager::Update(float dt)
 {
-	std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
+	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
 
 	// Comprobar si algun coche ha llegado a algun checkpoint
 	// En caso afirmativo, notificarlo
@@ -58,8 +58,8 @@ void RaceManager::Update(float dt)
 	double z = targetCheckpoint_Pos.GetZ() - player_Pos->GetZ();
 	LMVector3 directorVector = LMVector3(x, y, z);
 	float distance = directorVector.Magnitude();
-	std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
-	std::cout << "GO TO CHECKPOINT NUMBER " << carinfo.at(_playerId).currentCheckpoint << "\n";
+	//std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
+	//std::cout << "GO TO CHECKPOINT NUMBER " << carinfo.at(_playerId).currentCheckpoint << "\n";
 	if (distance < 20)
 		CheckpointReached(_playerId);
 
@@ -92,7 +92,7 @@ void RaceManager::RegisterNPCCar(std::string carId)
 
 void RaceManager::UpdateCarPosition(std::string carId, double x, double y, double z)
 {
-	std::cout << "carId = " << carId;
+	//std::cout << "carId = " << carId;
 
 	carinfo.at(carId).position->SetX(x);
 	carinfo.at(carId).position->SetY(y);
@@ -101,7 +101,7 @@ void RaceManager::UpdateCarPosition(std::string carId, double x, double y, doubl
 
 void RaceManager::CheckpointReached(std::string carId)
 {
-	std::cout << "CheckpointReached ";
+	//std::cout << "CheckpointReached ";
 
 	carinfo.at(carId).currentCheckpoint++;
 
