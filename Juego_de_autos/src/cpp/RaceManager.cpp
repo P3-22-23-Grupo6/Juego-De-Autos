@@ -1,7 +1,12 @@
-#include "RaceManager.h"
-#include "GameObject.h"
-#include "Checkpoint.h"
+// Motor
 #include "LMVector.h"
+#include "GameObject.h"
+#include "UITextLM.h"
+
+// Componentes juego
+#include "RaceManager.h"
+#include "Checkpoint.h"
+
 const std::string name = "RaceManager";
 
 RaceManager* RaceManager::_instance = nullptr;
@@ -39,10 +44,21 @@ void RaceManager::InitComponent()
 	//std::cout << "RaceManager START" << "\n" << "\n" << "\n" << "\n" << "\n";
 
 	RegisterPlayerCar("player");
+
+
+}
+
+void RaceManager::Start()
+{
+
 }
 
 void RaceManager::Update(float dt)
 {
+	lapsText = gameObject->GetComponent<LocoMotor::UITextLM>();
+
+	lapsText->ChangeText("DEDS");
+
 	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
 
 	// Comprobar si algun coche ha llegado a algun checkpoint
@@ -67,6 +83,8 @@ void RaceManager::Update(float dt)
 	if (raceCompleted) {
 		// Pasar a escena donde se muestran los resultados
 	}
+
+
 }
 
 void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)

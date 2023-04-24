@@ -3,6 +3,12 @@
 #include <string>
 #include "Component.h"
 #include "LMVector.h"
+
+using namespace LocoMotor;
+namespace LocoMotor {
+	class UITextLM;
+}
+
 class Checkpoint;
 struct CarInfo {
 	int rounds;
@@ -21,6 +27,8 @@ public:
 	static RaceManager* GetInstance();
 	/// @brief Sets the initial position of the listener to the gameobject's
 	void InitComponent() override;
+
+	void Start() override;
 	/// @brief Updates the listener's world attributes to be the same as the gameobject's
 	/// @param dt DeltaTime used to calculate the velocity
 	void Update(float dt) override;
@@ -52,5 +60,8 @@ private:
 	std::string _playerId;
 	// True if the player has completed _totalRounds rounds to the circuit
 	bool raceCompleted;
+
+	LocoMotor::UITextLM* lapsText;
+	
 };
 
