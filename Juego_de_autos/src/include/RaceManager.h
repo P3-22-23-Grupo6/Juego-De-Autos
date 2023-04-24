@@ -2,13 +2,12 @@
 #include <map>
 #include <string>
 #include "Component.h"
-
-class LMVector3;
+#include "LMVector.h"
 class Checkpoint;
 struct CarInfo {
 	int rounds;
 	int currentCheckpoint;
-	LMVector3* position;
+	LMVector3 position;
 };
 //bool operator<(CarInfo const& a, CarInfo const& b) {
 //	return a.rounds<b.rounds||(a.rounds==b.rounds&&a.checkpoints<b.checkpoints)||(a.rounds == b.rounds && a.checkpoints == b.checkpoints&&())

@@ -19,7 +19,7 @@ RaceManager::RaceManager()
 RaceManager::~RaceManager()
 {
 	for (auto& cInfo : carinfo) {
-		delete cInfo.second.position;
+
 	}
 }
 
@@ -51,11 +51,11 @@ void RaceManager::Update(float dt)
 	// Comprobar jugador
 	int checkpointIndex = carinfo.at(_playerId).currentCheckpoint;
 	LMVector3 targetCheckpoint_Pos = _checkpoints[checkpointIndex];
-	LMVector3* player_Pos = carinfo.at(_playerId).position;
+	LMVector3 player_Pos = carinfo.at(_playerId).position;
 
-	double x = targetCheckpoint_Pos.GetX() - player_Pos->GetX();
-	double y = targetCheckpoint_Pos.GetY() - player_Pos->GetY();
-	double z = targetCheckpoint_Pos.GetZ() - player_Pos->GetZ();
+	double x = targetCheckpoint_Pos.GetX() - player_Pos.GetX();
+	double y = targetCheckpoint_Pos.GetY() - player_Pos.GetY();
+	double z = targetCheckpoint_Pos.GetZ() - player_Pos.GetZ();
 	LMVector3 directorVector = LMVector3(x, y, z);
 	float distance = directorVector.Magnitude();
 	//std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
@@ -76,7 +76,7 @@ void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)
 
 void RaceManager::RegisterPlayerCar(std::string carId)
 {
-	CarInfo carInfo = { 0,0, new LMVector3() };
+	CarInfo carInfo = { 0,0,  LMVector3() };
 	carinfo.insert(std::pair<std::string, CarInfo>(carId, carInfo));
 	ranking.push_back(carId);
 	_playerId = carId;
@@ -84,7 +84,7 @@ void RaceManager::RegisterPlayerCar(std::string carId)
 
 void RaceManager::RegisterNPCCar(std::string carId)
 {
-	CarInfo carInfo = { 0,0, new LMVector3() };
+	CarInfo carInfo = { 0,0,  LMVector3() };
 
 	carinfo.insert(std::pair<std::string, CarInfo>(carId, carInfo));
 	ranking.push_back(carId);
@@ -94,9 +94,9 @@ void RaceManager::UpdateCarPosition(std::string carId, double x, double y, doubl
 {
 	//std::cout << "carId = " << carId;
 
-	carinfo.at(carId).position->SetX(x);
-	carinfo.at(carId).position->SetY(y);
-	carinfo.at(carId).position->SetZ(z);
+	carinfo.at(carId).position.SetX(x);
+	carinfo.at(carId).position.SetY(y);
+	carinfo.at(carId).position.SetZ(z);
 }
 
 void RaceManager::CheckpointReached(std::string carId)
