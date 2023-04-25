@@ -3,10 +3,12 @@
 // Motor
 #include "Transform.h"
 #include "GameObject.h"
+#include "Scene.h"
 #include "RigidBodyComponent.h"
 #include "MeshRenderer.h"
 #include "InputManager.h"
 #include "LMInputs.h"
+#include "UITextLM.h"
 
 // Componentes juego
 #include "PlayerController.h"
@@ -45,6 +47,9 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	raceManager = RaceManager::GetInstance();
+
+
+	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 }
 
 void PlayerController::Update(float dt)
@@ -91,13 +96,10 @@ void PlayerController::Update(float dt)
 
 
 	bool acelerate = inputMng->GetKey(LMKS_W) || inputMng->GetButton(LMC_A) || inputMng->GetButton(LMC_RIGHTSHOULDER);
-	if (acelerate) {
-
-		// MOVIMIENTO CON FISICAS :TODO
-		// Para que funcione, la gravedad tiene que estar activada y el objeto tener una masa distinta de 0
-
+	if (acelerate)
 		rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * 40 * dt);
-	}
+
+	velocityText->ChangeText(std::to_string(rbComp->GetLinearVelocity().Magnitude()) + " KM / H");
 
 
 	// Desacelerar la velocidad actual para que no haya tanto derrape

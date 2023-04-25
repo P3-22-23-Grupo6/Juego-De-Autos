@@ -7,6 +7,7 @@ namespace LocoMotor {
 	class RigidBodyComponent;
 	class InputManager;
 	class MeshRenderer;
+	class UITextLM;
 }
 
 class RaceManager;
@@ -27,5 +28,7 @@ private:
 
 	RigidBodyComponent* rbComp;
 	InputManager* inputMng;
+
+	UITextLM* velocityText;
 };
 
