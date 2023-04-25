@@ -84,14 +84,13 @@ void PlayerController::Update(float dt)
 	}
 
 
-	bool acelerate = inputMng->GetKey(LMKS_W);
+	bool acelerate = inputMng->GetKey(LMKS_W) || inputMng->GetButton(LMC_A);
 	if (acelerate) {
 
 		// MOVIMIENTO CON FISICAS :TODO
 		// Para que funcione, la gravedad tiene que estar activada y el objeto tener una masa distinta de 0
 
 		rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * 40 * dt);
-
 	}
 
 	//_rigidBody->AddForce(LMVector3(0, 0, 1));
@@ -132,6 +131,12 @@ void PlayerController::Update(float dt)
 
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * torqueStrengh);
 	}
+
+
+	float joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
+	double deadZone = .05f;
+	if (abs(joystickValue) >= deadZone)
+		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * torqueStrengh * -joystickValue);
 
 	//// std::cout << gameObject->GetTransform()->GetRotation().GetY() << std::endl;
 	////rbComp->getBody()->applyTorqueImpulse(btVector3(0, 0, rbComp->getBody()->getTotalTorque().getZ()));
