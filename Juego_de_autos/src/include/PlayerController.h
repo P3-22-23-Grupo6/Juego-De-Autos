@@ -42,7 +42,7 @@ public:
 
 	// Estos metodos se encargan de aplicar un Drag linear/angular, para que el movimiento de la 
 	// nave se sienta mas controlado y mejorar la experiencia de jugador
-	void LinearDrag();
+	void LinearDrag(float dt);
 	void AngularDrag(LMVector3 currentAngularVelocity, int direction);
 
 	// Este metodo se encarga de inclinar levemente el componente MeshRenderer hacia los lados 

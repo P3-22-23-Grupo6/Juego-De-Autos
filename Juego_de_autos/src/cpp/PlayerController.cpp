@@ -107,7 +107,7 @@ void PlayerController::MoveShip(float dt)
 	ApplyLinearForces(accelerate, dt);
 
 	// Desaceleracion controlada
-	LinearDrag();
+	LinearDrag(dt);
 
 	// Mantener la UI actualizada
 	UpdateVelocityUI();
@@ -170,7 +170,7 @@ void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, double 
 
 // Aplicar Drag
 
-void PlayerController::LinearDrag()
+void PlayerController::LinearDrag(float dt)
 {
 	// Desacelerar la velocidad actual para que no haya tanto derrape
 	//LMVector3 localVel = BulletToLm(rbComp->getBody()->getLinearVelocity());
@@ -185,7 +185,7 @@ void PlayerController::LinearDrag()
 	// Si el angulo entre la velocidad real del coche y la direccion en la que esta mirando es grande
 	// Aplicar una fuerza inversa a la velocidad actual para controlar el derrape
 	if (angle > .5f)
-		rbComp->addForce(invertedVelocity * intensity / 20 * angle);
+		rbComp->addForce(invertedVelocity * intensity / 20 * angle * dt);
 }
 
 void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int direction)
