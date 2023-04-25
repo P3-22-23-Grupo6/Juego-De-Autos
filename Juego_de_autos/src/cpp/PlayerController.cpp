@@ -25,16 +25,6 @@ PlayerController::~PlayerController()
 {
 }
 
-void PlayerController::Init(std::vector<std::pair<std::string, std::string>>& params)
-{
-	std::cout << "PLayer Controller I am \n\n\n\n\n";
-
-	//gameObject->GetTransform()->SetPosition(LMVector3(30, 30, 30));
-
-	//gameObject->GetComponent<Mesh>
-}
-
-
 void PlayerController::InitComponent()
 {
 
@@ -67,6 +57,7 @@ void PlayerController::Update(float dt)
 	TurnShip();
 }
 
+// Gestionar orientacion
 
 void PlayerController::UpdateUpDirection()
 {

@@ -17,7 +17,6 @@ class PlayerController : public LocoMotor::Component
 public:
 	PlayerController();
 	virtual ~PlayerController();
-	void Init(std::vector<std::pair<std::string, std::string>>& params) override;
 
 	void InitComponent() override;
 	void Start()override;
@@ -62,8 +61,6 @@ private:
 
 
 	double maxAngularVelocity = 3.5f;
-
-
 
 	double joystickDeadzone = .05f;
 };
