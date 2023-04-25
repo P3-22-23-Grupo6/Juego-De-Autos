@@ -127,8 +127,8 @@ void PlayerController::Update(float dt)
 	if (rotateRight)
 		// TODO: quitar la referencia directa a btvector3 abajo tambien
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -torqueStrengh);
-		//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
-	
+	//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
+
 	bool rotateLeft = inputMng->GetKey(LMKS_A);
 	if (rotateLeft)
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * torqueStrengh);
@@ -139,13 +139,23 @@ void PlayerController::Update(float dt)
 	if (abs(joystickValue) >= deadZone)
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * torqueStrengh * -joystickValue);
 
+	LMVector3 currentTurnVelocity = rbComp->GetAngularVelocity();
+	std::cout << "\n" << "ANGULAR VEL = " << currentTurnVelocity.GetX()
+		<< ", " << currentTurnVelocity.GetY() << ", " << currentTurnVelocity.GetZ() << "\n";
+
 	//// std::cout << gameObject->GetTransform()->GetRotation().GetY() << std::endl;
 	////rbComp->getBody()->applyTorqueImpulse(btVector3(0, 0, rbComp->getBody()->getTotalTorque().getZ()));
 	////rbComp->FreezeRotation(LMVector3(1, 1, 0));
 
+	//std::cout << "rbComp->GetTotalTorque() = "
+	//	<< rbComp->GetTotalTorque().GetX() << ", "
+	//	<< rbComp->GetTotalTorque().GetY() << ", "
+	//	<< rbComp->GetTotalTorque().GetZ() << std::endl;
+
 	// Comprobacion para que no gire demasiado rapido
-	//if (rbComp->getBody()->getTotalTorque().length() > 10)
-	//	rbComp->getBody()->applyTorqueImpulse(rbComp->getBody()->getTotalTorque() * -0.2f);
+	if (rbComp->GetTotalTorque().Magnitude() > 5)
+		rbComp->ApplyTorqueImpulse(rbComp->GetTotalTorque() * -0.8f);
+
 
 	//LMVector3 currentAngularVelocity = rbComp->Angul
 	//std::cout << "\n" << "TURN VEL = " << currentAngularVelocity.GetX()
@@ -180,6 +190,8 @@ void PlayerController::Update(float dt)
 		// MOVIMIENTO CALCULADO CON MATES :TODO
 
 
+	// Rotar SOLO la parte grafica del coche para mejor sensacion de juego
+	// Teniendo en cuenta la velocidad angular 
 	gameObject->GetComponent<MeshRenderer>()->Rotate(LMVector3(0, 0, 45));
 
 
