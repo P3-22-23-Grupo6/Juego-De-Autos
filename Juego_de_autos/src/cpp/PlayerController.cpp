@@ -91,15 +91,27 @@ void PlayerController::Update(float dt)
 		double hoverDist = 7;
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
-		// }
 	}
+
 
 
 	bool acelerate = inputMng->GetKey(LMKS_W) || inputMng->GetButton(LMC_A) || inputMng->GetButton(LMC_RIGHTSHOULDER);
 	if (acelerate)
 		rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * 40 * dt);
 
-	velocityText->ChangeText(std::to_string(rbComp->GetLinearVelocity().Magnitude()) + " KM / H");
+
+	// Para mostrar la velocidad se redondea la magnitud 
+	// del vector de velocidad y se actualiza el texto
+	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
+	velocityText->ChangeText(std::to_string(velocityClean) + " KM / H");
+
+	// Se utiliza para saber el tono de rojo del texto segun la velocidad actual
+	double highVelocityIndicator = 700;
+	double colorIntensity = ((double)velocityClean) / highVelocityIndicator;
+	if (colorIntensity > 1) colorIntensity = 1;
+	double inverseColor = 1 - colorIntensity;
+	velocityText->SetTopColor(1, inverseColor, inverseColor);
+	velocityText->SetBottomColor(1, inverseColor, inverseColor);
 
 
 	// Desacelerar la velocidad actual para que no haya tanto derrape
