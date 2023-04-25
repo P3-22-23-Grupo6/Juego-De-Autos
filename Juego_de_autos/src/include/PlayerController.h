@@ -6,6 +6,7 @@ using namespace LocoMotor;
 namespace LocoMotor {
 	class RigidBodyComponent;
 	class InputManager;
+	class MeshRenderer;
 }
 
 class RaceManager;

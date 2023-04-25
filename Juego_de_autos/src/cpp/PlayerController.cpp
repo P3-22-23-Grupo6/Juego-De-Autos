@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "RigidBodyComponent.h"
+#include "MeshRenderer.h"
 #include "InputManager.h"
 #include "LMInputs.h"
 
@@ -27,6 +28,8 @@ void PlayerController::Init(std::vector<std::pair<std::string, std::string>>& pa
 	std::cout << "PLayer Controller I am \n\n\n\n\n";
 
 	//gameObject->GetTransform()->SetPosition(LMVector3(30, 30, 30));
+
+	//gameObject->GetComponent<Mesh>
 }
 
 
@@ -84,7 +87,7 @@ void PlayerController::Update(float dt)
 	}
 
 
-	bool acelerate = inputMng->GetKey(LMKS_W) || inputMng->GetButton(LMC_A);
+	bool acelerate = inputMng->GetKey(LMKS_W) || inputMng->GetButton(LMC_A) || inputMng->GetButton(LMC_RIGHTSHOULDER);
 	if (acelerate) {
 
 		// MOVIMIENTO CON FISICAS :TODO
@@ -111,6 +114,7 @@ void PlayerController::Update(float dt)
 	LMVector3 invertedVelocity = localVel * -1;
 
 	// Si el angulo entre la velocidad real del coche y la direccion en la que esta mirando es grande
+	// Aplicar una fuerza inversa a la velocidad actual para controlar el derrape
 	if (angle > .5f)
 		rbComp->addForce(invertedVelocity * intensity / 20 * angle * dt);
 
@@ -118,21 +122,18 @@ void PlayerController::Update(float dt)
 	//	<< ", " << localVel.GetY() << ", " << localVel.GetZ() << "\n";
 
 
-
 	bool rotateRight = inputMng->GetKey(LMKS_D);
 	float torqueStrengh = 5.f;
-	if (rotateRight) {
+	if (rotateRight)
 		// TODO: quitar la referencia directa a btvector3 abajo tambien
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -torqueStrengh);
 		//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
-	}
+	
 	bool rotateLeft = inputMng->GetKey(LMKS_A);
-	if (rotateLeft) {
-
+	if (rotateLeft)
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * torqueStrengh);
-	}
 
-
+	// Giro con joystick
 	float joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 	double deadZone = .05f;
 	if (abs(joystickValue) >= deadZone)
@@ -153,7 +154,7 @@ void PlayerController::Update(float dt)
 	////if (!rotateLeft && !rotateRight)
 	////	rbComp->getBody()->setAngularVelocity(LmToBullet(LMVector3(0, 0, 0)));
 
-	//// Clampear la velocidad angular maxima permitida
+	// Clampear la velocidad angular maxima permitida
 	//float maxAngularVelocity = 3.5;
 	//if (currentAngularVelocity.Magnitude() > maxAngularVelocity) {
 	//	currentAngularVelocity.Normalize();
@@ -179,7 +180,7 @@ void PlayerController::Update(float dt)
 		// MOVIMIENTO CALCULADO CON MATES :TODO
 
 
-
+	gameObject->GetComponent<MeshRenderer>()->Rotate(LMVector3(0, 0, 45));
 
 
 	// Actualizar las posiciones del raceManager

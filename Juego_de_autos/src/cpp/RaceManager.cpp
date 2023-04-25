@@ -1,5 +1,6 @@
 // Motor
 #include "LMVector.h"
+#include "Scene.h"
 #include "GameObject.h"
 #include "UITextLM.h"
 
@@ -44,20 +45,19 @@ void RaceManager::InitComponent()
 	//std::cout << "RaceManager START" << "\n" << "\n" << "\n" << "\n" << "\n";
 
 	RegisterPlayerCar("player");
-
-
 }
 
 void RaceManager::Start()
 {
+	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
 
+	//std::cout
+
+	carinfo.at(_playerId).rounds = 0;
 }
 
 void RaceManager::Update(float dt)
 {
-	lapsText = gameObject->GetComponent<LocoMotor::UITextLM>();
-
-	lapsText->ChangeText("DEDS");
 
 	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
 
@@ -85,6 +85,13 @@ void RaceManager::Update(float dt)
 	}
 
 
+	
+
+	std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
+
+	std::cout << carinfo.at(_playerId).rounds << std::endl;
+	 
+	lapsText->ChangeText(s);
 }
 
 void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)

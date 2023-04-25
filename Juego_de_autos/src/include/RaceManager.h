@@ -11,7 +11,7 @@ namespace LocoMotor {
 
 class Checkpoint;
 struct CarInfo {
-	int rounds;
+	int rounds = 0;
 	int currentCheckpoint;
 	LMVector3 position;
 };
