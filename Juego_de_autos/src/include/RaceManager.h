@@ -12,7 +12,7 @@ namespace LocoMotor {
 class Checkpoint;
 struct CarInfo {
 	int rounds = 0;
-	int currentCheckpoint;
+	int currentCheckpoint = 0;
 	LMVector3 position;
 };
 //bool operator<(CarInfo const& a, CarInfo const& b) {
@@ -38,7 +38,9 @@ public:
 	void RegisterPlayerCar(std::string carId);
 	void RegisterNPCCar(std::string carId);
 	/// @brief Updates the carId car position
-	void UpdateCarPosition(std::string carId, double x, double y, double z);
+	void UpdateCarPosition(std::string carId, LMVector3 newPosition);
+
+	bool HasCarReachedCheckpoint(std::string carId);
 	// 
 	void CheckpointReached(std::string carId);
 private:
@@ -63,5 +65,7 @@ private:
 
 	LocoMotor::UITextLM* lapsText;
 	
+
+	std::vector<GameObject*> enemies;
 };
 

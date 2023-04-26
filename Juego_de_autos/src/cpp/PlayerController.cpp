@@ -55,6 +55,12 @@ void PlayerController::Update(float dt)
 	MoveShip(dt);
 
 	TurnShip();
+
+	//LMVector3 p = gameObject->GetTransform()->GetPosition();
+	//std::cout << "PLAYER POS = (" << p.GetX() 
+	//					  << ", " << p.GetY() 
+	//					  << ", " << p.GetZ() 
+	//					  << ")" << std::endl;
 }
 
 // Gestionar orientacion
@@ -215,7 +221,7 @@ void PlayerController::TiltShip(double currentAngularVelocity, int direction)
 
 	// Actualizar las posiciones del raceManager
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();
-	raceManager->UpdateCarPosition("player", pos.GetX(), pos.GetY(), pos.GetZ());
+	raceManager->UpdateCarPosition("Player", pos);
 }
 
 // UI
