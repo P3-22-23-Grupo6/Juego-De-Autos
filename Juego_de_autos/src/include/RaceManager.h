@@ -64,6 +64,7 @@ private:
 	bool raceCompleted;
 
 	LocoMotor::UITextLM* lapsText;
+	LocoMotor::UITextLM* positionText;
 	
 
 	std::vector<GameObject*> enemies;

@@ -50,8 +50,9 @@ void RaceManager::InitComponent()
 void RaceManager::Start()
 {
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
+	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
 
-
+	ranking.clear();
 	RegisterPlayerCar("Player");
 
 
@@ -62,15 +63,13 @@ void RaceManager::Start()
 	RegisterNPCCar("Enemy1");
 
 
-
-
 	GameObject* enemy = gameObject->GetScene()->GetObjectByName("Enemy0");
-	std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
+	//std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
 	enemies.push_back(enemy);
 
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
-	std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
+	//std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
 	enemies.push_back(enemy);
 
 	//enemy = gameObject->GetScene()->GetObjectByName("Enemy1");;
@@ -91,8 +90,9 @@ void RaceManager::Update(float dt)
 	// Actualizar la posicion de todos los coches enemigos
 	//UpdateCarPosition("Enemy", enemies[1]->GetTransform()->GetPosition());
 
-	GameObject* enemy = enemies[1];
-	std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
+	GameObject* enemy = enemies[0];
+	UpdateCarPosition("Enemy0", enemy->GetTransform()->GetPosition());
+	enemy = enemies[1];
 	UpdateCarPosition("Enemy1", enemy->GetTransform()->GetPosition());
 
 	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
@@ -160,7 +160,7 @@ void RaceManager::RegisterPlayerCar(std::string carId)
 {
 	CarInfo carInfo = { 0,0,  LMVector3() };
 	carinfo.insert(std::pair<std::string, CarInfo>(carId, carInfo));
-	ranking.push_back(carId);
+	//ranking.push_back(carId);
 	_playerId = carId;
 }
 
@@ -223,36 +223,120 @@ void RaceManager::CheckpointReached(std::string carId)
 
 void RaceManager::UpdateRanking()
 {
-	if (ranking.size() < 2)return;
+	//if (ranking.size() < 2)return;
 
-	for (int i = 1; i < ranking.size(); i++) {
-		if (carinfo.at(ranking[i]).rounds < _totalRounds) { // Check if the car has completed the race
-			if (carinfo.at(ranking[i]).rounds > carinfo.at(ranking[i - 1]).rounds ||
-				(carinfo.at(ranking[i]).rounds == carinfo.at(ranking[i - 1]).rounds
-					&& carinfo.at(ranking[i]).currentCheckpoint > carinfo.at(ranking[i - 1]).currentCheckpoint)) {
-				std::string aux = ranking[i - 1];
-				ranking[i - 1] = ranking[i];
-				ranking[i] = aux;
-			}
-		}
-	}
+	//for (int i = 1; i < ranking.size(); i++) {
+	//	if (carinfo.at(ranking[i]).rounds < _totalRounds) { // Check if the car has completed the race
+	//		if (carinfo.at(ranking[i]).rounds > carinfo.at(ranking[i - 1]).rounds ||
+	//			(carinfo.at(ranking[i]).rounds == carinfo.at(ranking[i - 1]).rounds
+	//				&& carinfo.at(ranking[i]).currentCheckpoint > carinfo.at(ranking[i - 1]).currentCheckpoint)) {
+	//			std::string aux = ranking[i - 1];
+	//			ranking[i - 1] = ranking[i];
+	//			ranking[i] = aux;
+	//		}
+	//	}
+	//}
+
+
+
+	// Saber cuantos coches tiene por delante el player
+	int carsAhead = 0;
 
 	// Un vector con todos los nombres
+	//std::cout << "RANKING = " << ranking.size() << std::endl;
+
+	//for (size_t i = 0; i < ranking.size(); i++)
+	//	std::cout << i << " = " << ranking[i] << std::endl;
+
 
 	// Que coches estan justo en la misma ronda que el jugador y cuantos estan por delante
+	std::vector<std::string> carsInSameRound;
+
+	int playerRounds = carinfo.at(_playerId).rounds;
+
+	for (size_t i = 0; i < ranking.size(); i++)
+	{
+		std::string enemyName = ranking[i];
+
+		int enemyRound = carinfo.at(enemyName).rounds;
+
+		// Si va por delante, añadirlo a coches que van por delante directamente
+		if (enemyRound > playerRounds)
+			carsAhead++;
+
+		// Si va en la misma ronda, guardar su nombre para comprobar mas tarde los checkpoints
+		else if (enemyRound == playerRounds)
+			carsInSameRound.push_back(enemyName);
+	}
+
+
+	//std::cout << "ENEMY 0 POS = " << carinfo.at("Enemy0").position.GetX() << std::endl;
+
 
 	// Que coches estan justo en el mismo checkpoint que el jugador y cuantos estan por delante
+	std::vector<std::string> carsInSameCheckpoint;
+
+	int playerCheckpoint = carinfo.at(_playerId).currentCheckpoint;
+
+	for (size_t i = 0; i < carsInSameRound.size(); i++)
+	{
+		std::string enemyName = carsInSameRound[i];
+
+		int enemyCheckpoint = carinfo.at(enemyName).currentCheckpoint;
+
+		// Si va por delante, añadirlo a coches que van por delante directamente
+		if (enemyCheckpoint > playerCheckpoint)
+			carsAhead++;
+
+		// Si va en la misma ronda, guardar su nombre para comprobar mas tarde los checkpoints
+		else if (enemyCheckpoint == playerCheckpoint)
+			carsInSameCheckpoint.push_back(enemyName);
+	}
+
+
+	std::cout << "CARS IN SAME CHECKPOINT = " << std::endl;
+	for (size_t i = 0; i < carsInSameCheckpoint.size(); i++)
+		std::cout << i << " = " << carsInSameCheckpoint[i] << std::endl;
+
 
 	// Entre los coches que estan en el mismo checkpoint calcular usando distancias cuantos coches estan por delante del jugador
 
+	LMVector3 playerPos = carinfo.at(_playerId).position;
+	LMVector3 checkpointPos = _checkpoints[playerCheckpoint];
+	double playerDistanceToCheckpoint = (playerPos - checkpointPos).Magnitude();
+
+	for (size_t i = 0; i < carsInSameCheckpoint.size(); i++)
+	{
+		std::string enemyName = carsInSameCheckpoint[i];
+
+		LMVector3 enemyPos = carinfo.at(enemyName).position;
+		LMVector3 enemyCheckpointPos = _checkpoints[carinfo.at(enemyName).currentCheckpoint];
+		double enemyDistanceToCheckpoint = (enemyPos - enemyCheckpointPos).Magnitude();
+
+		// Si va por delante, añadirlo a coches que van por delante directamente
+		if (enemyDistanceToCheckpoint < playerDistanceToCheckpoint)
+			carsAhead++;
+	}
 
 
 
 	// Posicion del jugador respecto al resto de coches en la carrera
-	int playerPos;
-	for (int i = 0; i < ranking.size(); i++)
-		if (ranking[i] == _playerId)
-			playerPos = i;
+	int playerRacePos = carsAhead + 1;
+	//for (int i = 0; i < ranking.size(); i++)
+	//	if (ranking[i] == _playerId)
+	//		playerPos = i;
 
-	std::cout << "CURRENTPOSITION = " << playerPos << std::endl;
+	std::string positionString;
+
+	if (playerRacePos == 1)
+		positionString = "1 st";
+	else if (playerRacePos == 2)
+		positionString = "2 nd";
+	else if (playerRacePos == 3)
+		positionString = "3 rd";
+
+	positionText->ChangeText(positionString);
+
+
+	std::cout << "CURRENTPOSITION = " << positionString << std::endl;
 }
