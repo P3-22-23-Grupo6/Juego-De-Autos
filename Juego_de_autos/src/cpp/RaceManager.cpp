@@ -59,11 +59,24 @@ void RaceManager::Start()
 
 	//std::string s = "Enemy";
 	RegisterNPCCar("Enemy0");
+	RegisterNPCCar("Enemy1");
+
+
+
 
 	GameObject* enemy = gameObject->GetScene()->GetObjectByName("Enemy0");
-
 	std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
 	enemies.push_back(enemy);
+
+
+	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
+	std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
+	enemies.push_back(enemy);
+
+	//enemy = gameObject->GetScene()->GetObjectByName("Enemy1");;
+	//std::cout << " enemy1= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
+	//enemies.push_back(enemy);
+
 
 	carinfo.at(_playerId).rounds = 0;
 	////carinfo.at(s).rounds = 0;
@@ -78,9 +91,9 @@ void RaceManager::Update(float dt)
 	// Actualizar la posicion de todos los coches enemigos
 	//UpdateCarPosition("Enemy", enemies[1]->GetTransform()->GetPosition());
 
-	GameObject* enemy = enemies[0];
+	GameObject* enemy = enemies[1];
 	std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
-	UpdateCarPosition("Enemy0", enemy->GetTransform()->GetPosition());
+	UpdateCarPosition("Enemy1", enemy->GetTransform()->GetPosition());
 
 	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
 
@@ -93,6 +106,9 @@ void RaceManager::Update(float dt)
 
 	if (HasCarReachedCheckpoint("Enemy0"))
 		CheckpointReached("Enemy0");
+
+	if (HasCarReachedCheckpoint("Enemy1"))
+		CheckpointReached("Enemy1");
 
 
 	//for (size_t i = 0; i < enemies.size(); i++)
@@ -125,13 +141,13 @@ void RaceManager::Update(float dt)
 	//	// Pasar a escena donde se muestran los resultados
 	//}
 
+	UpdateRanking();
 
-	
 
 	std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
 
 	//std::cout << carinfo.at(_playerId).rounds << std::endl;
-	 
+
 	lapsText->ChangeText(s);
 }
 
@@ -175,14 +191,11 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 	float distance = (targetCheckpointPosition - carPosition).Magnitude();
 
 
-	if (carId != "Player") {}
-	std::cout << "EnemyCheckpointIndex = " << checkpointIndex << std::endl;
-
-	if (carId != "Player")
-		std::cout << "EnemyDistance = " << distance << std::endl;
-
-	if (carId != "Player")
-		std::cout << "EnemyRounds = " << carinfo.at(carId).rounds << std::endl;
+	//if (carId == "Enemy1") {
+	//	std::cout << "Enemy1CheckpointIndex = " << checkpointIndex << std::endl;
+	//	std::cout << "Enemy1Distance = " << distance << std::endl;
+	//	std::cout << "Enemy1Rounds = " << carinfo.at(carId).rounds << std::endl;
+	//}
 
 	//std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
 	//std::cout << "GO TO CHECKPOINT NUMBER " << carinfo.at(_playerId).currentCheckpoint << "\n";
@@ -211,10 +224,11 @@ void RaceManager::CheckpointReached(std::string carId)
 void RaceManager::UpdateRanking()
 {
 	if (ranking.size() < 2)return;
+
 	for (int i = 1; i < ranking.size(); i++) {
 		if (carinfo.at(ranking[i]).rounds < _totalRounds) { // Check if the car has completed the race
 			if (carinfo.at(ranking[i]).rounds > carinfo.at(ranking[i - 1]).rounds ||
-				(carinfo.at(ranking[i]).rounds == carinfo.at(ranking[i - 1]).rounds 
+				(carinfo.at(ranking[i]).rounds == carinfo.at(ranking[i - 1]).rounds
 					&& carinfo.at(ranking[i]).currentCheckpoint > carinfo.at(ranking[i - 1]).currentCheckpoint)) {
 				std::string aux = ranking[i - 1];
 				ranking[i - 1] = ranking[i];
@@ -223,9 +237,22 @@ void RaceManager::UpdateRanking()
 		}
 	}
 
+	// Un vector con todos los nombres
+
+	// Que coches estan justo en la misma ronda que el jugador y cuantos estan por delante
+
+	// Que coches estan justo en el mismo checkpoint que el jugador y cuantos estan por delante
+
+	// Entre los coches que estan en el mismo checkpoint calcular usando distancias cuantos coches estan por delante del jugador
+
+
+
+
 	// Posicion del jugador respecto al resto de coches en la carrera
 	int playerPos;
 	for (int i = 0; i < ranking.size(); i++)
 		if (ranking[i] == _playerId)
 			playerPos = i;
+
+	std::cout << "CURRENTPOSITION = " << playerPos << std::endl;
 }
