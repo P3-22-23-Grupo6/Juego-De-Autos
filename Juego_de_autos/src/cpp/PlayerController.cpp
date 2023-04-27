@@ -78,6 +78,7 @@ void PlayerController::UpdateUpDirection()
 	to = from - upVector;
 
 	if (rbComp->GetRaycastHit(from, to)) {
+		rbComp->useGravity(LMVector3(0, 0, 0)); // TODO:
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
@@ -90,6 +91,7 @@ void PlayerController::UpdateUpDirection()
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
 	}
+	else rbComp->useGravity(LMVector3(0, -700, 0)); // TODO:
 }
 
 // Gestionar movimiento linear/angular
