@@ -30,23 +30,23 @@ namespace JuegoDeAutos {
 		// Esto es necesario para que la nave se quede "pegada" a la carretera en todo momento
 		void UpdateUpDirection();
 
-		// Metodos que se encargan de la gestion del movimiento linear/angular
-		// Se encargan de llamar a los metodos de movimiento de forma ordenada y controlada
+	// Metodos que se encargan de la gestion del movimiento linear/angular
+	// Se encargan de llamar a los metodos de movimiento de forma ordenada y controlada
 		void MoveShip(float dt);
-		void TurnShip();
+		void TurnShip(float dt);
 
-		// Dependiendo del Input recogido, estos metodos aplican fuerzas al rigidbody de la nave
+	// Dependiendo del Input recogido, estos metodos aplican fuerzas al rigidbody de la nave
 		void ApplyLinearForces(bool accelerate, float dt);
-		void ApplyAngularForces(bool turnLeft, bool turnRight, double joystickValue);
+		void ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt);
 
 		// Estos metodos se encargan de aplicar un Drag linear/angular, para que el movimiento de la 
 		// nave se sienta mas controlado y mejorar la experiencia de jugador
 		void LinearDrag(float dt);
 		void AngularDrag(LocoMotor::LMVector3 currentAngularVelocity, int direction);
 
-		// Este metodo se encarga de inclinar levemente el componente MeshRenderer hacia los lados 
-		// dependiendo de la rotacion actual de la nave (puramente estetico)
-		void TiltShip(double currentAngularVelocity, int direction);
+	// Este metodo se encarga de inclinar levemente el componente MeshRenderer hacia los lados 
+	// dependiendo de la rotacion actual de la nave (puramente estetico)
+	void TiltShip(float currentAngularVelocity, int direction);
 
 		// Actualiza el texto de velocidad y lo cambia de color
 		void UpdateVelocityUI();
@@ -59,10 +59,20 @@ namespace JuegoDeAutos {
 
 		LocoMotor::UITextLM* velocityText;
 
+	float acceleration = 70;
 
-		double maxAngularVelocity = 3.5f;
+	float maxAngularVelocity = 3;
+	float angularForce = 8.f;
 
-		double joystickDeadzone = .05f;
-	};
-}
+	float angularDragForce = .7f;
+	float linearDragForce = 7;
+
+	// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
+	float linearDragIntensity;
+
+	float extraAceleration = 45;
+
+
+	float joystickDeadzone = .05f;
+};
 

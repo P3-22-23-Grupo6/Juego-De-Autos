@@ -56,7 +56,7 @@ void PlayerController::Update(float dt)
 
 	MoveShip(dt);
 
-	TurnShip();
+	TurnShip(dt);
 
 	//LMVector3 p = gameObject->GetTransform()->GetPosition();
 	//std::cout << "PLAYER POS = (" << p.GetX() 
@@ -114,7 +114,7 @@ void PlayerController::MoveShip(float dt)
 	UpdateVelocityUI();
 }
 
-void PlayerController::TurnShip()
+void PlayerController::TurnShip(float dt)
 {
 	// Almacenar valores de input
 	bool turnRight = inputMng->GetKey(LMKS_D);
@@ -125,7 +125,7 @@ void PlayerController::TurnShip()
 
 
 	// Aplicar fuerzas
-	ApplyAngularForces(turnLeft, turnRight, joystickValue);
+	ApplyAngularForces(turnLeft, turnRight, joystickValue, dt);
 
 
 	// Definir variables necesarios para los calculos de las rotaciones
@@ -148,25 +148,42 @@ void PlayerController::TurnShip()
 
 void PlayerController::ApplyLinearForces(bool accelerate, float dt)
 {
+	//std::cout << "linearDragIntensity = " << linearDragIntensity << "endl";
+
 	if (accelerate)
-		rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * 40 * dt);
+		rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * acceleration * dt);
 }
 
-void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, double joystickValue)
+void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt)
 {
-	float torqueStrengh = 8.f;
 	if (turnRight)
 		// TODO: quitar la referencia directa a btvector3 abajo tambien
-		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -torqueStrengh);
+		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -angularForce);
 	//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
 
 	if (turnLeft)
-		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * torqueStrengh);
+		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce);
 
 
+	joystickValue *= .5f;
 	// Giro con joystick
 	if (abs(joystickValue) >= joystickDeadzone)
-		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * torqueStrengh * -joystickValue);
+		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue);
+
+
+
+	// Compensar la perdida de velocidad de un giro aumentando la aceleracion
+
+	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
+	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
+	double yAngVel = currentAngularVelocity.GetY();
+	int direction = abs(yAngVel) / yAngVel; // -1 : izquierda // 1 : derecha
+
+	float angularIntensity = currentAngularVelocity.Magnitude() * extraAceleration;
+
+	std::cout << "angularIntensity = " << angularIntensity;
+
+	rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * angularIntensity * dt);
 }
 
 // Aplicar Drag
@@ -178,15 +195,16 @@ void PlayerController::LinearDrag(float dt)
 	LMVector3 localVel = rbComp->GetLinearVelocity();
 
 	LMVector3 forward = gameObject->GetTransform()->GetRotation().Forward();
-	double angle = localVel.Angle(forward);
-	double intensity = localVel.Magnitude();
+	float angle = localVel.Angle(forward);
+	float intensity = (localVel.Magnitude() * linearDragForce) / 20;
+	linearDragIntensity = intensity;
 	localVel.Normalize();
 	LMVector3 invertedVelocity = localVel * -1;
 
 	// Si el angulo entre la velocidad real del coche y la direccion en la que esta mirando es grande
 	// Aplicar una fuerza inversa a la velocidad actual para controlar el derrape
-	if (angle > .5f)
-		rbComp->addForce(invertedVelocity * intensity / 20 * angle * dt);
+	if (angle > .01f)
+		rbComp->addForce(invertedVelocity * intensity * angle * dt);
 }
 
 void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int direction)
@@ -199,10 +217,10 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 	}
 
 	// Añadir un drag angular para frenar la rotacion mas controladamente
-	double angularDrag = .7;
-	currentAngularVelocity = LMVector3(currentAngularVelocity.GetX() * angularDrag,
-		currentAngularVelocity.GetY() * angularDrag,
-		currentAngularVelocity.GetZ() * angularDrag);
+	//double angularDrag = .7;
+	currentAngularVelocity = LMVector3(currentAngularVelocity.GetX() * angularDragForce,
+		currentAngularVelocity.GetY() * angularDragForce,
+		currentAngularVelocity.GetZ() * angularDragForce);
 
 	// Actualizar velocidad angular
 	rbComp->SetAngularVelocity(currentAngularVelocity);
@@ -210,7 +228,7 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 
 // Tilt
 
-void PlayerController::TiltShip(double currentAngularVelocity, int direction)
+void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 {
 	// Angulo maximo de la inclinacion visual del coche en grados
 	double maxTiltAngle = 20;
