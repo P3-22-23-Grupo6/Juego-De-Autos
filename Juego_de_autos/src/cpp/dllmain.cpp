@@ -28,7 +28,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 }
 
 
-extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
+extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::MotorApi* motor)
 {
     std::cout << "Ya no se" << std::endl;
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<PlayerController>("PlayerController");
@@ -37,7 +37,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(MotorApi* motor)
 
     motor->RegisterGame("Juego de autos");
 
-    LocoMotor::ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
+    //LocoMotor::ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
 
 #ifdef _DEBUG
     return "Juego de autos: Running in DEBUG";
