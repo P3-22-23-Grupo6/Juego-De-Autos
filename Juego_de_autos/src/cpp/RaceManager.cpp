@@ -94,8 +94,8 @@ void RaceManager::Update(float dt)
 
 	GameObject* enemy = enemies[0];
 	UpdateCarPosition("Enemy0", enemy->GetTransform()->GetPosition());
-	enemy = enemies[1];
-	UpdateCarPosition("Enemy1", enemy->GetTransform()->GetPosition());
+	//enemy = enemies[1];
+	//UpdateCarPosition("Enemy1", enemy->GetTransform()->GetPosition());
 
 	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
 
