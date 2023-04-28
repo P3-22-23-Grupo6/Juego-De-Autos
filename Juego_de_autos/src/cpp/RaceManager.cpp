@@ -9,6 +9,8 @@
 #include "RaceManager.h"
 #include "Checkpoint.h"
 
+using namespace JuegoDeAutos;
+using namespace LocoMotor;
 const std::string name = "RaceManager";
 
 RaceManager* RaceManager::_instance = nullptr;

@@ -8,7 +8,7 @@
 //#include "Node.h"
 
 #include "RigidBodyComponent.h"
-
+using namespace JuegoDeAutos;
 using namespace LocoMotor;
 
 const std::string Checkpoint::name = "CheckPoint";

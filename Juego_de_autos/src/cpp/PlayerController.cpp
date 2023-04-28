@@ -14,6 +14,8 @@
 #include "PlayerController.h"
 #include "RaceManager.h"
 
+using namespace JuegoDeAutos;
+using namespace LocoMotor;
 //std::string PlayerController::name = "PlayerController";
 
 PlayerController::PlayerController()

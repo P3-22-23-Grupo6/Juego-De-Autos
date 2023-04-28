@@ -7,6 +7,8 @@
 #include "Checkpoint.h"
 #include "RaceManager.h"
 #include "ScriptManager.h"
+using namespace LocoMotor;
+using namespace JuegoDeAutos;
 
 
 BOOL APIENTRY DllMain( HMODULE hModule,
