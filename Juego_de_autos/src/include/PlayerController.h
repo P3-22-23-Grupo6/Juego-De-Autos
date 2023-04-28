@@ -39,6 +39,8 @@ namespace JuegoDeAutos {
 		void ApplyLinearForces(bool accelerate, float dt);
 		void ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt);
 
+		void ApplyExtraAcceleration(float dt);
+
 		// Estos metodos se encargan de aplicar un Drag linear/angular, para que el movimiento de la 
 		// nave se sienta mas controlado y mejorar la experiencia de jugador
 		void LinearDrag(float dt);
@@ -72,8 +74,8 @@ namespace JuegoDeAutos {
 
 		float extraAceleration = 45;
 
+		bool accelerate;
 
 		float joystickDeadzone = .05f;
 	};
-
 }

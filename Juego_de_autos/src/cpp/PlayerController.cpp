@@ -101,9 +101,9 @@ void PlayerController::UpdateUpDirection()
 void PlayerController::MoveShip(float dt)
 {
 	// Almacenar valores de input
-	bool accelerate = inputMng->GetKey(LMKS_W) 
-				   || inputMng->GetButton(LMC_A) 
-				   || inputMng->GetButton(LMC_RIGHTSHOULDER);
+	accelerate = inputMng->GetKey(LMKS_W)
+		|| inputMng->GetButton(LMC_A)
+		|| inputMng->GetButton(LMC_RIGHTSHOULDER);
 	// Aplicar fuerzas
 	ApplyLinearForces(accelerate, dt);
 
@@ -123,9 +123,15 @@ void PlayerController::TurnShip(float dt)
 	double joystickValue;
 	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 
+	bool turning = !turnLeft && !turnRight && abs(joystickValue) < joystickDeadzone;
 
 	// Aplicar fuerzas
 	ApplyAngularForces(turnLeft, turnRight, joystickValue, dt);
+
+
+	// Compensar la perdida de velocidad de la nave en los giros, solo si se quiere acelerar la nave
+	if (accelerate)
+		ApplyExtraAcceleration(dt);
 
 
 	// Definir variables necesarios para los calculos de las rotaciones
@@ -136,7 +142,7 @@ void PlayerController::TurnShip(float dt)
 
 
 	// Aplicar el drag angular si no se esta intentando rotar el coche
-	if (!turnLeft && !turnRight && abs(joystickValue) < joystickDeadzone)
+	if (turning)
 		AngularDrag(currentAngularVelocity, direction);
 
 
@@ -169,10 +175,12 @@ void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, float j
 	// Giro con joystick
 	if (abs(joystickValue) >= joystickDeadzone)
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue);
+}
 
-
-
+void JuegoDeAutos::PlayerController::ApplyExtraAcceleration(float dt)
+{
 	// Compensar la perdida de velocidad de un giro aumentando la aceleracion
+	// Solo si se intenta acelerar
 
 	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
 	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
