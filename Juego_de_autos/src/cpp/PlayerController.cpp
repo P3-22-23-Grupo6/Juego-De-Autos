@@ -13,6 +13,7 @@
 // Componentes juego
 #include "PlayerController.h"
 #include "RaceManager.h"
+#include <AudioSource.h>
 
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
@@ -270,4 +271,6 @@ void PlayerController::UpdateVelocityUI()
 	double inverseColor = 1 - colorIntensity;
 	velocityText->SetTopColor(1, inverseColor, inverseColor);
 	velocityText->SetBottomColor(1, inverseColor, inverseColor);
+
+	gameObject->GetComponent<AudioSource>()->SetFreq((velocityClean / 300.f) + 0.9f);
 }
