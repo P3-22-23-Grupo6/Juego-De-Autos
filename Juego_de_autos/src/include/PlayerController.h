@@ -39,6 +39,7 @@ namespace JuegoDeAutos {
 		void ApplyLinearForces(bool accelerate, float dt);
 		void ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt);
 
+		void LimitMaxAngleVelocity(LocoMotor::LMVector3 currentAngularVelocity, int direction);
 		void ApplyExtraAcceleration(float dt);
 
 		// Estos metodos se encargan de aplicar un Drag linear/angular, para que el movimiento de la 
@@ -63,7 +64,7 @@ namespace JuegoDeAutos {
 
 		float acceleration = 70;
 
-		float maxAngularVelocity = 3;
+		float maxAngularVelocity = 6;
 		float angularForce = 8.f;
 
 		float angularDragForce = .7f;

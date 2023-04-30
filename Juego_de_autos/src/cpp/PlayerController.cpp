@@ -142,6 +142,8 @@ void PlayerController::TurnShip(float dt)
 	int direction = abs(yAngVel) / yAngVel; // -1 : izquierda // 1 : derecha
 
 
+	LimitMaxAngleVelocity(currentAngularVelocity, direction);
+
 	// Aplicar el drag angular si no se esta intentando rotar el coche
 	if (turning)
 		AngularDrag(currentAngularVelocity, direction);
@@ -178,7 +180,20 @@ void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, float j
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue);
 }
 
-void JuegoDeAutos::PlayerController::ApplyExtraAcceleration(float dt)
+void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, int direction)
+{
+	// Limitar la velocidad angular maxima
+	if (currentAngularVelocity.Magnitude() > maxAngularVelocity) {
+		currentAngularVelocity.Normalize();
+		// Modificar el vector de la velocidad angular actual
+		currentAngularVelocity = LMVector3(0, maxAngularVelocity * direction, 0);
+	}
+
+	// Actualizar velocidad angular
+	rbComp->SetAngularVelocity(currentAngularVelocity);
+}
+
+void PlayerController::ApplyExtraAcceleration(float dt)
 {
 	// Compensar la perdida de velocidad de un giro aumentando la aceleracion
 	// Solo si se intenta acelerar
@@ -218,13 +233,6 @@ void PlayerController::LinearDrag(float dt)
 
 void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int direction)
 {
-	// Limitar la velocidad angular maxima
-	if (currentAngularVelocity.Magnitude() > maxAngularVelocity) {
-		currentAngularVelocity.Normalize();
-		// Modificar el vector de la velocidad angular actual
-		currentAngularVelocity = LMVector3(0, maxAngularVelocity * direction, 0);
-	}
-
 	// Añadir un drag angular para frenar la rotacion mas controladamente
 	//double angularDrag = .7;
 	currentAngularVelocity = LMVector3(currentAngularVelocity.GetX() * angularDragForce,
