@@ -7,6 +7,7 @@ namespace LocoMotor {
 	class InputManager;
 	class MeshRenderer;
 	class UITextLM;
+	class Camera;
 }
 
 namespace JuegoDeAutos {
@@ -39,9 +40,6 @@ namespace JuegoDeAutos {
 		void ApplyLinearForces(bool accelerate, float dt);
 		void ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt);
 
-		void LimitMaxAngleVelocity(LocoMotor::LMVector3 currentAngularVelocity, int direction);
-		void ApplyExtraAcceleration(float dt);
-
 		// Estos metodos se encargan de aplicar un Drag linear/angular, para que el movimiento de la 
 		// nave se sienta mas controlado y mejorar la experiencia de jugador
 		void LinearDrag(float dt);
@@ -50,6 +48,13 @@ namespace JuegoDeAutos {
 		// Este metodo se encarga de inclinar levemente el componente MeshRenderer hacia los lados 
 		// dependiendo de la rotacion actual de la nave (puramente estetico)
 		void TiltShip(float currentAngularVelocity, int direction);
+
+		// Limita la velocidad maxima angular para que el coche no pueda girar rapidisimo
+		void LimitMaxAngleVelocity(LocoMotor::LMVector3 currentAngularVelocity, int direction);
+		// Aplica una aceleracion extra cuando se gira para no perder velocidad
+		void ApplyExtraAcceleration(float dt);
+		// Ajusta la Fov de la camara dependiendo de la actual velocidad lineal de la nave
+		void AdjustFov();
 
 		// Actualiza el texto de velocidad y lo cambia de color
 		void UpdateVelocityUI();
@@ -62,6 +67,8 @@ namespace JuegoDeAutos {
 
 		LocoMotor::UITextLM* velocityText;
 
+		LocoMotor::Camera* cam;
+
 		float acceleration = 70;
 
 		float maxAngularVelocity = 6;
@@ -73,7 +80,7 @@ namespace JuegoDeAutos {
 		// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
 		float linearDragIntensity;
 
-		float extraAceleration = 45;
+		float extraAceleration = 30;
 
 		bool accelerate;
 

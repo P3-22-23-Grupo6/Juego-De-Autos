@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "LMInputs.h"
 #include "UITextLM.h"
+#include "Camera.h"
 
 // Componentes juego
 #include "PlayerController.h"
@@ -41,6 +42,8 @@ void PlayerController::Start()
 	inputMng = LocoMotor::InputManager::GetInstance();
 	raceManager = RaceManager::GetInstance();
 
+	cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
+
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 
 
@@ -58,13 +61,8 @@ void PlayerController::Update(float dt)
 	MoveShip(dt);
 
 	TurnShip(dt);
-
-	//LMVector3 p = gameObject->GetTransform()->GetPosition();
-	//std::cout << "PLAYER POS = (" << p.GetX() 
-	//					  << ", " << p.GetY() 
-	//					  << ", " << p.GetZ() 
-	//					  << ")" << std::endl;
 }
+
 
 // Gestionar orientacion
 
@@ -97,6 +95,7 @@ void PlayerController::UpdateUpDirection()
 	else rbComp->useGravity(LMVector3(0, -700, 0)); // TODO:
 }
 
+
 // Gestionar movimiento linear/angular
 
 void PlayerController::MoveShip(float dt)
@@ -113,6 +112,9 @@ void PlayerController::MoveShip(float dt)
 
 	// Mantener la UI actualizada
 	UpdateVelocityUI();
+
+
+	AdjustFov();
 }
 
 void PlayerController::TurnShip(float dt)
@@ -153,12 +155,11 @@ void PlayerController::TurnShip(float dt)
 	TiltShip(currentAngularVelocity.Magnitude(), direction);
 }
 
+
 // Aplicar fuerzas
 
 void PlayerController::ApplyLinearForces(bool accelerate, float dt)
 {
-	//std::cout << "linearDragIntensity = " << linearDragIntensity << "endl";
-
 	if (accelerate)
 		rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * acceleration * dt);
 }
@@ -179,6 +180,63 @@ void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, float j
 	if (abs(joystickValue) >= joystickDeadzone)
 		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue);
 }
+
+
+// Aplicar Drag
+
+void PlayerController::LinearDrag(float dt)
+{
+	// Desacelerar la velocidad actual para que no haya tanto derrape
+	LMVector3 localVel = rbComp->GetLinearVelocity();
+
+	LMVector3 forward = gameObject->GetTransform()->GetRotation().Forward();
+	float angle = localVel.Angle(forward);
+	float intensity = (localVel.Magnitude() * linearDragForce) / 20;
+	linearDragIntensity = intensity;
+	localVel.Normalize();
+	LMVector3 invertedVelocity = localVel * -1;
+
+	// Si el angulo entre la velocidad real del coche y la direccion en la que esta mirando es grande
+	// Aplicar una fuerza inversa a la velocidad actual para controlar el derrape
+	if (angle > .01f)
+		rbComp->addForce(invertedVelocity * intensity * angle * dt);
+}
+
+void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int direction)
+{
+	// Añadir un drag angular para frenar la rotacion mas controladamente
+	//double angularDrag = .7;
+	currentAngularVelocity = LMVector3(currentAngularVelocity.GetX() * angularDragForce,
+		currentAngularVelocity.GetY() * angularDragForce,
+		currentAngularVelocity.GetZ() * angularDragForce);
+
+	// Actualizar velocidad angular
+	rbComp->SetAngularVelocity(currentAngularVelocity);
+}
+
+
+// Tilt
+
+void PlayerController::TiltShip(float currentAngularVelocity, int direction)
+{
+	// Angulo maximo de la inclinacion visual del coche en grados
+	double maxTiltAngle = 20;
+
+	// Determina cuanto se inclina el coche, es un valor de 0 a 1
+	double tiltAmount = currentAngularVelocity / maxAngularVelocity;
+
+	// Rotar SOLO la parte grafica del coche para mejor sensacion de juego
+	// Teniendo en cuenta la velocidad angular
+	gameObject->GetComponent<MeshRenderer>()->
+		Rotate(LMVector3(0, 0, tiltAmount * maxTiltAngle * direction));
+
+	// Actualizar las posiciones del raceManager
+	LMVector3 pos = gameObject->GetTransform()->GetPosition();
+	raceManager->UpdateCarPosition("Player", pos);
+}
+
+
+// Metodos extra
 
 void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, int direction)
 {
@@ -210,58 +268,16 @@ void PlayerController::ApplyExtraAcceleration(float dt)
 	rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * angularIntensity * dt);
 }
 
-// Aplicar Drag
-
-void PlayerController::LinearDrag(float dt)
+void PlayerController::AdjustFov()
 {
-	// Desacelerar la velocidad actual para que no haya tanto derrape
-	//LMVector3 localVel = BulletToLm(rbComp->getBody()->getLinearVelocity());
+	// Actualizar el fov
 	LMVector3 localVel = rbComp->GetLinearVelocity();
-
-	LMVector3 forward = gameObject->GetTransform()->GetRotation().Forward();
-	float angle = localVel.Angle(forward);
-	float intensity = (localVel.Magnitude() * linearDragForce) / 20;
-	linearDragIntensity = intensity;
-	localVel.Normalize();
-	LMVector3 invertedVelocity = localVel * -1;
-
-	// Si el angulo entre la velocidad real del coche y la direccion en la que esta mirando es grande
-	// Aplicar una fuerza inversa a la velocidad actual para controlar el derrape
-	if (angle > .01f)
-		rbComp->addForce(invertedVelocity * intensity * angle * dt);
+	float fovOne = (localVel.Magnitude() / 600);
+	if (fovOne > 1) fovOne = 1;
+	float fov = fovOne * 15 + 50;
+	cam->SetFOV(fov);
 }
 
-void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int direction)
-{
-	// Añadir un drag angular para frenar la rotacion mas controladamente
-	//double angularDrag = .7;
-	currentAngularVelocity = LMVector3(currentAngularVelocity.GetX() * angularDragForce,
-		currentAngularVelocity.GetY() * angularDragForce,
-		currentAngularVelocity.GetZ() * angularDragForce);
-
-	// Actualizar velocidad angular
-	rbComp->SetAngularVelocity(currentAngularVelocity);
-}
-
-// Tilt
-
-void PlayerController::TiltShip(float currentAngularVelocity, int direction)
-{
-	// Angulo maximo de la inclinacion visual del coche en grados
-	double maxTiltAngle = 20;
-
-	// Determina cuanto se inclina el coche, es un valor de 0 a 1
-	double tiltAmount = currentAngularVelocity / maxAngularVelocity;
-
-	// Rotar SOLO la parte grafica del coche para mejor sensacion de juego
-	// Teniendo en cuenta la velocidad angular
-	gameObject->GetComponent<MeshRenderer>()->
-		Rotate(LMVector3(0, 0, tiltAmount * maxTiltAngle * direction));
-
-	// Actualizar las posiciones del raceManager
-	LMVector3 pos = gameObject->GetTransform()->GetPosition();
-	raceManager->UpdateCarPosition("Player", pos);
-}
 
 // UI
 
