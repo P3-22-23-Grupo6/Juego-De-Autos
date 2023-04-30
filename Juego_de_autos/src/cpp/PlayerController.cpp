@@ -190,7 +190,7 @@ void JuegoDeAutos::PlayerController::ApplyExtraAcceleration(float dt)
 
 	float angularIntensity = currentAngularVelocity.Magnitude() * extraAceleration;
 
-	std::cout << "angularIntensity = " << angularIntensity;
+	//std::cout << "angularIntensity = " << angularIntensity;
 
 	rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * angularIntensity * dt);
 }

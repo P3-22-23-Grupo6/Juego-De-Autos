@@ -296,9 +296,9 @@ void RaceManager::UpdateRanking()
 	}
 
 
-	std::cout << "CARS IN SAME CHECKPOINT = " << std::endl;
-	for (size_t i = 0; i < carsInSameCheckpoint.size(); i++)
-		std::cout << i << " = " << carsInSameCheckpoint[i] << std::endl;
+	//std::cout << "CARS IN SAME CHECKPOINT = " << std::endl;
+	//for (size_t i = 0; i < carsInSameCheckpoint.size(); i++)
+	//	std::cout << i << " = " << carsInSameCheckpoint[i] << std::endl;
 
 
 	// Entre los coches que estan en el mismo checkpoint calcular usando distancias cuantos coches estan por delante del jugador
@@ -340,5 +340,5 @@ void RaceManager::UpdateRanking()
 	positionText->ChangeText(positionString);
 
 
-	std::cout << "CURRENTPOSITION = " << positionString << std::endl;
+	//std::cout << "CURRENTPOSITION = " << positionString << std::endl;
 }
