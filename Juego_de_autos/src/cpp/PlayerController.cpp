@@ -274,7 +274,7 @@ void PlayerController::AdjustFov()
 	LMVector3 localVel = rbComp->GetLinearVelocity();
 	float fovOne = (localVel.Magnitude() / 600);
 	if (fovOne > 1) fovOne = 1;
-	float fov = fovOne * 15 + 50;
+	float fov = fovOne * maxExtraFov + initialFov;
 	cam->SetFOV(fov);
 }
 

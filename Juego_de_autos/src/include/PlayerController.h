@@ -60,30 +60,33 @@ namespace JuegoDeAutos {
 		void UpdateVelocityUI();
 
 	private:
-		RaceManager* raceManager;
 
+		// Referencias
+		RaceManager* raceManager;
 		LocoMotor::RigidBodyComponent* rbComp;
 		LocoMotor::InputManager* inputMng;
-
 		LocoMotor::UITextLM* velocityText;
-
 		LocoMotor::Camera* cam;
 
+		// Paremetros de movimiento
 		float acceleration = 70;
-
 		float maxAngularVelocity = 6;
 		float angularForce = 8.f;
-
 		float angularDragForce = .7f;
 		float linearDragForce = 7;
 
+		// Controles
+		float extraAceleration = 30;
+		float joystickDeadzone = .05f;
+
+		// Fov
+		float initialFov = 50;
+		float maxExtraFov = 15;
+
+		// Almacenar informacion
 		// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
 		float linearDragIntensity;
-
-		float extraAceleration = 30;
-
+		// Devuelve true si en esta ejecucion se tiene presionado el boton de acelerar (mando o teclado)
 		bool accelerate;
-
-		float joystickDeadzone = .05f;
 	};
 }
