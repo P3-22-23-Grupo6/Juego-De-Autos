@@ -88,7 +88,7 @@ void PlayerController::UpdateUpDirection()
 		gameObject->GetTransform()->SetUpwards(newUp);
 
 		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 7;
+		double hoverDist = 10; // 7
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
 	}
@@ -133,7 +133,7 @@ void PlayerController::TurnShip(float dt)
 
 
 	// Compensar la perdida de velocidad de la nave en los giros, solo si se quiere acelerar la nave
-	if (accelerate)
+	if (accelerate && physicsBasedMovement)
 		ApplyExtraAcceleration(dt);
 
 
@@ -160,25 +160,66 @@ void PlayerController::TurnShip(float dt)
 
 void PlayerController::ApplyLinearForces(bool accelerate, float dt)
 {
-	if (accelerate)
-		rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * acceleration * dt);
+	if (accelerate) {
+
+		if (physicsBasedMovement)
+			rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * acceleration * dt);
+		else {
+			LMVector3 pos = gameObject->GetTransform()->GetPosition();
+			LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+
+			gameObject->GetTransform()->SetPosition(pos + forw * dt * .6f);
+		}
+	}
 }
 
 void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt)
 {
-	if (turnRight)
-		// TODO: quitar la referencia directa a btvector3 abajo tambien
-		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -angularForce);
-	//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
+	if (physicsBasedMovement) {
+		if (turnRight)
+			// TODO: quitar la referencia directa a btvector3 abajo tambien
+			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -angularForce);
+		//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
 
-	if (turnLeft)
-		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce);
+		if (turnLeft)
+			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce);
 
 
-	joystickValue *= .5f;
-	// Giro con joystick
-	if (abs(joystickValue) >= joystickDeadzone)
-		rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue);
+		joystickValue *= .5f;
+		// Giro con joystick
+		if (abs(joystickValue) >= joystickDeadzone)
+			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue);
+	}
+
+	else {
+
+		if (turnRight) {
+			float newRotationVelocity = currentRotationVelocity - rotationAcceleration;
+			if (newRotationVelocity > -maxRotationVelocity)
+				currentRotationVelocity -= rotationAcceleration;
+		}
+
+		else if (turnLeft) {
+			float newRotationVelocity = currentRotationVelocity + rotationAcceleration;
+			if (newRotationVelocity < maxRotationVelocity)
+				currentRotationVelocity += rotationAcceleration;
+
+		}
+
+		else {
+			if (currentRotationVelocity > 0.05)
+				currentRotationVelocity -= rotationDecceleration;
+			else if (currentRotationVelocity < -0.05)
+				currentRotationVelocity += rotationDecceleration;
+			else currentRotationVelocity = 0;
+		}
+
+		LMVector3 up = gameObject->GetTransform()->GetRotation().Up();
+		LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up, currentRotationVelocity * dt);
+		gameObject->GetTransform()->SetRotation(newRotation);
+	}
+
+	//std::cout << "Rotation = ( " << r.GetX() << ", " << r.GetY() << ", " << r.GetZ() << ")" << std::endl;
 }
 
 
