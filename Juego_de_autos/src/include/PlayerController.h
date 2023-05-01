@@ -82,7 +82,7 @@ namespace JuegoDeAutos {
 		float angularForce = .5f;
 		float angularDragForce = .7f;
 		float linearDragForce = 7;
-		float gravityThrust = -5000;
+		float gravityThrust = -1000;
 			// Matematicas
 				// Linear
 				
@@ -115,6 +115,7 @@ namespace JuegoDeAutos {
 		// Devuelve true si se esta girando
 		bool turning;
 		bool inAir;
+		bool inAirLastFrame;
 
 			// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
 		float linearDragIntensity;

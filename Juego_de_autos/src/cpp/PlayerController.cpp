@@ -106,6 +106,15 @@ void PlayerController::UpdateUpDirection(float dt)
 		rbComp->useGravity(LMVector3(0, gravityThrust, 0));
 		gameObject->GetTransform()->SetUpwards(LMVector3(0, autoRotIntensity * dt / 1000, 0));
 	}
+
+
+	if (!inAirLastFrame && inAir)
+		inputMng->RumbleController(.3, .2f);
+
+	if (inAirLastFrame && !inAir)
+		inputMng->RumbleController(1, .2f);
+
+	inAirLastFrame = inAir;
 }
 
 void PlayerController::GetInput()
