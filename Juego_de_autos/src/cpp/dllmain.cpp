@@ -7,6 +7,7 @@
 #include "Checkpoint.h"
 #include "RaceManager.h"
 #include "ScriptManager.h"
+#include "Boost.h"
 using namespace LocoMotor;
 using namespace JuegoDeAutos;
 
@@ -34,6 +35,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::MotorApi* moto
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<PlayerController>("PlayerController");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Checkpoint>("Checkpoint");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<RaceManager>("RaceManager");
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Boost>("Boost");
 
     motor->RegisterGame("Juego de autos");
 
