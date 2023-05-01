@@ -136,7 +136,6 @@ void RaceManager::Update(float dt)
 		if (countDownSeconds == 0 || countDownSeconds == -1) {
 			countdownFinished = true;
 			countdownText->SetBottomColor(0, 1, 0);
-			countdownText->SetPosition(-.1, .3);
 			countdownText->ChangeText("GO");
 		}
 		else if (countDownSeconds > 0 && countDownSeconds <= 3) {
