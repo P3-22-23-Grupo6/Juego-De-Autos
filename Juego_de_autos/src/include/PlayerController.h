@@ -62,6 +62,10 @@ namespace JuegoDeAutos {
 		// Actualiza el texto de velocidad y lo cambia de color
 		void UpdateVelocityUI();
 
+		void EnableGyro();
+
+		void DisableGyro();
+
 	private:
 
 		// Referencias
@@ -91,7 +95,7 @@ namespace JuegoDeAutos {
 		// Controles
 		float extraAceleration = 30;
 		float joystickDeadzone = .05f;
-		bool useGyro = true;
+		bool useGyro = false;
 		float maxGyroValue = 8;
 
 		// Fov

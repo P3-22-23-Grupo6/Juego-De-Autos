@@ -46,8 +46,7 @@ void PlayerController::Start()
 
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 
-	if (useGyro)
-		inputMng->ActivateGyroscopeWhenConnected();
+	EnableGyro();
 }
 
 void PlayerController::Update(float dt)
@@ -202,6 +201,16 @@ void PlayerController::ApplyLinearForces(float dt)
 
 void PlayerController::ApplyAngularForces(float dt)
 {
+	// Activar desactivar Gyroscopio
+	if (inputMng->GetButtonDown(LMC_DPAD_UP))
+	{
+		useGyro = !useGyro;
+		if (useGyro)
+			EnableGyro();
+		else
+			DisableGyro();
+	}
+
 	if (physicsBasedMovement) {
 		if (turnRight)
 			// TODO: quitar la referencia directa a btvector3 abajo tambien
@@ -385,4 +394,19 @@ void PlayerController::UpdateVelocityUI()
 	velocityText->SetBottomColor(1, inverseColor, inverseColor);
 
 	gameObject->GetComponent<AudioSource>()->SetFreq((velocityClean / 300.f) + 0.9f);
+}
+
+void JuegoDeAutos::PlayerController::EnableGyro()
+{
+	std::cout << "ENABLE GYRO" << std::endl;
+	useGyro = true;
+	inputMng->ActivateGyroscopeWhenConnected();
+	gyroValue = 0;
+}
+
+void JuegoDeAutos::PlayerController::DisableGyro()
+{
+	useGyro = false;
+	inputMng->DisableControllerGyroscope();
+	gyroValue = 0;
 }
