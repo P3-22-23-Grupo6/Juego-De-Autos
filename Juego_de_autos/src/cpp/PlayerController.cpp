@@ -329,10 +329,10 @@ void PlayerController::UpdateVelocityUI()
 	// Para mostrar la velocidad se redondea la magnitud 
 	// del vector de velocidad y se actualiza el texto
 	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
-	velocityText->ChangeText(std::to_string(velocityClean) + " KM / H");
+	velocityText->ChangeText(std::to_string(velocityClean / 6) + " KM / H");
 
 	// Se utiliza para saber el tono de rojo del texto segun la velocidad actual
-	double highVelocityIndicator = 700;
+	double highVelocityIndicator = 1000;
 	double colorIntensity = ((double)velocityClean) / highVelocityIndicator;
 	if (colorIntensity > 1) colorIntensity = 1;
 	double inverseColor = 1 - colorIntensity;
