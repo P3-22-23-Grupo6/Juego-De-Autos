@@ -109,6 +109,7 @@ namespace JuegoDeAutos {
 		bool turnRight;
 		bool turnLeft;
 		float joystickValue;
+		float triggerValue;
 		float gyroValue;
 
 		// Devuelve true si se esta girando

@@ -121,6 +121,9 @@ void PlayerController::GetInput()
 
 	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 
+	triggerValue = inputMng->GetTriggerValue(1);
+	if (triggerValue > 0)accelerate = true;
+
 	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
 }
 
@@ -190,7 +193,8 @@ void PlayerController::ApplyLinearForces(float dt)
 		forw.Normalize();
 
 		if (physicsBasedMovement) {
-			rbComp->addForce(forw * acceleration * dt);
+			if (triggerValue > 0)rbComp->addForce(forw * acceleration * triggerValue * dt);
+			else rbComp->addForce(forw * acceleration * dt);
 		}
 		else {
 			LMVector3 pos = gameObject->GetTransform()->GetPosition();
