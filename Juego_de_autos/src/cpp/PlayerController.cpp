@@ -162,12 +162,14 @@ void PlayerController::ApplyLinearForces(bool accelerate, float dt)
 {
 	if (accelerate) {
 
-		if (physicsBasedMovement)
-			rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * acceleration * dt);
+		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+		forw.Normalize();
+
+		if (physicsBasedMovement) {
+			rbComp->addForce(forw * acceleration * dt);
+		}
 		else {
 			LMVector3 pos = gameObject->GetTransform()->GetPosition();
-			LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-
 			gameObject->GetTransform()->SetPosition(pos + forw * dt * .6f);
 		}
 	}
@@ -178,17 +180,17 @@ void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, float j
 	if (physicsBasedMovement) {
 		if (turnRight)
 			// TODO: quitar la referencia directa a btvector3 abajo tambien
-			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -angularForce);
+			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -angularForce * dt);
 		//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
 
 		if (turnLeft)
-			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce);
+			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * dt);
 
 
 		joystickValue *= .5f;
 		// Giro con joystick
 		if (abs(joystickValue) >= joystickDeadzone)
-			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue);
+			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue * dt);
 	}
 
 	else {

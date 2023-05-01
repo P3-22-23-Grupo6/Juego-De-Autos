@@ -72,7 +72,7 @@ namespace JuegoDeAutos {
 			// Fisicas
 		float acceleration = 90;
 		float maxAngularVelocity = 6;
-		float angularForce = 8.f;
+		float angularForce = .5f;
 		float angularDragForce = .7f;
 		float linearDragForce = 7;
 			// Matematicas

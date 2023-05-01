@@ -89,6 +89,8 @@ void RaceManager::Start()
 
 void RaceManager::Update(float dt)
 {
+	return;
+
 	// Actualizar la posicion de todos los coches enemigos
 	//UpdateCarPosition("Enemy", enemies[1]->GetTransform()->GetPosition());
 
