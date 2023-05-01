@@ -133,29 +133,29 @@ void RaceManager::Update(float dt)
 		countdownTimer -= dt * timeConstant;
 		countDownSeconds = (int)floor(countdownTimer);
 
+		if (countDownSeconds != countDownSecondsLastFrame && countDownSeconds != -1)
+			CountdownUIChanged();
+
 		if (countDownSeconds == 0 || countDownSeconds == -1) {
 			countdownFinished = true;
 			countdownText->SetBottomColor(0, 1, 0);
-			countdownText->ChangeText("GO");
+			countdownText->ChangeText("GO!");
 		}
 		else if (countDownSeconds > 0 && countDownSeconds <= 3) {
 			std::string countdownNumber = std::to_string(countDownSeconds);
 			countdownText->ChangeText(countdownNumber);
 
-			if (countDownSeconds != countDownSecondsLastFrame)
-				CountdownUIChanged();
-
 			if (countDownSeconds == 3) {
-				countdownText->SetBottomColor(1, 0, 0);
 				countdownText->SetTopColor(1, 0, 0);
+				countdownText->SetBottomColor(0, 0, 0);
 			}
 			else if (countDownSeconds == 2) {
-				countdownText->SetBottomColor(1, .5, 0);
 				countdownText->SetTopColor(1, .5, 0);
+				countdownText->SetBottomColor(1, 0, 0);
 			}
 			else if (countDownSeconds == 1) {
-				countdownText->SetBottomColor(1, 1, 0);
 				countdownText->SetTopColor(1, 1, 0);
+				countdownText->SetBottomColor(1, .5, 0);
 			}
 		}
 		else countdownText->ChangeText("");
