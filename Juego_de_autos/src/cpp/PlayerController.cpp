@@ -58,6 +58,8 @@ void PlayerController::Update(float dt)
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	UpdateUpDirection();
 
+	GetInput();
+
 	MoveShip(dt);
 
 	TurnShip(dt);
@@ -95,17 +97,29 @@ void PlayerController::UpdateUpDirection()
 	else rbComp->useGravity(LMVector3(0, -700, 0)); // TODO:
 }
 
-
-// Gestionar movimiento linear/angular
-
-void PlayerController::MoveShip(float dt)
+void PlayerController::GetInput()
 {
 	// Almacenar valores de input
 	accelerate = inputMng->GetKey(LMKS_W)
 		|| inputMng->GetButton(LMC_A)
 		|| inputMng->GetButton(LMC_RIGHTSHOULDER);
+
+
+	turnRight = inputMng->GetKey(LMKS_D);
+	turnLeft = inputMng->GetKey(LMKS_A);
+
+	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
+
+	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
+}
+
+
+// Gestionar movimiento linear/angular
+
+void PlayerController::MoveShip(float dt)
+{
 	// Aplicar fuerzas
-	ApplyLinearForces(accelerate, dt);
+	ApplyLinearForces(dt);
 
 	// Desaceleracion controlada
 	LinearDrag(dt);
@@ -119,22 +133,23 @@ void PlayerController::MoveShip(float dt)
 
 void PlayerController::TurnShip(float dt)
 {
-	// Almacenar valores de input
-	bool turnRight = inputMng->GetKey(LMKS_D);
-	bool turnLeft = inputMng->GetKey(LMKS_A);
-
-	double joystickValue;
-	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
-
-	bool turning = !turnLeft && !turnRight && abs(joystickValue) < joystickDeadzone;
 
 	// Aplicar fuerzas
-	ApplyAngularForces(turnLeft, turnRight, joystickValue, dt);
+	ApplyAngularForces(dt);
+
+
+	if (turning && accelerate)
+	{
+		float currentVel = rbComp->GetLinearVelocity().Magnitude();
+		std::cout << "currentVel = " << currentVel << std::endl;
+
+		rbComp->SetLinearVelocity(gameObject->GetTransform()->GetRotation().Forward() * currentVel);
+	}
 
 
 	// Compensar la perdida de velocidad de la nave en los giros, solo si se quiere acelerar la nave
-	if (accelerate && physicsBasedMovement)
-		ApplyExtraAcceleration(dt);
+	//if (accelerate && physicsBasedMovement)
+	//	ApplyExtraAcceleration(dt);
 
 
 	// Definir variables necesarios para los calculos de las rotaciones
@@ -147,7 +162,7 @@ void PlayerController::TurnShip(float dt)
 	LimitMaxAngleVelocity(currentAngularVelocity, direction);
 
 	// Aplicar el drag angular si no se esta intentando rotar el coche
-	if (turning)
+	if (!turning)
 		AngularDrag(currentAngularVelocity, direction);
 
 
@@ -158,7 +173,7 @@ void PlayerController::TurnShip(float dt)
 
 // Aplicar fuerzas
 
-void PlayerController::ApplyLinearForces(bool accelerate, float dt)
+void PlayerController::ApplyLinearForces(float dt)
 {
 	if (accelerate) {
 
@@ -175,7 +190,7 @@ void PlayerController::ApplyLinearForces(bool accelerate, float dt)
 	}
 }
 
-void PlayerController::ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt)
+void PlayerController::ApplyAngularForces(float dt)
 {
 	if (physicsBasedMovement) {
 		if (turnRight)

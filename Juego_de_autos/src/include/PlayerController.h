@@ -31,14 +31,17 @@ namespace JuegoDeAutos {
 		// Esto es necesario para que la nave se quede "pegada" a la carretera en todo momento
 		void UpdateUpDirection();
 
+		// Almacena el input de esta ejecucion
+		void GetInput();
+
 		// Metodos que se encargan de la gestion del movimiento linear/angular
 		// Se encargan de llamar a los metodos de movimiento de forma ordenada y controlada
 		void MoveShip(float dt);
 		void TurnShip(float dt);
 
 		// Dependiendo del Input recogido, estos metodos aplican fuerzas al rigidbody de la nave
-		void ApplyLinearForces(bool accelerate, float dt);
-		void ApplyAngularForces(bool turnLeft, bool turnRight, float joystickValue, float dt);
+		void ApplyLinearForces(float dt);
+		void ApplyAngularForces(float dt);
 
 		// Estos metodos se encargan de aplicar un Drag linear/angular, para que el movimiento de la 
 		// nave se sienta mas controlado y mejorar la experiencia de jugador
@@ -70,7 +73,7 @@ namespace JuegoDeAutos {
 
 		// Paremetros de movimiento
 			// Fisicas
-		float acceleration = 90;
+		float acceleration = 70;
 		float maxAngularVelocity = 6;
 		float angularForce = .5f;
 		float angularDragForce = .7f;
@@ -93,10 +96,17 @@ namespace JuegoDeAutos {
 		float maxExtraFov = 15;
 
 		// Almacenar informacion
-		// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
-		float linearDragIntensity;
-		// Devuelve true si en esta ejecucion se tiene presionado el boton de acelerar (mando o teclado)
+			// Controles
+				// Devuelve true si en esta ejecucion se tiene presionado el boton de acelerar (mando o teclado)
 		bool accelerate;
+		bool turnRight;
+		bool turnLeft;
+		float joystickValue;
+		// Devuelve true si se esta girando
+		bool turning;
+
+			// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
+		float linearDragIntensity;
 
 		bool physicsBasedMovement = true;
 	};
