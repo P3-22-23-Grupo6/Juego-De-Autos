@@ -142,8 +142,9 @@ void PlayerController::TurnShip(float dt)
 	{
 		float currentVel = rbComp->GetLinearVelocity().Magnitude();
 		std::cout << "currentVel = " << currentVel << std::endl;
-
-		rbComp->SetLinearVelocity(gameObject->GetTransform()->GetRotation().Forward() * currentVel);
+		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+		forw.Normalize();
+		rbComp->SetLinearVelocity(forw * currentVel * .99f);
 	}
 
 
