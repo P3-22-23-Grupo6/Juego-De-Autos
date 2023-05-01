@@ -156,7 +156,7 @@ void PlayerController::TurnShip(float dt)
 	// Definir variables necesarios para los calculos de las rotaciones
 	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
 	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
-	double yAngVel = currentAngularVelocity.GetY();
+	double yAngVel = gameObject->GetTransform()->GetRotation().Rotate(currentAngularVelocity).GetY();
 	int direction = abs(yAngVel) / yAngVel; // -1 : izquierda // 1 : derecha
 
 
@@ -300,10 +300,10 @@ void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, int direction)
 {
 	// Limitar la velocidad angular maxima
-	if (currentAngularVelocity.Magnitude() > maxAngularVelocity) {
+	if (abs(gameObject->GetTransform()->GetRotation().Rotate(currentAngularVelocity).GetY()) > maxAngularVelocity) {
 		currentAngularVelocity.Normalize();
 		// Modificar el vector de la velocidad angular actual
-		currentAngularVelocity = LMVector3(0, maxAngularVelocity * direction, 0);
+		currentAngularVelocity = currentAngularVelocity * maxAngularVelocity;
 	}
 
 	// Actualizar velocidad angular
