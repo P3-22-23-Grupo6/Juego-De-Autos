@@ -46,7 +46,7 @@ void PlayerController::Start()
 
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 
-	EnableGyro();
+	//EnableGyro();
 }
 
 void PlayerController::Update(float dt)
@@ -229,7 +229,6 @@ void PlayerController::ApplyAngularForces(float dt)
 		// Usar el Gyroscopio
 		if (useGyro) {
 			gyroValue = inputMng->GetGyroscopeAngle(InputManager::Horizontal);
-			std::cout << "gyroValue ANTES = " << gyroValue << std::endl;
 			// Adaptar el valor a la jugabilidad
 			gyroValue *= 26;
 			// Clampear el valor
@@ -239,8 +238,6 @@ void PlayerController::ApplyAngularForces(float dt)
 				gyroValue = -maxGyroValue;
 
 			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * gyroValue * dt);
-
-			std::cout << "gyroValue DESPUES = " << gyroValue << std::endl;
 		}
 		// Usar el Joystick
 		else {
@@ -402,9 +399,10 @@ void PlayerController::UpdateVelocityUI()
 
 void JuegoDeAutos::PlayerController::EnableGyro()
 {
-	std::cout << "ENABLE GYRO" << std::endl;
+	inputMng->ResetGyroscope();
 	useGyro = true;
 	inputMng->ActivateGyroscopeWhenConnected();
+	inputMng->EnableControllerGyroscope();
 	gyroValue = 0;
 }
 
