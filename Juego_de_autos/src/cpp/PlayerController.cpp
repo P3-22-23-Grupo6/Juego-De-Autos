@@ -56,7 +56,7 @@ void PlayerController::Update(float dt)
 {
 	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
-	UpdateUpDirection();
+	UpdateUpDirection(dt);
 
 	GetInput();
 
@@ -68,7 +68,7 @@ void PlayerController::Update(float dt)
 
 // Gestionar orientacion
 
-void PlayerController::UpdateUpDirection()
+void PlayerController::UpdateUpDirection(float dt)
 {
 	// Definir el punto inicial y la direccion del raycast
 	LMVector3 from = gameObject->GetTransform()->GetPosition();
@@ -76,7 +76,7 @@ void PlayerController::UpdateUpDirection()
 
 	LMVector3 upVector = gameObject->GetTransform()->GetRotation().Up();
 	upVector.Normalize();
-	double raycastDistance = 20;
+	double raycastDistance = 40;
 	upVector = upVector * raycastDistance;
 	to = from - upVector;
 
@@ -86,8 +86,8 @@ void PlayerController::UpdateUpDirection()
 
 		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
 		// Ignorarlo, esto bloquea el subirse a las paredes
-		float angle = n.Angle(upVector);
-		if (angle > .4)
+		float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
+		if (angle > 0.5)
 			return;
 		//std::cout << "angle = " << angle << std::endl;
 
@@ -103,9 +103,9 @@ void PlayerController::UpdateUpDirection()
 	}
 	else//No se Detecta suelo, Caida
 	{
-		float autoRotIntensity = 20;
-		rbComp->useGravity(LMVector3(0, -100 * gravityThrust, 0));
-		gameObject->GetTransform()->SetUpwards(LMVector3(0,1 * autoRotIntensity,0));
+		float autoRotIntensity = 7;
+		rbComp->useGravity(LMVector3(0, -800 * gravityThrust, 0));
+		gameObject->GetTransform()->SetUpwards(LMVector3(0,1 * autoRotIntensity * dt,0));
 	}
 }
 

@@ -29,7 +29,7 @@ namespace JuegoDeAutos {
 		// Actualiza la direccion Up del componente Transform para que la nave siempre se posicione
 		// a la misma distancia y direccion de la carretera respetando su rotacion
 		// Esto es necesario para que la nave se quede "pegada" a la carretera en todo momento
-		void UpdateUpDirection();
+		void UpdateUpDirection(float dt);
 
 		// Almacena el input de esta ejecucion
 		void GetInput();
