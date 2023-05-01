@@ -63,9 +63,13 @@ namespace JuegoDeAutos {
 		// True if the player has completed _totalRounds rounds to the circuit
 		bool raceCompleted;
 
+		// Countdown
+		float countdownTimer = 6;
+
+		// UI
 		LocoMotor::UITextLM* lapsText;
 		LocoMotor::UITextLM* positionText;
-
+		LocoMotor::UITextLM* countdownText;
 
 		std::vector<LocoMotor::GameObject*> enemies;
 	};

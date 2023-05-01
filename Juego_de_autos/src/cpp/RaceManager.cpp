@@ -53,6 +53,7 @@ void RaceManager::Start()
 {
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
 	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
+	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 
 	ranking.clear();
 	RegisterPlayerCar("Player");
@@ -68,7 +69,6 @@ void RaceManager::Start()
 	GameObject* enemy = gameObject->GetScene()->GetObjectByName("Enemy0");
 	//std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
 	enemies.push_back(enemy);
-
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
 	//std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
@@ -89,7 +89,6 @@ void RaceManager::Start()
 
 void RaceManager::Update(float dt)
 {
-	return;
 
 	// Actualizar la posicion de todos los coches enemigos
 	//UpdateCarPosition("Enemy", enemies[1]->GetTransform()->GetPosition());
@@ -123,36 +122,25 @@ void RaceManager::Update(float dt)
 	//		//CheckpointReached(enemyId);
 	//}
 
-	//// Comprobar jugador
-	//int checkpointIndex = carinfo.at(_playerId).currentCheckpoint;
-	//LMVector3 targetCheckpoint_Pos = _checkpoints[checkpointIndex];
-	//LMVector3 player_Pos = carinfo.at(_playerId).position;
-
-	//double x = targetCheckpoint_Pos.GetX() - player_Pos.GetX();
-	//double y = targetCheckpoint_Pos.GetY() - player_Pos.GetY();
-	//double z = targetCheckpoint_Pos.GetZ() - player_Pos.GetZ();
-	//LMVector3 directorVector = LMVector3(x, y, z);
-	//float distance = directorVector.Magnitude();
-	////std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
-	////std::cout << "GO TO CHECKPOINT NUMBER " << carinfo.at(_playerId).currentCheckpoint << "\n";
-	//if (distance < 250)
-	//	CheckpointReached(_playerId);
-
-
-
-	//UpdateRanking();
-	//if (raceCompleted) {
-	//	// Pasar a escena donde se muestran los resultados
-	//}
 
 	UpdateRanking();
 
-
 	std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
-
-	//std::cout << carinfo.at(_playerId).rounds << std::endl;
-
 	lapsText->ChangeText(s);
+
+
+	if (countdownTimer > -1) {
+		countdownTimer -= dt * .0009;
+		int intCountdown = (int)floor(countdownTimer);
+
+		if (intCountdown == 0 || intCountdown == -1)
+			countdownText->ChangeText("GO");
+		else if (intCountdown > 0 && intCountdown <= 3) {
+			std::string countdownNumber = std::to_string(intCountdown);
+			countdownText->ChangeText(countdownNumber);
+		}
+		else countdownText->ChangeText("");
+	}
 }
 
 void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)
@@ -227,31 +215,8 @@ void RaceManager::CheckpointReached(std::string carId)
 
 void RaceManager::UpdateRanking()
 {
-	//if (ranking.size() < 2)return;
-
-	//for (int i = 1; i < ranking.size(); i++) {
-	//	if (carinfo.at(ranking[i]).rounds < _totalRounds) { // Check if the car has completed the race
-	//		if (carinfo.at(ranking[i]).rounds > carinfo.at(ranking[i - 1]).rounds ||
-	//			(carinfo.at(ranking[i]).rounds == carinfo.at(ranking[i - 1]).rounds
-	//				&& carinfo.at(ranking[i]).currentCheckpoint > carinfo.at(ranking[i - 1]).currentCheckpoint)) {
-	//			std::string aux = ranking[i - 1];
-	//			ranking[i - 1] = ranking[i];
-	//			ranking[i] = aux;
-	//		}
-	//	}
-	//}
-
-
-
 	// Saber cuantos coches tiene por delante el player
 	int carsAhead = 0;
-
-	// Un vector con todos los nombres
-	//std::cout << "RANKING = " << ranking.size() << std::endl;
-
-	//for (size_t i = 0; i < ranking.size(); i++)
-	//	std::cout << i << " = " << ranking[i] << std::endl;
-
 
 	// Que coches estan justo en la misma ronda que el jugador y cuantos estan por delante
 	std::vector<std::string> carsInSameRound;
@@ -272,10 +237,6 @@ void RaceManager::UpdateRanking()
 		else if (enemyRound == playerRounds)
 			carsInSameRound.push_back(enemyName);
 	}
-
-
-	//std::cout << "ENEMY 0 POS = " << carinfo.at("Enemy0").position.GetX() << std::endl;
-
 
 	// Que coches estan justo en el mismo checkpoint que el jugador y cuantos estan por delante
 	std::vector<std::string> carsInSameCheckpoint;
@@ -302,7 +263,6 @@ void RaceManager::UpdateRanking()
 	//for (size_t i = 0; i < carsInSameCheckpoint.size(); i++)
 	//	std::cout << i << " = " << carsInSameCheckpoint[i] << std::endl;
 
-
 	// Entre los coches que estan en el mismo checkpoint calcular usando distancias cuantos coches estan por delante del jugador
 
 	LMVector3 playerPos = carinfo.at(_playerId).position;
@@ -321,7 +281,6 @@ void RaceManager::UpdateRanking()
 		if (enemyDistanceToCheckpoint < playerDistanceToCheckpoint)
 			carsAhead++;
 	}
-
 
 
 	// Posicion del jugador respecto al resto de coches en la carrera
