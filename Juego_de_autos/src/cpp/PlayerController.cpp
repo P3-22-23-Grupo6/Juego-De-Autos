@@ -149,14 +149,10 @@ void PlayerController::TurnShip(float dt)
 	// Aplicar fuerzas
 	ApplyAngularForces(dt);
 
-	// Para no perder aceleracion durante un giro, se transfiere la velocidad actual al forward de la nave
-	if (turning && accelerate)
-	{
-		float currentVel = rbComp->GetLinearVelocity().Magnitude();
-		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-		forw.Normalize();
-		rbComp->SetLinearVelocity(forw * currentVel * .99f);
-	}
+	float currentVel = rbComp->GetLinearVelocity().Magnitude();
+	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+	forw.Normalize();
+	rbComp->SetLinearVelocity(forw * currentVel);
 
 
 	// Compensar la perdida de velocidad de la nave en los giros, solo si se quiere acelerar la nave
