@@ -78,7 +78,7 @@ namespace JuegoDeAutos {
 		float angularForce = .5f;
 		float angularDragForce = .7f;
 		float linearDragForce = 7;
-		float gravityThrust = 20;
+		float gravityThrust = 25;
 			// Matematicas
 				// Linear
 				

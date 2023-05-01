@@ -94,7 +94,11 @@ void PlayerController::UpdateUpDirection()
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
 	}
-	else rbComp->useGravity(LMVector3(0, -100 * gravityThrust, 0)); // TODO:
+	else//No se Detecta suelo, Caida
+	{
+		rbComp->useGravity(LMVector3(0, -100 * gravityThrust, 0));
+		gameObject->GetTransform()->SetUpwards(LMVector3(0,1,0));
+	}
 }
 
 void PlayerController::GetInput()
