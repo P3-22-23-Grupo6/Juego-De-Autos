@@ -46,10 +46,8 @@ void PlayerController::Start()
 
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 
-
-	// Como queremos que el coche se pege a las paredes y se ajuste a la normal
-	// del suelo en cada momento, no utilizaremos la gravedad, pero si el resto de fisicas
-	rbComp->useGravity(LMVector3(0, 0, 0)); // TODO:
+	if (useGyro)
+		inputMng->ActivateGyroscopeWhenConnected();
 }
 
 void PlayerController::Update(float dt)
@@ -81,6 +79,7 @@ void PlayerController::UpdateUpDirection(float dt)
 	to = from - upVector;
 
 	if (rbComp->GetRaycastHit(from, to)) {
+		inAir = false;
 		rbComp->useGravity(LMVector3(0, 0, 0)); // TODO:
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 
@@ -103,9 +102,10 @@ void PlayerController::UpdateUpDirection(float dt)
 	}
 	else//No se Detecta suelo, Caida
 	{
+		inAir = true;
 		float autoRotIntensity = 300;
-		rbComp->useGravity(LMVector3(0, -800 * gravityThrust, 0));
-		gameObject->GetTransform()->SetUpwards(LMVector3(0,autoRotIntensity * dt/1000,0));
+		rbComp->useGravity(LMVector3(0, gravityThrust, 0));
+		gameObject->GetTransform()->SetUpwards(LMVector3(0, autoRotIntensity * dt / 1000, 0));
 	}
 }
 
@@ -149,10 +149,12 @@ void PlayerController::TurnShip(float dt)
 	// Aplicar fuerzas
 	ApplyAngularForces(dt);
 
-	float currentVel = rbComp->GetLinearVelocity().Magnitude();
-	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-	forw.Normalize();
-	rbComp->SetLinearVelocity(forw * currentVel);
+	if (!inAir) {
+		float currentVel = rbComp->GetLinearVelocity().Magnitude();
+		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+		forw.Normalize();
+		rbComp->SetLinearVelocity(forw * currentVel);
+	}
 
 
 	// Compensar la perdida de velocidad de la nave en los giros, solo si se quiere acelerar la nave
@@ -210,10 +212,30 @@ void PlayerController::ApplyAngularForces(float dt)
 			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * dt);
 
 
-		joystickValue *= .5f;
-		// Giro con joystick
-		if (abs(joystickValue) >= joystickDeadzone)
-			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue * dt);
+		// Si hay un mando conectado, saber si se va a usar el giroscopio o no
+		// Usar el Gyroscopio
+		if (useGyro) {
+			gyroValue = inputMng->GetGyroscopeAngle(InputManager::Horizontal);
+			std::cout << "gyroValue ANTES = " << gyroValue << std::endl;
+			// Adaptar el valor a la jugabilidad
+			gyroValue *= 26;
+			// Clampear el valor
+			if (gyroValue > maxGyroValue)
+				gyroValue = maxGyroValue;
+			else if (gyroValue < -maxGyroValue)
+				gyroValue = -maxGyroValue;
+
+			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * gyroValue * dt);
+
+			std::cout << "gyroValue DESPUES = " << gyroValue << std::endl;
+		}
+		// Usar el Joystick
+		else {
+			joystickValue *= .5f;
+			// Giro con joystick
+			if (abs(joystickValue) >= joystickDeadzone)
+				rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue * dt);
+		}
 	}
 
 	else {
