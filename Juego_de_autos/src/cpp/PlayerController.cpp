@@ -84,6 +84,13 @@ void PlayerController::UpdateUpDirection()
 		rbComp->useGravity(LMVector3(0, 0, 0)); // TODO:
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 
+		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
+		// Ignorarlo, esto bloquea el subirse a las paredes
+		float angle = n.Angle(upVector);
+		if (angle > .2)
+			return;
+		//std::cout << "angle = " << angle << std::endl;
+
 		//Intensidad con la que se va a actualizar el vector normal del coche
 		float pitchIntensity = 40;
 		LMVector3 newUp = n * pitchIntensity;
@@ -142,11 +149,10 @@ void PlayerController::TurnShip(float dt)
 	// Aplicar fuerzas
 	ApplyAngularForces(dt);
 
-
+	// Para no perder aceleracion durante un giro, se transfiere la velocidad actual al forward de la nave
 	if (turning && accelerate)
 	{
 		float currentVel = rbComp->GetLinearVelocity().Magnitude();
-		std::cout << "currentVel = " << currentVel << std::endl;
 		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
 		forw.Normalize();
 		rbComp->SetLinearVelocity(forw * currentVel * .99f);

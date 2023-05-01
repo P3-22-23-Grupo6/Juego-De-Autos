@@ -164,8 +164,6 @@ void RaceManager::Update(float dt)
 		countDownSecondsLastFrame = countDownSeconds;
 	}
 
-	std::cout << "countdownAnimating = " << countdownAnimating << std::endl;
-
 	// Animating text
 	if (countdownAnimating) {
 
