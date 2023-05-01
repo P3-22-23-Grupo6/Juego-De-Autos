@@ -46,6 +46,9 @@ namespace JuegoDeAutos {
 	private:
 		// 
 		void UpdateRanking();
+
+		void CountdownUIChanged();
+
 		static RaceManager* _instance;
 		// The number of rounds to complete the race
 		const int _totalRounds = 3;
@@ -64,7 +67,15 @@ namespace JuegoDeAutos {
 		bool raceCompleted;
 
 		// Countdown
-		float countdownTimer = 6;
+		float countdownTimer = 8;
+		bool countdownFinished = false;
+		int countDownSeconds;
+		int countDownSecondsLastFrame;
+		// Countdown Animation
+		float countdownCurrentSize = 0;
+		float countdownNormalSize;
+		bool countdownAnimating;
+		const float timeConstant = .0009;
 
 		// UI
 		LocoMotor::UITextLM* lapsText;

@@ -54,6 +54,7 @@ void RaceManager::Start()
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
 	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
+	countdownNormalSize = countdownText->GetSizeX();
 
 	ranking.clear();
 	RegisterPlayerCar("Player");
@@ -128,18 +129,53 @@ void RaceManager::Update(float dt)
 	std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
 	lapsText->ChangeText(s);
 
-
 	if (countdownTimer > -1) {
-		countdownTimer -= dt * .0009;
-		int intCountdown = (int)floor(countdownTimer);
+		countdownTimer -= dt * timeConstant;
+		countDownSeconds = (int)floor(countdownTimer);
 
-		if (intCountdown == 0 || intCountdown == -1)
+		if (countDownSeconds == 0 || countDownSeconds == -1) {
+			countdownFinished = true;
+			countdownText->SetBottomColor(0, 1, 0);
+			countdownText->SetPosition(-.1, .3);
 			countdownText->ChangeText("GO");
-		else if (intCountdown > 0 && intCountdown <= 3) {
-			std::string countdownNumber = std::to_string(intCountdown);
+		}
+		else if (countDownSeconds > 0 && countDownSeconds <= 3) {
+			std::string countdownNumber = std::to_string(countDownSeconds);
 			countdownText->ChangeText(countdownNumber);
+
+			if (countDownSeconds != countDownSecondsLastFrame)
+				CountdownUIChanged();
+
+			if (countDownSeconds == 3) {
+				countdownText->SetBottomColor(1, 0, 0);
+				countdownText->SetTopColor(1, 0, 0);
+			}
+			else if (countDownSeconds == 2) {
+				countdownText->SetBottomColor(1, .5, 0);
+				countdownText->SetTopColor(1, .5, 0);
+			}
+			else if (countDownSeconds == 1) {
+				countdownText->SetBottomColor(1, 1, 0);
+				countdownText->SetTopColor(1, 1, 0);
+			}
 		}
 		else countdownText->ChangeText("");
+
+
+		countDownSecondsLastFrame = countDownSeconds;
+	}
+
+	std::cout << "countdownAnimating = " << countdownAnimating << std::endl;
+
+	// Animating text
+	if (countdownAnimating) {
+
+		if (countdownCurrentSize < countdownNormalSize) {
+			countdownCurrentSize += dt * timeConstant;
+			countdownText->SetSize(countdownCurrentSize, countdownCurrentSize);
+		}
+		else
+			countdownAnimating = false;
 	}
 }
 
@@ -302,4 +338,11 @@ void RaceManager::UpdateRanking()
 
 
 	//std::cout << "CURRENTPOSITION = " << positionString << std::endl;
+}
+
+void RaceManager::CountdownUIChanged()
+{
+	countdownAnimating = true;
+	countdownCurrentSize = 0;
+	countdownText->SetSize(0, 0);
 }
