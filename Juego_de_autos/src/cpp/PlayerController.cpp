@@ -96,8 +96,9 @@ void PlayerController::UpdateUpDirection()
 	}
 	else//No se Detecta suelo, Caida
 	{
+		float autoRotIntensity = 20;
 		rbComp->useGravity(LMVector3(0, -100 * gravityThrust, 0));
-		gameObject->GetTransform()->SetUpwards(LMVector3(0,1,0));
+		gameObject->GetTransform()->SetUpwards(LMVector3(0,1 * autoRotIntensity,0));
 	}
 }
 
