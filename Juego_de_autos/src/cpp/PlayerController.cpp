@@ -60,6 +60,8 @@ void PlayerController::Update(float dt)
 	MoveShip(dt);
 
 	TurnShip(dt);
+
+	CheckRespawn();
 }
 
 
@@ -166,7 +168,6 @@ void PlayerController::TurnShip(float dt)
 		forw.Normalize();
 		rbComp->SetLinearVelocity(forw * currentVel);
 	}
-
 
 	// Compensar la perdida de velocidad de la nave en los giros, solo si se quiere acelerar la nave
 	//if (accelerate && physicsBasedMovement)
@@ -327,7 +328,7 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 {
 	// Angulo maximo de la inclinacion visual del coche en grados
-	double maxTiltAngle = 20;
+	double maxTiltAngle = 50;
 
 	// Determina cuanto se inclina el coche, es un valor de 0 a 1
 	double tiltAmount = currentAngularVelocity / maxAngularVelocity;
@@ -358,23 +359,6 @@ void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, i
 	rbComp->SetAngularVelocity(currentAngularVelocity);
 }
 
-void PlayerController::ApplyExtraAcceleration(float dt)
-{
-	// Compensar la perdida de velocidad de un giro aumentando la aceleracion
-	// Solo si se intenta acelerar
-
-	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
-	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
-	double yAngVel = currentAngularVelocity.GetY();
-	int direction = abs(yAngVel) / yAngVel; // -1 : izquierda // 1 : derecha
-
-	float angularIntensity = currentAngularVelocity.Magnitude() * extraAceleration;
-
-	//std::cout << "angularIntensity = " << angularIntensity;
-
-	rbComp->addForce(gameObject->GetTransform()->GetRotation().Forward() * angularIntensity * dt);
-}
-
 void PlayerController::AdjustFov()
 {
 	// Actualizar el fov
@@ -383,6 +367,18 @@ void PlayerController::AdjustFov()
 	if (fovOne > 1) fovOne = 1;
 	float fov = fovOne * maxExtraFov + initialFov;
 	cam->SetFOV(fov);
+}
+
+void JuegoDeAutos::PlayerController::CheckRespawn()
+{
+	// Si la nave se cae al agua, acceder al ultimo chekpoint
+	if (gameObject->GetTransform()->GetPosition().GetY() < -900)
+	{
+		LMVector3 lastCheckpointPos = raceManager->GetPlayerLastCheckpointPosition();
+		gameObject->GetTransform()->SetPosition(lastCheckpointPos);
+		rbComp->SetLinearVelocity(LMVector3(0, 0, 0));
+		rbComp->SetAngularVelocity(LMVector3(0, 0, 0));
+	}
 }
 
 
@@ -400,8 +396,12 @@ void PlayerController::UpdateVelocityUI()
 	double colorIntensity = ((double)velocityClean) / highVelocityIndicator;
 	if (colorIntensity > 1) colorIntensity = 1;
 	double inverseColor = 1 - colorIntensity;
-	velocityText->SetTopColor(1, inverseColor, inverseColor);
-	velocityText->SetBottomColor(1, inverseColor, inverseColor);
+
+	LMVector3 color = LMVector3(1, inverseColor, inverseColor);
+	velocityText->SetTopColor(color.GetX(), color.GetY(), color.GetZ());
+	velocityText->SetBottomColor(color.GetX(), color.GetY() / 2, color.GetZ());
+
+	inputMng->SetControllerLedColor(colorIntensity, 0, 0);
 
 	gameObject->GetComponent<AudioSource>()->SetFreq((velocityClean / 300.f) + 0.9f);
 }

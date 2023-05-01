@@ -54,10 +54,9 @@ namespace JuegoDeAutos {
 
 		// Limita la velocidad maxima angular para que el coche no pueda girar rapidisimo
 		void LimitMaxAngleVelocity(LocoMotor::LMVector3 currentAngularVelocity, int direction);
-		// Aplica una aceleracion extra cuando se gira para no perder velocidad
-		void ApplyExtraAcceleration(float dt);
 		// Ajusta la Fov de la camara dependiendo de la actual velocidad lineal de la nave
 		void AdjustFov();
+		void CheckRespawn();
 
 		// Actualiza el texto de velocidad y lo cambia de color
 		void UpdateVelocityUI();

@@ -245,6 +245,17 @@ void RaceManager::CheckpointReached(std::string carId)
 	// Actualizar el siguiente checkpoint
 }
 
+LMVector3 RaceManager::GetPlayerLastCheckpointPosition()
+{
+	int checkpointIndex = carinfo.at(_playerId).currentCheckpoint;
+
+	checkpointIndex--;
+	if (checkpointIndex < 0)
+		checkpointIndex = _checkpoints.size() - 1;
+
+	return _checkpoints[checkpointIndex];
+}
+
 void RaceManager::UpdateRanking()
 {
 	// Saber cuantos coches tiene por delante el player
