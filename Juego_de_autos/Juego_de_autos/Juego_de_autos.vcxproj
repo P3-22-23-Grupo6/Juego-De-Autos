@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\include\Boost.h" />
     <ClInclude Include="..\src\include\Checkpoint.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
     <ClInclude Include="..\src\include\RaceManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\cpp\Boost.cpp" />
     <ClCompile Include="..\src\cpp\Checkpoint.cpp" />
     <ClCompile Include="..\src\cpp\dllmain.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
