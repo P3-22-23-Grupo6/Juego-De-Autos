@@ -87,7 +87,7 @@ void PlayerController::UpdateUpDirection()
 		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
 		// Ignorarlo, esto bloquea el subirse a las paredes
 		float angle = n.Angle(upVector);
-		if (angle > .2)
+		if (angle > .4)
 			return;
 		//std::cout << "angle = " << angle << std::endl;
 

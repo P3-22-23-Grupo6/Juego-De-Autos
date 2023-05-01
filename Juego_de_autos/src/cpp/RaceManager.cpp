@@ -42,11 +42,10 @@ RaceManager* RaceManager::GetInstance()
 //	//if (_instance == nullptr)_instance = this;
 //	//else delete this;
 //}
-//
+
 void RaceManager::InitComponent()
 {
 	//std::cout << "RaceManager START" << "\n" << "\n" << "\n" << "\n" << "\n";
-
 }
 
 void RaceManager::Start()
