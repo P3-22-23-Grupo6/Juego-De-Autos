@@ -8,6 +8,7 @@
 #include "RaceManager.h"
 #include "ScriptManager.h"
 #include "Boost.h"
+#include "SceneChangeButton.h"
 using namespace LocoMotor;
 using namespace JuegoDeAutos;
 
@@ -36,10 +37,11 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::MotorApi* moto
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Checkpoint>("Checkpoint");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<RaceManager>("RaceManager");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Boost>("Boost");
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<SceneChangeButton>("SceneChangeButton");
 
-    motor->RegisterGame("Juego de autos");
+    //motor->RegisterGame("Juego de autos");
 
-    //LocoMotor::ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
+    LocoMotor::ScriptManager::GetInstance()->LoadSceneFromFile("Assets/sc.lua");
 
 #ifdef _DEBUG
     return "Juego de autos: Running in DEBUG";

@@ -61,7 +61,7 @@ void PlayerController::Update(float dt)
 
 	TurnShip(dt);
 
-	CheckRespawn();
+	//CheckRespawn();
 }
 
 
@@ -340,6 +340,7 @@ void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 
 	// Actualizar las posiciones del raceManager
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();
+	if(raceManager!=nullptr)
 	raceManager->UpdateCarPosition("Player", pos);
 }
 
@@ -388,6 +389,7 @@ void PlayerController::UpdateVelocityUI()
 {
 	// Para mostrar la velocidad se redondea la magnitud 
 	// del vector de velocidad y se actualiza el texto
+	if (velocityText == nullptr) return;
 	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
 	velocityText->ChangeText(std::to_string(velocityClean / 6) + " KM / H");
 

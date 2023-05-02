@@ -23,6 +23,7 @@
     <ClInclude Include="..\src\include\Checkpoint.h" />
     <ClInclude Include="..\src\include\PlayerController.h" />
     <ClInclude Include="..\src\include\RaceManager.h" />
+    <ClInclude Include="..\src\include\SceneChangeButton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\cpp\Boost.cpp" />
@@ -30,6 +31,7 @@
     <ClCompile Include="..\src\cpp\dllmain.cpp" />
     <ClCompile Include="..\src\cpp\PlayerController.cpp" />
     <ClCompile Include="..\src\cpp\RaceManager.cpp" />
+    <ClCompile Include="..\src\cpp\SceneChangeButton.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
