@@ -173,6 +173,8 @@ void RaceManager::Update(float dt)
 		else
 			countdownAnimating = false;
 	}
+
+	gameObject->GetComponent<UITextLM>()->ChangeText(std::to_string(1000 / (int)dt) + " fps");
 }
 
 void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)
