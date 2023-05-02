@@ -13,7 +13,7 @@ using namespace LocoMotor;
 const std::string Boost::name = "Boost";
 
 Boost::Boost() {
-	
+	thrust = 2000;
 }
 
 void Boost::Init(std::vector<std::pair<std::string, std::string>>& params) {
@@ -35,5 +35,5 @@ void Boost::Update(float dt) {
 
 void Boost::OnCollisionEnter(GameObject* other)
 {
- other->GetComponent<RigidBodyComponent>()->addForce(LMVector3(other->GetTransform()->GetRotation().Forward() * 20000));
+ other->GetComponent<RigidBodyComponent>()->addForce(LMVector3(other->GetTransform()->GetRotation().Forward() * thrust));
 }
