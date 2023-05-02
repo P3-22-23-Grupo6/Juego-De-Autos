@@ -10,6 +10,7 @@
 #include "LMInputs.h"
 #include "UITextLM.h"
 #include "Camera.h"
+#include "ScriptManager.h"
 
 // Componentes juego
 #include "PlayerController.h"
@@ -39,6 +40,8 @@ void PlayerController::Start()
 	// Asignacion de referencias
 	rbComp = gameObject->GetComponent<LocoMotor::RigidBodyComponent>();
 
+	rbComp->SetActivationState(LM_DISABLE_DEACTIVATION);
+
 	inputMng = LocoMotor::InputManager::GetInstance();
 	raceManager = RaceManager::GetInstance();
 
@@ -51,6 +54,11 @@ void PlayerController::Start()
 
 void PlayerController::Update(float dt)
 {
+	if (inputMng->GetKey(LMKS_0))
+	{
+		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/sc.lua");
+		return;
+	}
 	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	UpdateUpDirection(dt);
@@ -61,7 +69,7 @@ void PlayerController::Update(float dt)
 
 	TurnShip(dt);
 
-	//CheckRespawn();
+	CheckRespawn();
 }
 
 
@@ -83,6 +91,7 @@ void PlayerController::UpdateUpDirection(float dt)
 		inAir = false;
 		rbComp->useGravity(LMVector3(0, 0, 0)); // TODO:
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
+		n.Normalize();
 
 		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
 		// Ignorarlo, esto bloquea el subirse a las paredes
@@ -92,7 +101,7 @@ void PlayerController::UpdateUpDirection(float dt)
 		//std::cout << "angle = " << angle << std::endl;
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
-		float pitchIntensity = 40;
+		float pitchIntensity = 20;
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
 
@@ -121,6 +130,7 @@ void PlayerController::UpdateUpDirection(float dt)
 
 void PlayerController::GetInput()
 {
+
 	// Almacenar valores de input
 	accelerate = inputMng->GetKey(LMKS_W)
 		|| inputMng->GetButton(LMC_A)
@@ -387,10 +397,13 @@ void JuegoDeAutos::PlayerController::CheckRespawn()
 
 void PlayerController::UpdateVelocityUI()
 {
+
+	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
+	gameObject->GetComponent<AudioSource>()->SetFreq((velocityClean / 300.f) + 0.9f);
+
 	// Para mostrar la velocidad se redondea la magnitud 
 	// del vector de velocidad y se actualiza el texto
 	if (velocityText == nullptr) return;
-	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
 	velocityText->ChangeText(std::to_string(velocityClean / 6) + " KM / H");
 
 	// Se utiliza para saber el tono de rojo del texto segun la velocidad actual
@@ -404,8 +417,6 @@ void PlayerController::UpdateVelocityUI()
 	velocityText->SetBottomColor(color.GetX(), color.GetY() / 2, color.GetZ());
 
 	inputMng->SetControllerLedColor(colorIntensity, 0, 0);
-
-	gameObject->GetComponent<AudioSource>()->SetFreq((velocityClean / 300.f) + 0.9f);
 }
 
 void JuegoDeAutos::PlayerController::EnableGyro()
