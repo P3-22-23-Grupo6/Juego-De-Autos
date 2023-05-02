@@ -240,7 +240,7 @@ void PlayerController::ApplyAngularForces(float dt)
 		if (useGyro) {
 			gyroValue = inputMng->GetGyroscopeAngle(InputManager::Horizontal);
 			// Adaptar el valor a la jugabilidad
-			gyroValue *= 26;
+			gyroValue *= 30;
 			// Clampear el valor
 			if (gyroValue > maxGyroValue)
 				gyroValue = maxGyroValue;
