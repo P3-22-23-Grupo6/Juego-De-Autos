@@ -331,7 +331,7 @@ void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 	double maxTiltAngle = 50;
 
 	// Determina cuanto se inclina el coche, es un valor de 0 a 1
-	double tiltAmount = currentAngularVelocity / maxAngularVelocity;
+	double tiltAmount = currentAngularVelocity / maxAngularVelocity * 0.25f;
 
 	// Rotar SOLO la parte grafica del coche para mejor sensacion de juego
 	// Teniendo en cuenta la velocidad angular

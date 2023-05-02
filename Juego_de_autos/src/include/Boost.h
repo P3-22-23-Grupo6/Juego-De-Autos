@@ -18,7 +18,7 @@ namespace JuegoDeAutos {
 		};
 		Boost();
 
-		virtual void Init(std::vector<std::pair<std::string, std::string>>& params) {} override;
+		//virtual void Init(std::vector<std::pair<std::string, std::string>>& params) {} override;
 		//void Init(float thrust) {};
 		void InitComponent() override;
 		void Update(float dt) override;
