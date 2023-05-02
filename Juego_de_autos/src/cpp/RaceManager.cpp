@@ -50,52 +50,36 @@ void RaceManager::InitComponent()
 
 void RaceManager::Start()
 {
+	// Referencias
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
 	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 	countdownNormalSize = countdownText->GetSizeX();
 
+
 	ranking.clear();
 	RegisterPlayerCar("Player");
 
 
-	//int numberOfEnemies = 3;
-
-	//std::string s = "Enemy";
 	RegisterNPCCar("Enemy0");
 	RegisterNPCCar("Enemy1");
 
 
 	GameObject* enemy = gameObject->GetScene()->GetObjectByName("Enemy0");
-	//std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
 	enemies.push_back(enemy);
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
-	//std::cout << " enemy= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
 	enemies.push_back(enemy);
 
-	//enemy = gameObject->GetScene()->GetObjectByName("Enemy1");;
-	//std::cout << " enemy1= " << enemy->GetTransform()->GetPosition().GetY() << std::endl;
-	//enemies.push_back(enemy);
-
-
 	carinfo.at(_playerId).rounds = 0;
-	////carinfo.at(s).rounds = 0;
-
-	//std::cout << " carinfo = " << carinfo.begin()->first << std::endl;
-
-	//std::cout << " carinfo_currentCheckpoint = " << carinfo.begin()->second.position.GetY() << std::endl;
 }
 
 void RaceManager::Update(float dt)
 {
+	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
 
-	// Actualizar la posicion de todos los coches enemigos
-	//UpdateCarPosition("Enemy", enemies[1]->GetTransform()->GetPosition());
-
-	GameObject* enemy = enemies[0];
-	UpdateCarPosition("Enemy0", enemy->GetTransform()->GetPosition());
-	//enemy = enemies[1];
+	//GameObject* enemy = enemies[0];
+	//UpdateCarPosition("Enemy0", enemy->GetTransform()->GetPosition());
 	//UpdateCarPosition("Enemy1", enemy->GetTransform()->GetPosition());
 
 	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
