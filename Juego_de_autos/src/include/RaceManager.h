@@ -103,7 +103,7 @@ namespace JuegoDeAutos {
 
 		std::vector<LocoMotor::GameObject*> enemies;
 
-		Spline* mainSpline;
+		LocoMotor::Spline* mainSpline;
 
 		LocoMotor::UITextLM* pruebaaa;
 	};
