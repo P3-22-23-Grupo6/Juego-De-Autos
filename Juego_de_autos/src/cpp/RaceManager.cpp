@@ -70,8 +70,6 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 void RaceManager::Start()
 {
 	std::cout << "RACEMANAGER START" << std::endl;
-	RegisterPlayerCar("Player");
-	return;
 
 	// Referencias
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
@@ -83,6 +81,9 @@ void RaceManager::Start()
 	ranking.clear();
 	RegisterPlayerCar("Player");
 
+	carinfo.at(_playerId).rounds = 0;
+
+	return;
 
 	RegisterNPCCar("Enemy0");
 	RegisterNPCCar("Enemy1");
@@ -93,13 +94,10 @@ void RaceManager::Start()
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
 	enemies.push_back(enemy);
-
-	carinfo.at(_playerId).rounds = 0;
 }
 
 void RaceManager::Update(float dt)
 {
-	return;
 	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
 
 	//GameObject* enemy = enemies[0];
@@ -115,11 +113,11 @@ void RaceManager::Update(float dt)
 	if (HasCarReachedCheckpoint(_playerId))
 		CheckpointReached(_playerId);
 
-	if (HasCarReachedCheckpoint("Enemy0"))
-		CheckpointReached("Enemy0");
+	//if (HasCarReachedCheckpoint("Enemy0"))
+	//	CheckpointReached("Enemy0");
 
-	if (HasCarReachedCheckpoint("Enemy1"))
-		CheckpointReached("Enemy1");
+	//if (HasCarReachedCheckpoint("Enemy1"))
+	//	CheckpointReached("Enemy1");
 
 
 	//for (size_t i = 0; i < enemies.size(); i++)
