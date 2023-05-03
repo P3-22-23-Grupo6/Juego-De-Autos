@@ -18,7 +18,6 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 
 void JuegoDeAutos::SceneChangeButton::Start()
 {
-	RaceManager::gameModeVelocity = RaceManager::GameModeVelocity::high;
 
 	_raceButton = gameObject->GetScene()->GetObjectByName("raceButton")->GetComponent<UIImageLM>();
 	_speedButton = gameObject->GetScene()->GetObjectByName("speedButton")->GetComponent<UIImageLM>();
@@ -32,7 +31,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	}
 
 	if (_raceButton != nullptr) {
-		_raceButton->CallOnClick([]() {
+		_raceButton->CallOnClick([this]() {
+
+			//RaceManager::speedMode = _speedMode;
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
 			std::cout << "hola\n";
 		});
@@ -41,23 +42,26 @@ void JuegoDeAutos::SceneChangeButton::Start()
 
 void JuegoDeAutos::SceneChangeButton::ChangeVelocity()
 {
-	int speedIndex = (int)currentSpeed;
+	RaceManager::SpeedMode aux = RaceManager::speedMode;
+
+	int speedIndex = (int) aux;
 	if (speedIndex + 1 < 3)
 		speedIndex++;
 	else speedIndex = 0;
 
-	currentSpeed = (SpeedType) speedIndex;
+	aux = (RaceManager::SpeedMode)speedIndex;
+	RaceManager::speedMode = aux;
 
-	switch (currentSpeed)
+	switch (aux)
 	{
-	case JuegoDeAutos::SceneChangeButton::low:
-		_speedText->ChangeText("100CC");
+	case JuegoDeAutos::RaceManager::low:
+		_speedText->ChangeText("100cc");
 		break;
-	case JuegoDeAutos::SceneChangeButton::middle:
-		_speedText->ChangeText("200CC");
+	case JuegoDeAutos::RaceManager::middle:
+		_speedText->ChangeText("200cc");
 		break;
-	case JuegoDeAutos::SceneChangeButton::high:
-		_speedText->ChangeText("500CC");
+	case JuegoDeAutos::RaceManager::high:
+		_speedText->ChangeText("500cc");
 		break;
 	default:
 		break;

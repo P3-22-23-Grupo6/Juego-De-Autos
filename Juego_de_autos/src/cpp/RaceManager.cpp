@@ -19,7 +19,8 @@ const std::string name = "RaceManager";
 
 RaceManager* RaceManager::_instance = nullptr;
 
-RaceManager::GameModeVelocity RaceManager::gameModeVelocity;
+RaceManager::SpeedMode RaceManager::speedMode;
+
 RaceManager::RaceManager()
 {
 	raceCompleted = false;
@@ -90,7 +91,7 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 
 void RaceManager::Start()
 {
-	std::cout << std::endl << "RACEMANAGER START = gameModeVelocity = " << gameModeVelocity
+	std::cout << std::endl << "RACEMANAGER START = gameModeVelocity = " << speedMode
 		<< std::endl << std::endl << std::endl << std::endl;
 
 	// Referencias

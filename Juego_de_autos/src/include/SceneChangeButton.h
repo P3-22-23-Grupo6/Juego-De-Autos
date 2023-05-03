@@ -6,6 +6,8 @@ namespace LocoMotor {
 	class UITextLM;
 }
 namespace JuegoDeAutos {
+	class RaceManager;
+
 	class SceneChangeButton : public LocoMotor::Component {
 	public:
 		SceneChangeButton();
@@ -20,9 +22,6 @@ namespace JuegoDeAutos {
 		LocoMotor::UIImageLM* _raceButton;
 		LocoMotor::UIImageLM* _speedButton;
 		LocoMotor::UITextLM* _speedText;
-
-		enum SpeedType {low, middle, high};
-		SpeedType currentSpeed;
 	};
 }
 

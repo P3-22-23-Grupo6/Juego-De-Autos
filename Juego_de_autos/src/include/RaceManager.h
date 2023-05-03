@@ -56,10 +56,11 @@ namespace JuegoDeAutos {
 		bool HasCountDownFinished();
 
 
-		enum GameModeVelocity { low, middle, high };
-		static GameModeVelocity gameModeVelocity;
-
 		LocoMotor::Spline* GetSpline();
+
+
+		enum SpeedMode { low, middle, high };
+		static SpeedMode speedMode;
 
 	private:
 		// 
