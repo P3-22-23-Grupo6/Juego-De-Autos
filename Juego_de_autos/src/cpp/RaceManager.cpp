@@ -9,6 +9,9 @@
 #include "RaceManager.h"
 #include "Checkpoint.h"
 
+// Comparacion de Strings
+#include <algorithm>
+
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
 const std::string name = "RaceManager";
@@ -48,8 +51,22 @@ void RaceManager::InitComponent()
 	//std::cout << "RaceManager START" << "\n" << "\n" << "\n" << "\n" << "\n";
 }
 
+void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
+{
+	std::cout << "RACEMANAGER INIT" << params.size() << std::endl << std::endl << std::endl;
+
+	//std::string result = checkpointPositions[0];
+	//std::cout << " (" << result << ")" << std::endl;
+
+	CreateCheckpoints(params);
+}
+
 void RaceManager::Start()
 {
+	std::cout << "RACEMANAGER START" << std::endl;
+	RegisterPlayerCar("Player");
+	return;
+
 	// Referencias
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
 	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
@@ -76,6 +93,7 @@ void RaceManager::Start()
 
 void RaceManager::Update(float dt)
 {
+	return;
 	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
 
 	//GameObject* enemy = enemies[0];
@@ -159,6 +177,103 @@ void RaceManager::Update(float dt)
 	}
 
 	gameObject->GetComponent<UITextLM>()->ChangeText(std::to_string(1000 / (int)dt) + " fps");
+}
+
+void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)
+{
+
+	// Comprobar si los datos introducidos desde LUA son validos
+	// Informar de los datos mal declarados en LUA y solo tener en cuenta los buenos
+	#pragma region Comprobar Datos Validos
+	std::vector<std::pair<std::string, std::string>> checkpointPositions_pairs;
+	for (size_t i = 0; i < params.size(); i++) {
+		std::string name = params[i].first;
+		char checkpointNumber = name[name.size() - 1];
+		name.erase(name.size() - 1, 1); // elimina el último carácter
+		if (name == "checkpoint") {
+
+			try {
+				if (!isdigit(checkpointNumber))
+					throw std::invalid_argument("Numero de checkpoint no valido");
+				checkpointPositions_pairs.push_back(params[i]);
+			}
+			catch (std::invalid_argument& e) {
+				std::cerr << "Error: " << e.what() << std::endl;
+			}
+		}
+	}
+	#pragma endregion
+
+
+	// Ordenar las posiciones de los checkpoints
+	std::sort(checkpointPositions_pairs.begin(), checkpointPositions_pairs.end(), [](const auto& a, const auto& b) {
+		return a.first.back() < b.first.back();
+		});
+
+
+	#pragma region Convertir Coordenadas
+	// Convertir las coordenadas de strings a LMVector3
+	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
+	{
+		std::string positionString = checkpointPositions_pairs[i].second;
+		unsigned char currAxis = 0;
+		std::string num = "";
+		LMVector3 result = LMVector3();
+		for (const char c : positionString) {
+			if (c != ' ') {
+				num += c;
+			}
+			else {
+				float value = 0.f;
+				try {
+					value = std::stof(num);
+				}
+				catch (const char*) {
+					value = 0.f;
+				}
+				if (currAxis == 0) {
+					result.SetX(value);
+				}
+				else if (currAxis == 1) {
+					result.SetY(value);
+				}
+				else if (currAxis == 2) {
+					result.SetZ(value);
+				}
+				currAxis++;
+				num = "";
+			}
+		}
+		float value = 0.0f;
+		try {
+			value = std::stof(num);
+		}
+		catch (const char*) {
+			value = 0.0f;
+		}
+		if (currAxis == 2)
+			result.SetZ(value);
+
+		RegisterCheckpointPosition(result);
+	}
+	#pragma endregion
+
+
+	std::cout << "CHECKPOINTS = " << _checkpoints.size()<< std::endl;
+	for (size_t i = 0; i < _checkpoints.size(); i++)
+	{
+		LMVector3 result = _checkpoints[i];
+		std::cout << "Checkpoint_" << i << " = (" << result.GetX() 
+			<< ", " << result.GetY() << ", " << result.GetZ() << ")" << std::endl;
+	}
+}
+
+bool RaceManager::Compare(const std::pair<std::string, std::string>& p1, const std::pair<std::string, std::string>& p2) {
+	std::string s1 = p1.first;
+	std::string s2 = p2.first;
+	char last_char_s1 = s1.back(); // obtiene el último carácter de la cadena s1
+	char last_char_s2 = s2.back(); // obtiene el último carácter de la cadena s2
+	return last_char_s1 < last_char_s2; // compara los últimos caracteres de las cadenas
 }
 
 void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)

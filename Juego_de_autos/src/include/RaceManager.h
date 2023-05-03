@@ -28,10 +28,15 @@ namespace JuegoDeAutos {
 		/// @brief Sets the initial position of the listener to the gameobject's
 		void InitComponent() override;
 
+		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
+
 		void Start() override;
 		/// @brief Updates the listener's world attributes to be the same as the gameobject's
 		/// @param dt DeltaTime used to calculate the velocity
 		void Update(float dt) override;
+
+		void CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params);
+		bool Compare(const std::pair<std::string, std::string>& p1, const std::pair<std::string, std::string>& p2);
 		// 
 		void RegisterCheckpointPosition(LocoMotor::LMVector3 checkpointPos);
 		// 
