@@ -6,6 +6,7 @@
 
 namespace LocoMotor {
 	class UITextLM;
+	class Spline;
 }
 
 namespace JuegoDeAutos {
@@ -102,7 +103,7 @@ namespace JuegoDeAutos {
 
 		std::vector<LocoMotor::GameObject*> enemies;
 
-
+		Spline* mainSpline;
 
 		LocoMotor::UITextLM* pruebaaa;
 	};

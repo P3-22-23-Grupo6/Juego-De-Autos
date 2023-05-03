@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "UITextLM.h"
+#include "LMSpline.h"
 
 // Componentes juego
 #include "RaceManager.h"
@@ -23,6 +24,8 @@ RaceManager::RaceManager()
 {
 	raceCompleted = false;
 	fpsCounterUpdated = fpsCounterRefreshRate;
+	mainSpline = nullptr;
+
 	if (_instance == nullptr)
 	{
 		carinfo = std::map<std::string, CarInfo>();
@@ -66,6 +69,7 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 	//std::string result = checkpointPositions[0];
 	//std::cout << " (" << result << ")" << std::endl;
 
+	mainSpline = new Spline();
 	CreateCheckpoints(params);
 
 
@@ -213,7 +217,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	for (size_t i = 0; i < params.size(); i++) {
 		std::string name = params[i].first;
 		char checkpointNumber = name[name.size() - 1];
-		name.erase(name.size() - 1, 1); // elimina el último carácter
+		name.erase(name.size() - 1, 1); // elimina el ï¿½ltimo carï¿½cter
 		if (name == "checkpoint") {
 
 			try {
@@ -240,7 +244,8 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
-
+		//Add points to Spline
+		mainSpline->AddPoint(result);
 		RegisterCheckpointPosition(result);
 	}
 	#pragma endregion
@@ -258,9 +263,9 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 bool RaceManager::Compare(const std::pair<std::string, std::string>& p1, const std::pair<std::string, std::string>& p2) {
 	std::string s1 = p1.first;
 	std::string s2 = p2.first;
-	char last_char_s1 = s1.back(); // obtiene el último carácter de la cadena s1
-	char last_char_s2 = s2.back(); // obtiene el último carácter de la cadena s2
-	return last_char_s1 < last_char_s2; // compara los últimos caracteres de las cadenas
+	char last_char_s1 = s1.back(); // obtiene el ï¿½ltimo carï¿½cter de la cadena s1
+	char last_char_s2 = s2.back(); // obtiene el ï¿½ltimo carï¿½cter de la cadena s2
+	return last_char_s1 < last_char_s2; // compara los ï¿½ltimos caracteres de las cadenas
 }
 
 void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)
@@ -360,7 +365,7 @@ void RaceManager::UpdateRanking()
 
 		int enemyRound = carinfo.at(enemyName).rounds;
 
-		// Si va por delante, añadirlo a coches que van por delante directamente
+		// Si va por delante, aï¿½adirlo a coches que van por delante directamente
 		if (enemyRound > playerRounds)
 			carsAhead++;
 
@@ -380,7 +385,7 @@ void RaceManager::UpdateRanking()
 
 		int enemyCheckpoint = carinfo.at(enemyName).currentCheckpoint;
 
-		// Si va por delante, añadirlo a coches que van por delante directamente
+		// Si va por delante, aï¿½adirlo a coches que van por delante directamente
 		if (enemyCheckpoint > playerCheckpoint)
 			carsAhead++;
 
@@ -408,7 +413,7 @@ void RaceManager::UpdateRanking()
 		LMVector3 enemyCheckpointPos = _checkpoints[carinfo.at(enemyName).currentCheckpoint];
 		double enemyDistanceToCheckpoint = (enemyPos - enemyCheckpointPos).Magnitude();
 
-		// Si va por delante, añadirlo a coches que van por delante directamente
+		// Si va por delante, aï¿½adirlo a coches que van por delante directamente
 		if (enemyDistanceToCheckpoint < playerDistanceToCheckpoint)
 			carsAhead++;
 	}
