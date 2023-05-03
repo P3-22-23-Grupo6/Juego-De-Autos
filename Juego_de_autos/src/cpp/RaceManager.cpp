@@ -43,6 +43,8 @@ RaceManager::~RaceManager()
 
 	}
 	carinfo.clear();
+	mainSpline->ClearAll();
+	delete mainSpline;
 	mainSpline = nullptr;
 	_instance = nullptr;
 }
@@ -242,11 +244,12 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 
 	#pragma region Convertir Coordenadas
 	// Convertir las coordenadas de strings a LMVector3
+	mainSpline->SetAutoCalc(true);
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 		//Add points to Spline
-		mainSpline->AddPoint(result);
+		mainSpline->AddPoint(result * 20);
 		RegisterCheckpointPosition(result);
 	}
 	#pragma endregion
@@ -348,6 +351,11 @@ LMVector3 RaceManager::GetPlayerLastCheckpointPosition()
 		checkpointIndex = _checkpoints.size() - 1;
 
 	return _checkpoints[checkpointIndex];
+}
+
+LocoMotor::Spline* JuegoDeAutos::RaceManager::GetSpline()
+{
+	return mainSpline;
 }
 
 void RaceManager::UpdateRanking()

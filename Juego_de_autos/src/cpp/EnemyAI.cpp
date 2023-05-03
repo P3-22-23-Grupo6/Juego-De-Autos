@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "LMSpline.h"
+#include "RaceManager.h"
 
 #include "RigidBody.h"
 #include "EnemyAI.h"
@@ -18,15 +19,17 @@ EnemyAI::EnemyAI() {
 	startSeparation = 0;
 }
 
+void JuegoDeAutos::EnemyAI::Start()
+{
+	mySpline = RaceManager::GetInstance()->GetSpline();
+}
+
 void EnemyAI::Init(std::vector<std::pair<std::string, std::string>>& params) {
 	for (int i = 0; i < params.size(); i++) {
 		if (params[i].first == "enemySpeed") {
 			enemySpeed = std::stof(params[i].second);
 		}
 		else if (params[i].first == "StartSeparation") {
-			startSeparation = std::stof(params[i].second);
-		}
-		else if (params[i].first == "Spline") {
 			startSeparation = std::stof(params[i].second);
 		}
 	}

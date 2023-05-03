@@ -16,6 +16,8 @@ namespace JuegoDeAutos {
 		};
 		EnemyAI();
 
+		void Start() override;
+
 		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
 		void InitComponent() override;
 		void Update(float dt) override;

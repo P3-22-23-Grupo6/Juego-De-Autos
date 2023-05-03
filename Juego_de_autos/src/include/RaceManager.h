@@ -59,6 +59,8 @@ namespace JuegoDeAutos {
 		enum GameModeVelocity { low, middle, high };
 		static GameModeVelocity gameModeVelocity;
 
+		LocoMotor::Spline* GetSpline();
+
 	private:
 		// 
 		void UpdateRanking();
