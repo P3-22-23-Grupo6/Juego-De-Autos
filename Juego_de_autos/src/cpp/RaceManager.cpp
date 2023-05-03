@@ -221,44 +221,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	// Convertir las coordenadas de strings a LMVector3
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
 	{
-		std::string positionString = checkpointPositions_pairs[i].second;
-		unsigned char currAxis = 0;
-		std::string num = "";
-		LMVector3 result = LMVector3();
-		for (const char c : positionString) {
-			if (c != ' ') {
-				num += c;
-			}
-			else {
-				float value = 0.f;
-				try {
-					value = std::stof(num);
-				}
-				catch (const char*) {
-					value = 0.f;
-				}
-				if (currAxis == 0) {
-					result.SetX(value);
-				}
-				else if (currAxis == 1) {
-					result.SetY(value);
-				}
-				else if (currAxis == 2) {
-					result.SetZ(value);
-				}
-				currAxis++;
-				num = "";
-			}
-		}
-		float value = 0.0f;
-		try {
-			value = std::stof(num);
-		}
-		catch (const char*) {
-			value = 0.0f;
-		}
-		if (currAxis == 2)
-			result.SetZ(value);
+		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 
 		RegisterCheckpointPosition(result);
 	}
