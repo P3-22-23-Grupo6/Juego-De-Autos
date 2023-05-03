@@ -49,7 +49,8 @@ void PlayerController::Start()
 
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 
-	//EnableGyro();
+	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+	rbComp->addForce(forw * 2000);
 }
 
 void PlayerController::Update(float dt)
@@ -63,9 +64,14 @@ void PlayerController::Update(float dt)
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	UpdateUpDirection(dt);
 
+	// Comprobar si ya se puede mover el coche despues del countdown inicial
+	//if (!raceManager->HasCountDownFinished())
+	//	return;
+
 	GetInput();
 
-	MoveShip(dt);
+	if (raceManager->HasCountDownFinished())
+		MoveShip(dt);
 
 	TurnShip(dt);
 
@@ -179,10 +185,6 @@ void PlayerController::TurnShip(float dt)
 		rbComp->SetLinearVelocity(forw * currentVel);
 	}
 
-	// Compensar la perdida de velocidad de la nave en los giros, solo si se quiere acelerar la nave
-	//if (accelerate && physicsBasedMovement)
-	//	ApplyExtraAcceleration(dt);
-
 
 	// Definir variables necesarios para los calculos de las rotaciones
 	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
@@ -213,7 +215,7 @@ void PlayerController::ApplyLinearForces(float dt)
 		forw.Normalize();
 
 		if (physicsBasedMovement) {
-			if (triggerValue > 0)rbComp->addForce(forw * acceleration * triggerValue);
+			if (triggerValue > 0) rbComp->addForce(forw * acceleration * triggerValue);
 			else rbComp->addForce(forw * acceleration);
 		}
 		else {
@@ -350,8 +352,8 @@ void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 
 	// Actualizar las posiciones del raceManager
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();
-	if(raceManager!=nullptr)
-	raceManager->UpdateCarPosition("Player", pos);
+	if (raceManager != nullptr)
+		raceManager->UpdateCarPosition("Player", pos);
 }
 
 
@@ -397,7 +399,6 @@ void JuegoDeAutos::PlayerController::CheckRespawn()
 
 void PlayerController::UpdateVelocityUI()
 {
-
 	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
 	gameObject->GetComponent<AudioSource>()->SetFreq((velocityClean / 300.f) + 0.9f);
 

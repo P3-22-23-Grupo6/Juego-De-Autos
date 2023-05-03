@@ -421,3 +421,6 @@ void RaceManager::CountdownUIChanged()
 	countdownCurrentSize = 0;
 	countdownText->SetSize(0, 0);
 }
+
+bool RaceManager::HasCountDownFinished()
+{ return countdownFinished; }
