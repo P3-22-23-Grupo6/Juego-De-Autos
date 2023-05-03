@@ -35,6 +35,21 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			std::cout << "hola\n";
 		});
 	}
+
+	switch (RaceManager::speedMode)
+	{
+	case JuegoDeAutos::RaceManager::low:
+		_speedText->ChangeText("100cc");
+		break;
+	case JuegoDeAutos::RaceManager::middle:
+		_speedText->ChangeText("200cc");
+		break;
+	case JuegoDeAutos::RaceManager::high:
+		_speedText->ChangeText("500cc");
+		break;
+	default:
+		break;
+	}
 }
 
 void JuegoDeAutos::SceneChangeButton::ChangeVelocity()

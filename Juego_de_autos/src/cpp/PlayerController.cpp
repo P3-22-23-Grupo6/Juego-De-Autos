@@ -16,6 +16,7 @@
 #include "PlayerController.h"
 #include "RaceManager.h"
 #include <AudioSource.h>
+#include <AudioListener.h>
 
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
@@ -105,12 +106,12 @@ void PlayerController::UpdateUpDirection(float dt)
 		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
 		// Ignorarlo, esto bloquea el subirse a las paredes
 		float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
-		if (angle > 0.5)
+		if (angle > 0.9f)
 			return;
 		//std::cout << "angle = " << angle << std::endl;
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
-		float pitchIntensity = 60;
+		float pitchIntensity = 80;
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
 
@@ -425,7 +426,9 @@ void JuegoDeAutos::PlayerController::CheckRespawn()
 void PlayerController::UpdateVelocityUI()
 {
 	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
-	gameObject->GetComponent<AudioSource>()->SetFreq((velocityClean / 300.f) + 0.9f);
+	AudioSource* auSrc = gameObject->GetComponent<AudioSource>();
+	if (auSrc)
+		auSrc->SetFreq((rbComp->GetLinearVelocity().Magnitude() / ((1300.f + acceleration * .75f) + (acceleration * -1)) + 0.85f));
 
 	// Para mostrar la velocidad se redondea la magnitud 
 	// del vector de velocidad y se actualiza el texto
