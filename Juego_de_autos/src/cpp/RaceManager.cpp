@@ -43,6 +43,7 @@ RaceManager::~RaceManager()
 
 	}
 	carinfo.clear();
+	mainSpline = nullptr;
 	_instance = nullptr;
 }
 
