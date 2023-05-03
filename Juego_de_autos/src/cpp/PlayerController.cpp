@@ -215,8 +215,8 @@ void PlayerController::ApplyLinearForces(float dt)
 		forw.Normalize();
 
 		if (physicsBasedMovement) {
-			if (triggerValue > 0) rbComp->addForce(forw * acceleration * triggerValue);
-			else rbComp->addForce(forw * acceleration);
+			if (triggerValue > 0) rbComp->addForce(forw * acceleration * triggerValue * dt);
+			else rbComp->addForce(forw * acceleration * dt);
 		}
 		else {
 			LMVector3 pos = gameObject->GetTransform()->GetPosition();
@@ -319,7 +319,7 @@ void PlayerController::LinearDrag(float dt)
 	// Si el angulo entre la velocidad real del coche y la direccion en la que esta mirando es grande
 	// Aplicar una fuerza inversa a la velocidad actual para controlar el derrape
 	if (angle > .01f)
-		rbComp->addForce(invertedVelocity * intensity * angle);
+		rbComp->addForce(invertedVelocity * intensity * angle * dt);
 }
 
 void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int direction)
