@@ -5,7 +5,6 @@
 
 #include "RigidBody.h"
 #include "Boost.h"
-#include "Boost.h"
 
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
