@@ -25,7 +25,6 @@ namespace JuegoDeAutos {
 		float timeStep; //lastTimeStep
 		//STATS
 		float enemySpeed;
-		float enemyMaxAcc;
 		float startSeparation;
 	};
 }
