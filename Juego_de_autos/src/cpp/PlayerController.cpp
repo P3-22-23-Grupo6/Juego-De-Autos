@@ -460,3 +460,8 @@ void JuegoDeAutos::PlayerController::DisableGyro()
 	inputMng->DisableControllerGyroscope();
 	gyroValue = 0;
 }
+
+void JuegoDeAutos::PlayerController::SetAcceleration(float newAcceleration)
+{
+	acceleration = newAcceleration;
+}

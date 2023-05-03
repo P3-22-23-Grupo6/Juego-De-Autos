@@ -9,6 +9,7 @@
 // Componentes juego
 #include "RaceManager.h"
 #include "Checkpoint.h"
+#include "PlayerController.h"
 
 // Comparacion de Strings
 #include <algorithm>
@@ -100,6 +101,8 @@ void RaceManager::Start()
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 	countdownNormalSize = countdownText->GetSizeX();
 
+	gameObject->GetScene()->GetObjectByName("coche")
+		->GetComponent<JuegoDeAutos::PlayerController>()->SetAcceleration(speeds[speedMode]);
 
 	ranking.clear();
 	RegisterPlayerCar("Player");

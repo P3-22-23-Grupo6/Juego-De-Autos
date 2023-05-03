@@ -65,6 +65,8 @@ namespace JuegoDeAutos {
 
 		void DisableGyro();
 
+		void SetAcceleration(float newAcceleration);
+
 	private:
 
 		// Referencias

@@ -25,15 +25,12 @@ void JuegoDeAutos::SceneChangeButton::Start()
 
 	if (_speedButton != nullptr) {
 		_speedButton->CallOnClick([this]() {
-
 			ChangeVelocity();
 			});
 	}
 
 	if (_raceButton != nullptr) {
 		_raceButton->CallOnClick([this]() {
-
-			//RaceManager::speedMode = _speedMode;
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
 			std::cout << "hola\n";
 		});
