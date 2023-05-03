@@ -145,14 +145,20 @@ void PlayerController::GetInput()
 		|| inputMng->GetButton(LMC_A)
 		|| inputMng->GetButton(LMC_RIGHTSHOULDER);
 
+	reverseAccelerate= inputMng->GetKey(LMKS_S)
+		|| inputMng->GetButton(LMC_B)
+		|| inputMng->GetButton(LMC_LEFTSHOULDER);
+
 
 	turnRight = inputMng->GetKey(LMKS_D);
 	turnLeft = inputMng->GetKey(LMKS_A);
 
 	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 
-	triggerValue = inputMng->GetTriggerValue(1);
-	if (triggerValue > 0)accelerate = true;
+	accTriggerValue = inputMng->GetTriggerValue(1);
+	reverseAccTriggerValue = inputMng->GetTriggerValue(0);
+	if (accTriggerValue > 0)accelerate = true;
+	if (reverseAccTriggerValue > 0)reverseAccelerate = true;
 
 	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
 }
@@ -183,9 +189,11 @@ void PlayerController::TurnShip(float dt)
 
 	if (!inAir) {
 		float currentVel = rbComp->GetLinearVelocity().Magnitude();
-		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-		forw.Normalize();
-		rbComp->SetLinearVelocity(forw * currentVel);
+		if (!reverseAccelerate) {
+			LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+			forw.Normalize();
+			rbComp->SetLinearVelocity(forw * currentVel);
+		}
 	}
 
 
@@ -212,14 +220,28 @@ void PlayerController::TurnShip(float dt)
 
 void PlayerController::ApplyLinearForces(float dt)
 {
+	if (accelerate && reverseAccelerate)return;
 	if (accelerate) {
 
 		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
 		forw.Normalize();
 
 		if (physicsBasedMovement) {
-			if (triggerValue > 0) rbComp->addForce(forw * acceleration * triggerValue);
+			if (accTriggerValue > 0) rbComp->addForce(forw * acceleration * accTriggerValue);
 			else rbComp->addForce(forw * acceleration);
+		}
+		else {
+			LMVector3 pos = gameObject->GetTransform()->GetPosition();
+			gameObject->GetTransform()->SetPosition(pos + forw * dt * .6f);
+		}
+	}
+	else if (reverseAccelerate) {
+		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+		forw.Normalize();
+
+		if (physicsBasedMovement) {
+			if (reverseAccTriggerValue > 0) rbComp->addForce(forw * reversingAcceleration * reverseAccTriggerValue);
+			else rbComp->addForce(forw * reversingAcceleration);
 		}
 		else {
 			LMVector3 pos = gameObject->GetTransform()->GetPosition();

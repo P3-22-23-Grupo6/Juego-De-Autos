@@ -77,6 +77,7 @@ namespace JuegoDeAutos {
 		// Paremetros de movimiento
 			// Fisicas
 		float acceleration = 1000;
+		float reversingAcceleration = -800;
 		float maxAngularVelocity = 4;
 		float angularForce = .5f;
 		float angularDragForce = .6f;
@@ -105,10 +106,12 @@ namespace JuegoDeAutos {
 			// Controles
 				// Devuelve true si en esta ejecucion se tiene presionado el boton de acelerar (mando o teclado)
 		bool accelerate;
+		bool reverseAccelerate;
 		bool turnRight;
 		bool turnLeft;
 		float joystickValue;
-		float triggerValue;
+		float accTriggerValue;
+		float reverseAccTriggerValue;
 		float gyroValue;
 
 		// Devuelve true si se esta girando
