@@ -94,6 +94,10 @@ namespace JuegoDeAutos {
 		LocoMotor::UITextLM* countdownText;
 
 		std::vector<LocoMotor::GameObject*> enemies;
+
+
+
+		LocoMotor::UITextLM* pruebaaa;
 	};
 }
 

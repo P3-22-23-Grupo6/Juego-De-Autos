@@ -65,6 +65,18 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 	//std::cout << " (" << result << ")" << std::endl;
 
 	CreateCheckpoints(params);
+
+
+	LocoMotor::GameObject* prueba = gameObject->GetScene()->AddGameobject("prueba");
+	prueba->AddComponent("Transform");
+	prueba->AddComponent("UITextLM");
+	prueba->GetComponent<UITextLM>()->SetFont("BrunoAce");
+	prueba->GetComponent<UITextLM>()->SetPosition(0, .7);
+	prueba->GetComponent<UITextLM>()->AlignLeft();
+	prueba->GetComponent<UITextLM>()->ChangeText("HUJIAVFENJKAFE");
+	prueba->GetComponent<UITextLM>()->SetSize(0.1, 0.1);
+	prueba->GetComponent<UITextLM>()->SetBottomColor(1, 1, 1);
+	prueba->GetComponent<UITextLM>()->SetTopColor(1, 1, 1);
 }
 
 void RaceManager::Start()
