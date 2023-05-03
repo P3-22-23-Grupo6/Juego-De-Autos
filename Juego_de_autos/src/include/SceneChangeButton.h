@@ -10,8 +10,11 @@ namespace JuegoDeAutos {
 		SceneChangeButton();
 		~SceneChangeButton();
 		void Start() override;
+
+
+
 	private:
-		LocoMotor::UIImageLM* _button;
+		LocoMotor::UIImageLM* _raceButton;
 	};
 }
 
