@@ -20,7 +20,7 @@ RaceManager* RaceManager::_instance = nullptr;
 RaceManager::RaceManager()
 {
 	raceCompleted = false;
-
+	fpsCounterUpdated = fpsCounterRefreshRate;
 	if (_instance == nullptr)
 	{
 		carinfo = std::map<std::string, CarInfo>();
@@ -192,7 +192,12 @@ void RaceManager::Update(float dt)
 			countdownAnimating = false;
 	}
 
-	gameObject->GetComponent<UITextLM>()->ChangeText(std::to_string(1000 / (int)dt) + " fps");
+	if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
+	else {
+		fpsCounterUpdated = 0;
+		gameObject->GetComponent<UITextLM>()->ChangeText(std::to_string(1000 / (int)dt) + " fps");
+	}
+	
 }
 
 void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)

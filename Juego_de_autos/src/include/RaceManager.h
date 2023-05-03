@@ -87,6 +87,9 @@ namespace JuegoDeAutos {
 		float countdownNormalSize;
 		bool countdownAnimating;
 		const float timeConstant = .0009;
+		// FPS counter timer
+		const float fpsCounterRefreshRate = 0.5;
+		float fpsCounterUpdated;
 
 		// UI
 		LocoMotor::UITextLM* lapsText;
