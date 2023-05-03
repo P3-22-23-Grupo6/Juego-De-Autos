@@ -50,7 +50,7 @@ void PlayerController::Start()
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 
 	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-	rbComp->addForce(forw * 2000);
+	//rbComp->addForce(forw * 2000);
 }
 
 void PlayerController::Update(float dt)
