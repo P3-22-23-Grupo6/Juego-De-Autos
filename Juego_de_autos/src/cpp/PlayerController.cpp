@@ -50,7 +50,9 @@ void PlayerController::Start()
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
 
 	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-	//rbComp->addForce(forw * 2000);
+	rbComp->addForce(forw * 2000);
+
+	UpdateUpDirection(0.02f);
 }
 
 void PlayerController::Update(float dt)
@@ -60,6 +62,7 @@ void PlayerController::Update(float dt)
 		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/sc.lua");
 		return;
 	}
+
 	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	UpdateUpDirection(dt);
@@ -107,12 +110,12 @@ void PlayerController::UpdateUpDirection(float dt)
 		//std::cout << "angle = " << angle << std::endl;
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
-		float pitchIntensity = 20;
+		float pitchIntensity = 60;
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
 
 		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 10; // 7
+		double hoverDist = 7; // 7
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
 	}
@@ -215,8 +218,8 @@ void PlayerController::ApplyLinearForces(float dt)
 		forw.Normalize();
 
 		if (physicsBasedMovement) {
-			if (triggerValue > 0) rbComp->addForce(forw * acceleration * triggerValue * dt);
-			else rbComp->addForce(forw * acceleration * dt);
+			if (triggerValue > 0) rbComp->addForce(forw * acceleration * triggerValue);
+			else rbComp->addForce(forw * acceleration);
 		}
 		else {
 			LMVector3 pos = gameObject->GetTransform()->GetPosition();
@@ -319,7 +322,7 @@ void PlayerController::LinearDrag(float dt)
 	// Si el angulo entre la velocidad real del coche y la direccion en la que esta mirando es grande
 	// Aplicar una fuerza inversa a la velocidad actual para controlar el derrape
 	if (angle > .01f)
-		rbComp->addForce(invertedVelocity * intensity * angle * dt);
+		rbComp->addForce(invertedVelocity * intensity * angle);
 }
 
 void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int direction)
