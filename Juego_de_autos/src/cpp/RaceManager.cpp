@@ -22,10 +22,14 @@ RaceManager::RaceManager()
 	raceCompleted = false;
 
 	if (_instance == nullptr)
+	{
+		carinfo = std::map<std::string, CarInfo>();
 		_instance = this;
-	else delete this;
+	}
+	else {
+		delete this;
+	}
 
-	this->carinfo = std::map<std::string, CarInfo>();
 }
 
 RaceManager::~RaceManager()
@@ -33,6 +37,8 @@ RaceManager::~RaceManager()
 	for (auto& cInfo : carinfo) {
 
 	}
+	carinfo.clear();
+	_instance = nullptr;
 }
 
 RaceManager* RaceManager::GetInstance()
@@ -64,8 +70,6 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 void RaceManager::Start()
 {
 	std::cout << "RACEMANAGER START" << std::endl;
-	RegisterPlayerCar("Player");
-	return;
 
 	// Referencias
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
@@ -77,6 +81,9 @@ void RaceManager::Start()
 	ranking.clear();
 	RegisterPlayerCar("Player");
 
+	carinfo.at(_playerId).rounds = 0;
+
+	return;
 
 	RegisterNPCCar("Enemy0");
 	RegisterNPCCar("Enemy1");
@@ -87,13 +94,10 @@ void RaceManager::Start()
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
 	enemies.push_back(enemy);
-
-	carinfo.at(_playerId).rounds = 0;
 }
 
 void RaceManager::Update(float dt)
 {
-	return;
 	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
 
 	//GameObject* enemy = enemies[0];
@@ -109,11 +113,11 @@ void RaceManager::Update(float dt)
 	if (HasCarReachedCheckpoint(_playerId))
 		CheckpointReached(_playerId);
 
-	if (HasCarReachedCheckpoint("Enemy0"))
-		CheckpointReached("Enemy0");
+	//if (HasCarReachedCheckpoint("Enemy0"))
+	//	CheckpointReached("Enemy0");
 
-	if (HasCarReachedCheckpoint("Enemy1"))
-		CheckpointReached("Enemy1");
+	//if (HasCarReachedCheckpoint("Enemy1"))
+	//	CheckpointReached("Enemy1");
 
 
 	//for (size_t i = 0; i < enemies.size(); i++)
@@ -215,44 +219,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	// Convertir las coordenadas de strings a LMVector3
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
 	{
-		std::string positionString = checkpointPositions_pairs[i].second;
-		unsigned char currAxis = 0;
-		std::string num = "";
-		LMVector3 result = LMVector3();
-		for (const char c : positionString) {
-			if (c != ' ') {
-				num += c;
-			}
-			else {
-				float value = 0.f;
-				try {
-					value = std::stof(num);
-				}
-				catch (const char*) {
-					value = 0.f;
-				}
-				if (currAxis == 0) {
-					result.SetX(value);
-				}
-				else if (currAxis == 1) {
-					result.SetY(value);
-				}
-				else if (currAxis == 2) {
-					result.SetZ(value);
-				}
-				currAxis++;
-				num = "";
-			}
-		}
-		float value = 0.0f;
-		try {
-			value = std::stof(num);
-		}
-		catch (const char*) {
-			value = 0.0f;
-		}
-		if (currAxis == 2)
-			result.SetZ(value);
+		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 
 		RegisterCheckpointPosition(result);
 	}
@@ -454,3 +421,6 @@ void RaceManager::CountdownUIChanged()
 	countdownCurrentSize = 0;
 	countdownText->SetSize(0, 0);
 }
+
+bool RaceManager::HasCountDownFinished()
+{ return countdownFinished; }

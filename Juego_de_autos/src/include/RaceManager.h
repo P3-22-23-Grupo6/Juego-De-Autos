@@ -51,6 +51,9 @@ namespace JuegoDeAutos {
 
 		// Accede a la posicion del siguiente Checkpoint del Jugador
 		LocoMotor::LMVector3 GetPlayerLastCheckpointPosition();
+
+		bool HasCountDownFinished();
+
 	private:
 		// 
 		void UpdateRanking();
