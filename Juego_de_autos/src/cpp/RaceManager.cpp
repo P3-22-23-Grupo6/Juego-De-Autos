@@ -22,10 +22,14 @@ RaceManager::RaceManager()
 	raceCompleted = false;
 
 	if (_instance == nullptr)
+	{
+		carinfo = std::map<std::string, CarInfo>();
 		_instance = this;
-	else delete this;
+	}
+	else {
+		delete this;
+	}
 
-	this->carinfo = std::map<std::string, CarInfo>();
 }
 
 RaceManager::~RaceManager()
@@ -33,6 +37,8 @@ RaceManager::~RaceManager()
 	for (auto& cInfo : carinfo) {
 
 	}
+	carinfo.clear();
+	_instance = nullptr;
 }
 
 RaceManager* RaceManager::GetInstance()
