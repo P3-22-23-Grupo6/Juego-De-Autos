@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Scene.h"
-#include "RigidBodyComponent.h"
+#include "RigidBody.h"
 #include "MeshRenderer.h"
 #include "InputManager.h"
 #include "LMInputs.h"
@@ -38,7 +38,7 @@ void PlayerController::InitComponent()
 void PlayerController::Start()
 {
 	// Asignacion de referencias
-	rbComp = gameObject->GetComponent<LocoMotor::RigidBodyComponent>();
+	rbComp = gameObject->GetComponent<LocoMotor::RigidBody>();
 
 	rbComp->SetActivationState(LM_DISABLE_DEACTIVATION);
 

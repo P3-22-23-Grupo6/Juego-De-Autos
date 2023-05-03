@@ -7,7 +7,7 @@
 #include "PlayerController.h"
 //#include "Node.h"
 
-#include "RigidBodyComponent.h"
+#include "RigidBody.h"
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
 

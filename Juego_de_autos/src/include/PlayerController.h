@@ -3,7 +3,7 @@
 #include "LMVector.h"
 
 namespace LocoMotor {
-	class RigidBodyComponent;
+	class RigidBody;
 	class InputManager;
 	class MeshRenderer;
 	class UITextLM;
@@ -69,7 +69,7 @@ namespace JuegoDeAutos {
 
 		// Referencias
 		RaceManager* raceManager;
-		LocoMotor::RigidBodyComponent* rbComp;
+		LocoMotor::RigidBody* rbComp;
 		LocoMotor::InputManager* inputMng;
 		LocoMotor::UITextLM* velocityText;
 		LocoMotor::Camera* cam;

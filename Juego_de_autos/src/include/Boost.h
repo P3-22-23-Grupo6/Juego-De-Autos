@@ -2,7 +2,7 @@
 #include "Component.h"
 
 namespace LocoMotor {
-	class RigidBodyComponent;
+	class RigidBody;
 	class GameObject;
 }
 namespace JuegoDeAutos {

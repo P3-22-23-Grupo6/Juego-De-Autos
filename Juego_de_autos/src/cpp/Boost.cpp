@@ -3,7 +3,7 @@
 #include "Transform.h"
 #include "RaceManager.h"
 
-#include "RigidBodyComponent.h"
+#include "RigidBody.h"
 #include "Boost.h"
 #include "Boost.h"
 
@@ -35,5 +35,5 @@ void Boost::Update(float dt) {
 
 void Boost::OnCollisionEnter(GameObject* other)
 {
- other->GetComponent<RigidBodyComponent>()->addForce(LMVector3(other->GetTransform()->GetRotation().Forward() * thrust));
+ other->GetComponent<RigidBody>()->addForce(LMVector3(other->GetTransform()->GetRotation().Forward() * thrust));
 }
