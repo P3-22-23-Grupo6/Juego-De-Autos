@@ -17,6 +17,8 @@ using namespace LocoMotor;
 const std::string name = "RaceManager";
 
 RaceManager* RaceManager::_instance = nullptr;
+
+RaceManager::GameModeVelocity RaceManager::gameModeVelocity;
 RaceManager::RaceManager()
 {
 	raceCompleted = false;
@@ -81,7 +83,8 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 
 void RaceManager::Start()
 {
-	std::cout << "RACEMANAGER START" << std::endl;
+	std::cout << std::endl << "RACEMANAGER START = gameModeVelocity = " << gameModeVelocity
+		<< std::endl << std::endl << std::endl << std::endl;
 
 	// Referencias
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();

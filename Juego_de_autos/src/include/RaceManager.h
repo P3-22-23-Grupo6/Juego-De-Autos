@@ -54,6 +54,10 @@ namespace JuegoDeAutos {
 
 		bool HasCountDownFinished();
 
+
+		enum GameModeVelocity { low, middle, high };
+		static GameModeVelocity gameModeVelocity;
+
 	private:
 		// 
 		void UpdateRanking();
