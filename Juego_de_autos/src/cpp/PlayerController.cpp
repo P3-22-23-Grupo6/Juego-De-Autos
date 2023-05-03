@@ -115,7 +115,7 @@ void PlayerController::UpdateUpDirection(float dt)
 		gameObject->GetTransform()->SetUpwards(newUp);
 
 		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 7; // 7
+		double hoverDist = 12; // 7
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
 	}
