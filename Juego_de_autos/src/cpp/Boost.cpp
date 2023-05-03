@@ -16,14 +16,14 @@ Boost::Boost() {
 	thrust = 2000;
 }
 
-//void Boost::Init(std::vector<std::pair<std::string, std::string>>& params) {
-//	for (int i = 0; i < params.size(); i++) {
-//		if (params[i].first == "thrust") {
-//			thrust = std::stof(params[i].second);
-//		}
-//	}
-//	//_body = nullptr;
-//}
+void Boost::Init(std::vector<std::pair<std::string, std::string>>& params) {
+	for (int i = 0; i < params.size(); i++) {
+		if (params[i].first == "thrust") {
+			thrust = std::stof(params[i].second);
+		}
+	}
+	//_body = nullptr;
+}
 
 void Boost::InitComponent() {
 
