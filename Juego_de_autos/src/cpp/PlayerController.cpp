@@ -70,7 +70,7 @@ void PlayerController::Update(float dt)
 
 	GetInput();
 
-	if (raceManager->HasCountDownFinished())
+	//if (raceManager->HasCountDownFinished())
 		MoveShip(dt);
 
 	TurnShip(dt);
