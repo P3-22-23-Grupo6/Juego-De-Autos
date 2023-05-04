@@ -231,6 +231,8 @@ void RaceManager::Update(float dt)
 
 void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)
 {
+	std::cout << "CHECKPOINT DEBUG" << std::endl << std::endl
+		<< std::endl << std::endl << std::endl << std::endl;
 
 	// Comprobar si los datos introducidos desde LUA son validos
 	// Informar de los datos mal declarados en LUA y solo tener en cuenta los buenos
@@ -239,11 +241,16 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	for (size_t i = 0; i < params.size(); i++) {
 		std::string name = params[i].first;
 		char checkpointNumber = name[name.size() - 1];
-		name.erase(name.size() - 1, 1); // elimina el �ltimo car�cter
-		if (name == "checkpoint") {
+		//name.erase(name.size() - 1, 1); // elimina el �ltimo car�cter
+
+		std::string checkName = name.substr(0, 10);
+		std::string checkpointNumber_ = name.substr(10);
+		std::cout << "checkpointNumber = " << checkpointNumber_ << std::endl << std::endl;
+
+		if (checkName == "checkpoint") {
 
 			try {
-				if (!isdigit(checkpointNumber))
+				if (!IsInt(checkpointNumber_))
 					throw std::invalid_argument("Numero de checkpoint no valido");
 				checkpointPositions_pairs.push_back(params[i]);
 			}
@@ -257,7 +264,9 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 
 	// Ordenar las posiciones de los checkpoints
 	std::sort(checkpointPositions_pairs.begin(), checkpointPositions_pairs.end(), [](const auto& a, const auto& b) {
-		return a.first.back() < b.first.back();
+		int one = std::stoi(a.first.substr(10));
+		int two = std::stoi(b.first.substr(10));
+		return one < two;
 		});
 
 
@@ -280,6 +289,16 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		LMVector3 result = _checkpoints[i];
 		std::cout << "Checkpoint_" << i << " = (" << result.GetX()
 			<< ", " << result.GetY() << ", " << result.GetZ() << ")" << std::endl;
+	}
+}
+
+bool RaceManager::IsInt(const std::string& str) {
+	try {
+		std::stoi(str);
+		return true;
+	}
+	catch (const std::exception&) {
+		return false;
 	}
 }
 
@@ -507,13 +526,13 @@ void RaceManager::SecondsToTimer(float _sec, int& min, int& sec, int& mil)
 }
 
 std::string RaceManager::NumToString(int num, int numZeros) {
-	
+
 	std::string s;
 
 	if (numZeros == 2) {
 		if (num < 10)
 			s = "0" + std::to_string(num);
-		else 
+		else
 			s = std::to_string(num);
 	}
 	else if (numZeros == 3) {
