@@ -35,39 +35,48 @@ namespace JuegoDeAutos {
 		/// @brief Updates the listener's world attributes to be the same as the gameobject's
 		/// @param dt DeltaTime used to calculate the velocity
 		void Update(float dt) override;
-
+		/// @brief Creates checkpoints
+		/// @param params given by LUA
 		void CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params);
+		/// @brief Checks if the string can be an int type
 		bool IsInt(const std::string& str);
+		
 		bool Compare(const std::pair<std::string, std::string>& p1, const std::pair<std::string, std::string>& p2);
-		// 
+		/// @brief Registers the position of the checkpoint
+		/// @param checkpointPos The position of the checkpiont being registereds
 		void RegisterCheckpointPosition(LocoMotor::LMVector3 checkpointPos);
-		// 
+		/// @brief Register player car
 		void RegisterPlayerCar(std::string carId);
+		/// @brief Register enemy car
 		void RegisterNPCCar(std::string carId);
 		/// @brief Updates the carId car position
 		void UpdateCarPosition(std::string carId, LocoMotor::LMVector3 newPosition);
-
+		/// @brief Checks if the ship has reached the checkpoint
+		/// @return True if the ship is near the checkpoint
 		bool HasCarReachedCheckpoint(std::string carId);
-		// 
+		/// @brief Checks and register the last checkpoint reached 
 		void CheckpointReached(std::string carId);
-
+		/// @brief Speeds the bgm when entering the last lap
 		void OnLastLap();
 
 		// Accede a la posicion del siguiente Checkpoint del Jugador
+		/// @brief Gets the position of the next checkpoint the player has to reach
+		/// @return The next checkpoint position
 		LocoMotor::LMVector3 GetPlayerLastCheckpointPosition();
 
+		/// @brief Returs true when the starting countdown finishes
 		bool HasCountDownFinished();
 
-
+		/// @brief Get the spline of the map
 		LocoMotor::Spline* GetSpline();
-
+		
 		float GetSpeed();
 
 		enum SpeedMode { low, middle, high };
 		static SpeedMode speedMode;
 
 	private:
-		// 
+		 
 		void UpdateRanking();
 
 		void CountdownUIChanged();
