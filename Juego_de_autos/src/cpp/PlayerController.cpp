@@ -45,7 +45,7 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	raceManager = RaceManager::GetInstance();
-
+	acceleration = raceManager->GetSpeed();
 	cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();

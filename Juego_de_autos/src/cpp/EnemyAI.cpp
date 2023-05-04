@@ -25,6 +25,7 @@ void JuegoDeAutos::EnemyAI::Start()
 	mySpline = RaceManager::GetInstance()->GetSpline();
 	rbComp = gameObject->GetComponent<RigidBody>();
 	rbComp->UseGravity(LMVector3(0, 0, 0));
+	enemySpeed = RaceManager::GetInstance()->GetSpeed() * 0.00004f;
 
 	LMVector3 from = gameObject->GetTransform()->GetPosition();
 	LMVector3 to;

@@ -12,6 +12,7 @@
 #include "Checkpoint.h"
 #include "PlayerController.h"
 #include "AudioSource.h"
+#include "EnemyAI.h"
 
 // Extra
 #include <algorithm>
@@ -104,9 +105,6 @@ void RaceManager::Start()
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
-
-	gameObject->GetScene()->GetObjectByName("coche")
-		->GetComponent<JuegoDeAutos::PlayerController>()->SetAcceleration(speeds[speedMode]);
 
 	ranking.clear();
 	RegisterPlayerCar("Player");
@@ -576,4 +574,8 @@ bool RaceManager::HasCountDownFinished()
 void RaceManager::OnLastLap() {
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
 		gameObject->GetComponent<AudioSource>()->SetFreq(1.5f);
+}
+
+float RaceManager::GetSpeed() {
+	return speeds[speedMode];
 }

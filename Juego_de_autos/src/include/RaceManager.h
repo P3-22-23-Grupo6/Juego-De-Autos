@@ -61,6 +61,7 @@ namespace JuegoDeAutos {
 
 		LocoMotor::Spline* GetSpline();
 
+		float GetSpeed();
 
 		enum SpeedMode { low, middle, high };
 		static SpeedMode speedMode;
