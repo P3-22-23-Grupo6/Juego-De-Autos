@@ -68,6 +68,10 @@ namespace JuegoDeAutos {
 
 		void CountdownUIChanged();
 
+		void UpdateTimer(float dt);
+
+		void SecondsToTimer(float _sec, int& min, int& sec, int& mil);
+
 		static RaceManager* _instance;
 		// The number of rounds to complete the race
 		const int _totalRounds = 3;
@@ -99,10 +103,14 @@ namespace JuegoDeAutos {
 		const float fpsCounterRefreshRate = 0.5;
 		float fpsCounterUpdated;
 
+		// Timer
+		float currentTime;
+
 		// UI
 		LocoMotor::UITextLM* lapsText;
 		LocoMotor::UITextLM* positionText;
 		LocoMotor::UITextLM* countdownText;
+		LocoMotor::UITextLM* timerText;
 
 		std::vector<LocoMotor::GameObject*> enemies;
 

@@ -11,8 +11,9 @@
 #include "Checkpoint.h"
 #include "PlayerController.h"
 
-// Comparacion de Strings
+// Extra
 #include <algorithm>
+#include <iomanip>
 
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
@@ -98,6 +99,7 @@ void RaceManager::Start()
 	// Referencias
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
 	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
+	timerText = gameObject->GetScene()->GetObjectByName("timerText")->GetComponent<LocoMotor::UITextLM>();
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
@@ -158,11 +160,13 @@ void RaceManager::Update(float dt)
 
 	UpdateRanking();
 
+	// Update Laps Text
 	if (lapsText != nullptr) {
 		std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
 		lapsText->ChangeText(s);
 	}
 
+	// Update Countdown
 	if (countdownText != nullptr) {
 		if (countdownTimer > -1) {
 			countdownTimer -= dt * timeConstant;
@@ -220,6 +224,9 @@ void RaceManager::Update(float dt)
 			fps->ChangeText(std::to_string(1000 / (int)dt) + " fps");
 	}
 
+
+	// Update timer
+	UpdateTimer(dt);
 }
 
 void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)
@@ -469,6 +476,27 @@ void RaceManager::CountdownUIChanged()
 	countdownAnimating = true;
 	countdownCurrentSize = 0;
 	countdownText->SetSize(0, 0);
+}
+
+void RaceManager::UpdateTimer(float dt)
+{
+	currentTime += dt * 0.001;
+
+	int min, sec, mil;
+	SecondsToTimer(currentTime, min, sec, mil);
+
+	std::string s = std::to_string(min)
+		+ ":" + std::to_string(sec)
+		+ ":" + std::to_string(mil);
+
+	timerText->ChangeText(s);
+}
+
+void RaceManager::SecondsToTimer(float _sec, int& min, int& sec, int& mil)
+{
+	min = floor(_sec / 60);
+	sec = round(_sec - min * 60);
+	mil = round(_sec * 100);
 }
 
 bool RaceManager::HasCountDownFinished()
