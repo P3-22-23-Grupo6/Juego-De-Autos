@@ -5,6 +5,7 @@
 #include "UIImageLM.h"
 #include "UITextLM.h"
 #include "ScriptManager.h"
+#include "AudioSource.h"
 using namespace LocoMotor;
 JuegoDeAutos::SceneChangeButton::SceneChangeButton()
 {
@@ -23,8 +24,13 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	_speedButton = gameObject->GetScene()->GetObjectByName("speedButton")->GetComponent<UIImageLM>();
 	_speedText = _speedButton->gameObject->GetComponent<UITextLM>();
 
+	AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+
 	if (_speedButton != nullptr) {
 		_speedButton->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			if (aSrc)
+				aSrc->Play("Assets/Sounds/Select.wav");
 			ChangeVelocity();
 			});
 		_speedButton->SetOnMouseImage("UIPanel2");
@@ -33,6 +39,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 
 	if (_raceButton != nullptr) {
 		_raceButton->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			if (aSrc)
+				aSrc->Play("Assets/Sounds/Select2.wav");
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
 			std::cout << "hola\n";
 		});
