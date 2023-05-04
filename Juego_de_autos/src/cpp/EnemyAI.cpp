@@ -13,6 +13,7 @@ using namespace LocoMotor;
 const std::string EnemyAI::name = "EnemyAI";
 
 EnemyAI::EnemyAI() {
+	rbComp = nullptr;
 	mySpline = nullptr;
 	timeStep = 0;
 	enemySpeed = 0;
@@ -22,6 +23,8 @@ EnemyAI::EnemyAI() {
 void JuegoDeAutos::EnemyAI::Start()
 {
 	mySpline = RaceManager::GetInstance()->GetSpline();
+	rbComp = gameObject->GetComponent<RigidBody>();
+	rbComp->UseGravity(LMVector3(0, 0, 0));
 }
 
 void EnemyAI::Init(std::vector<std::pair<std::string, std::string>>& params) {
@@ -41,31 +44,51 @@ void EnemyAI::InitComponent() {
 }
 
 void EnemyAI::Update(float dt) {
-	timeStep += 0.0005f * enemySpeed;
+	timeStep += enemySpeed * dt/1000.0f;
 	if (timeStep > 1) {
 		timeStep = 0.0f;
 	}
+	// Definir el punto inicial y la direccion del raycast
 	LMVector3 from = gameObject->GetTransform()->GetPosition();
-	LMVector3 to = from + LMVector3(0, -20, 0);
+	LMVector3 to;
 
 	LMVector3 upVector = gameObject->GetTransform()->GetRotation().Up();
 	upVector.Normalize();
-	RigidBody* rbComp = gameObject->GetComponent<RigidBody>();
-	double raycastDistance = 7;
+	double raycastDistance = 40;
 	upVector = upVector * raycastDistance;
 	to = from - upVector;
 
+	//gameObject->GetTransform()->SetPosition(gameObject->GetTransform()->GetPosition() + 
+	//										(mySpline->Interpolate(timeStep) - gameObject->GetTransform()->GetPosition()) * 0.2f);
+	LMVector3 newPos = mySpline->Interpolate(timeStep) ;
+	//gameObject->GetTransform()->SetPosition(newPos);
+
 	if (rbComp->GetRaycastHit(from, to)) {
+		
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
-		LMVector3 newUp = n * 40;
+		n.Normalize();
+	
+		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
+		// Ignorarlo, esto bloquea el subirse a las paredes
+		float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
+		if (angle > 0.9f)
+			return;
+		
+		//Intensidad con la que se va a actualizar el vector normal del coche
+		float pitchIntensity = 1000;
+		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
+	
+		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
+		double hoverDist = 12; // 7
+		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
+		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement + (mySpline->Interpolate(timeStep) - gameObject->GetTransform()->GetPosition()) * 0.2f);
 	}
 
-	//Interpolate Position
-	LMVector3 newPos = mySpline->Interpolate(timeStep);
-	newPos = newPos + gameObject->GetTransform()->GetRotation().Right() * startSeparation;
-	//LookAt
+	//newPos = newPos + gameObject->GetTransform()->GetRotation().Right() * startSeparation;
+	////LookAt
 	gameObject->GetTransform()->LookAt(newPos);
-	//Set Position
-	gameObject->SetPosition(newPos);
+	////Set Position
+	//double hoverDist = 12; // 7
+	//LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 }

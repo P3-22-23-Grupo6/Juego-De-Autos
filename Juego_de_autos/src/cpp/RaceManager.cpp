@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "UITextLM.h"
 #include "LMSpline.h"
+#include "MeshRenderer.h"
 
 // Componentes juego
 #include "RaceManager.h"
@@ -112,8 +113,6 @@ void RaceManager::Start()
 
 	carinfo.at(_playerId).rounds = 0;
 
-	return;
-
 	RegisterNPCCar("Enemy0");
 	RegisterNPCCar("Enemy1");
 
@@ -123,6 +122,27 @@ void RaceManager::Start()
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
 	enemies.push_back(enemy);
+
+	if (gameObject->GetComponent<AudioSource>() != nullptr)
+		gameObject->GetComponent<AudioSource>()->Set2D();
+
+	//NO QUITAR AUN HASTA QUE ESTE LA SPLINE
+	std::vector<GameObject*> waypointBalls = std::vector<GameObject*>();
+	int maxBalls = 100;
+	std::vector<std::pair<std::string, std::string>> pares = std::vector<std::pair<std::string, std::string>>();
+	pares.push_back({ "file", "SphereDebug.mesh" });
+	for (float i = 1; i < maxBalls; i++) {
+		auto wayPointNew = gameObject->GetScene()->AddGameobject("WayPointProc" + std::to_string(i));
+		wayPointNew->AddComponent("Transform");
+		wayPointNew->AddComponent("MeshRenderer", pares);
+		wayPointNew->GetComponent<MeshRenderer>()->PreStart();
+		//nuevaSpl->RecalcTangents();
+		waypointBalls.push_back(wayPointNew);
+	}
+	for (int i = 1; i < waypointBalls.size(); i++) {
+		waypointBalls[i]->SetScale(LMVector3(3.0f, 3.0f, 3.0f));
+		waypointBalls[i]->SetPosition(mainSpline->Interpolate((float) i / maxBalls));
+	}
 }
 
 void RaceManager::Update(float dt)
@@ -263,7 +283,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 
 #pragma region Convertir Coordenadas
 	// Convertir las coordenadas de strings a LMVector3
-	mainSpline->SetAutoCalc(true);
+	//mainSpline->SetAutoCalc(true);
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);

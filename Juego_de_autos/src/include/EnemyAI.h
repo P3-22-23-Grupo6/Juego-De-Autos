@@ -4,6 +4,7 @@
 namespace LocoMotor {
 	class GameObject;
 	class Spline;
+	class RigidBody;
 }
 namespace JuegoDeAutos {
 	class RaceManager;
@@ -28,5 +29,6 @@ namespace JuegoDeAutos {
 		//STATS
 		float enemySpeed;
 		float startSeparation;
+		LocoMotor::RigidBody* rbComp;
 	};
 }
