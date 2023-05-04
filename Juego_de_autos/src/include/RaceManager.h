@@ -50,6 +50,8 @@ namespace JuegoDeAutos {
 		// 
 		void CheckpointReached(std::string carId);
 
+		void OnLastLap();
+
 		// Accede a la posicion del siguiente Checkpoint del Jugador
 		LocoMotor::LMVector3 GetPlayerLastCheckpointPosition();
 

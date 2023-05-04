@@ -10,6 +10,7 @@
 #include "RaceManager.h"
 #include "Checkpoint.h"
 #include "PlayerController.h"
+#include "AudioSource.h"
 
 // Extra
 #include <algorithm>
@@ -122,6 +123,9 @@ void RaceManager::Start()
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
 	enemies.push_back(enemy);
+
+	if (gameObject->GetComponent<AudioSource>() != nullptr)
+		gameObject->GetComponent<AudioSource>()->Set2D();
 }
 
 void RaceManager::Update(float dt)
@@ -531,4 +535,9 @@ std::string RaceManager::NumToString(int num, int numZeros) {
 bool RaceManager::HasCountDownFinished()
 {
 	return countdownFinished;
+}
+
+void RaceManager::OnLastLap() {
+	if (gameObject->GetComponent<AudioSource>() != nullptr)
+		gameObject->GetComponent<AudioSource>()->SetFreq(1.5f);
 }
