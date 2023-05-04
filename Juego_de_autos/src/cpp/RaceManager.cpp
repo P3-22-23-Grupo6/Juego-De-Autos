@@ -296,7 +296,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 		//Add points to Spline
 		mainSpline->AddPoint(result * 20);
-		RegisterCheckpointPosition(result);
+		RegisterCheckpointPosition(result * 20);
 	}
 #pragma endregion
 
@@ -368,11 +368,11 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 	float distance = (targetCheckpointPosition - carPosition).Magnitude();
 
 
-	//if (carId == "Enemy1") {
-	//	std::cout << "Enemy1CheckpointIndex = " << checkpointIndex << std::endl;
-	//	std::cout << "Enemy1Distance = " << distance << std::endl;
-	//	std::cout << "Enemy1Rounds = " << carinfo.at(carId).rounds << std::endl;
-	//}
+	if (carId == _playerId) {
+		std::cout << "PlayerCheckpointIndex = " << checkpointIndex << std::endl;
+		std::cout << "PlayerDistance = " << distance << std::endl;
+		std::cout << "PlayerRounds = " << carinfo.at(carId).rounds << std::endl;
+	}
 
 	//std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
 	//std::cout << "GO TO CHECKPOINT NUMBER " << carinfo.at(_playerId).currentCheckpoint << "\n";
