@@ -6,4 +6,4 @@ msbuild Juego_de_autos.sln /p:configuration=Release
 
 xcopy %MotorBin% %Bin% /h /i /c /k /e /r /y
 cd %Bin%
-start LM_Main_d.exe
+start LM_Main.exe
