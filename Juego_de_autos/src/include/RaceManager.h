@@ -108,8 +108,6 @@ namespace JuegoDeAutos {
 
 		LocoMotor::Spline* mainSpline;
 
-		LocoMotor::UITextLM* pruebaaa;
-
 		// SpeedModes
 		int speeds[3] = { 500, 1000, 2000 };
 	};

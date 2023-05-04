@@ -99,7 +99,8 @@ void RaceManager::Start()
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
 	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
-	countdownNormalSize = countdownText->GetSizeX();
+	if (countdownText != nullptr)
+		countdownNormalSize = countdownText->GetSizeX();
 
 	gameObject->GetScene()->GetObjectByName("coche")
 		->GetComponent<JuegoDeAutos::PlayerController>()->SetAcceleration(speeds[speedMode]);
@@ -157,61 +158,68 @@ void RaceManager::Update(float dt)
 
 	UpdateRanking();
 
-	std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
-	lapsText->ChangeText(s);
-
-	if (countdownTimer > -1) {
-		countdownTimer -= dt * timeConstant;
-		countDownSeconds = (int)floor(countdownTimer);
-
-		if (countDownSeconds != countDownSecondsLastFrame && countDownSeconds != -1)
-			CountdownUIChanged();
-
-		if (countDownSeconds == 0 || countDownSeconds == -1) {
-			countdownFinished = true;
-			countdownText->SetBottomColor(0, 1, 0);
-			countdownText->ChangeText("GO!");
-		}
-		else if (countDownSeconds > 0 && countDownSeconds <= 3) {
-			std::string countdownNumber = std::to_string(countDownSeconds);
-			countdownText->ChangeText(countdownNumber);
-
-			if (countDownSeconds == 3) {
-				countdownText->SetTopColor(1, 0, 0);
-				countdownText->SetBottomColor(0, 0, 0);
-			}
-			else if (countDownSeconds == 2) {
-				countdownText->SetTopColor(1, .5, 0);
-				countdownText->SetBottomColor(1, 0, 0);
-			}
-			else if (countDownSeconds == 1) {
-				countdownText->SetTopColor(1, 1, 0);
-				countdownText->SetBottomColor(1, .5, 0);
-			}
-		}
-		else countdownText->ChangeText("");
-
-
-		countDownSecondsLastFrame = countDownSeconds;
+	if (lapsText != nullptr) {
+		std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
+		lapsText->ChangeText(s);
 	}
 
-	// Animating text
-	if (countdownAnimating) {
+	if (countdownText != nullptr) {
+		if (countdownTimer > -1) {
+			countdownTimer -= dt * timeConstant;
+			countDownSeconds = (int)floor(countdownTimer);
 
-		if (countdownCurrentSize < countdownNormalSize) {
-			countdownCurrentSize += dt * timeConstant;
-			countdownText->SetSize(countdownCurrentSize, countdownCurrentSize);
+			if (countDownSeconds != countDownSecondsLastFrame && countDownSeconds != -1)
+				CountdownUIChanged();
+
+			if (countDownSeconds == 0 || countDownSeconds == -1) {
+				countdownFinished = true;
+				countdownText->SetBottomColor(0, 1, 0);
+				countdownText->ChangeText("GO!");
+			}
+			else if (countDownSeconds > 0 && countDownSeconds <= 3) {
+				std::string countdownNumber = std::to_string(countDownSeconds);
+				countdownText->ChangeText(countdownNumber);
+
+				if (countDownSeconds == 3) {
+					countdownText->SetTopColor(1, 0, 0);
+					countdownText->SetBottomColor(0, 0, 0);
+				}
+				else if (countDownSeconds == 2) {
+					countdownText->SetTopColor(1, .5, 0);
+					countdownText->SetBottomColor(1, 0, 0);
+				}
+				else if (countDownSeconds == 1) {
+					countdownText->SetTopColor(1, 1, 0);
+					countdownText->SetBottomColor(1, .5, 0);
+				}
+			}
+			else countdownText->ChangeText("");
+
+
+			countDownSecondsLastFrame = countDownSeconds;
 		}
-		else
-			countdownAnimating = false;
+
+		// Animating text
+		if (countdownAnimating) {
+
+			if (countdownCurrentSize < countdownNormalSize) {
+				countdownCurrentSize += dt * timeConstant;
+				countdownText->SetSize(countdownCurrentSize, countdownCurrentSize);
+			}
+			else
+				countdownAnimating = false;
+		}
+
 	}
 
 	if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
 	else {
 		fpsCounterUpdated = 0;
-		gameObject->GetComponent<UITextLM>()->ChangeText(std::to_string(1000 / (int)dt) + " fps");
+		UITextLM* fps = gameObject->GetComponent<UITextLM>();
+		if (fps != nullptr)
+			fps->ChangeText(std::to_string(1000 / (int)dt) + " fps");
 	}
-	
+
 }
 
 void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)
@@ -219,7 +227,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 
 	// Comprobar si los datos introducidos desde LUA son validos
 	// Informar de los datos mal declarados en LUA y solo tener en cuenta los buenos
-	#pragma region Comprobar Datos Validos
+#pragma region Comprobar Datos Validos
 	std::vector<std::pair<std::string, std::string>> checkpointPositions_pairs;
 	for (size_t i = 0; i < params.size(); i++) {
 		std::string name = params[i].first;
@@ -237,7 +245,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 			}
 		}
 	}
-	#pragma endregion
+#pragma endregion
 
 
 	// Ordenar las posiciones de los checkpoints
@@ -246,7 +254,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		});
 
 
-	#pragma region Convertir Coordenadas
+#pragma region Convertir Coordenadas
 	// Convertir las coordenadas de strings a LMVector3
 	mainSpline->SetAutoCalc(true);
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
@@ -256,14 +264,14 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		mainSpline->AddPoint(result * 20);
 		RegisterCheckpointPosition(result);
 	}
-	#pragma endregion
+#pragma endregion
 
 
-	std::cout << "CHECKPOINTS = " << _checkpoints.size()<< std::endl;
+	std::cout << "CHECKPOINTS = " << _checkpoints.size() << std::endl;
 	for (size_t i = 0; i < _checkpoints.size(); i++)
 	{
 		LMVector3 result = _checkpoints[i];
-		std::cout << "Checkpoint_" << i << " = (" << result.GetX() 
+		std::cout << "Checkpoint_" << i << " = (" << result.GetX()
 			<< ", " << result.GetY() << ", " << result.GetZ() << ")" << std::endl;
 	}
 }
@@ -364,6 +372,9 @@ LocoMotor::Spline* JuegoDeAutos::RaceManager::GetSpline()
 
 void RaceManager::UpdateRanking()
 {
+	if (positionText == nullptr)
+		return;
+
 	// Saber cuantos coches tiene por delante el player
 	int carsAhead = 0;
 
@@ -461,4 +472,6 @@ void RaceManager::CountdownUIChanged()
 }
 
 bool RaceManager::HasCountDownFinished()
-{ return countdownFinished; }
+{
+	return countdownFinished;
+}
