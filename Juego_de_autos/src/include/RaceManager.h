@@ -37,6 +37,7 @@ namespace JuegoDeAutos {
 		void Update(float dt) override;
 
 		void CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params);
+		bool IsInt(const std::string& str);
 		bool Compare(const std::pair<std::string, std::string>& p1, const std::pair<std::string, std::string>& p2);
 		// 
 		void RegisterCheckpointPosition(LocoMotor::LMVector3 checkpointPos);
