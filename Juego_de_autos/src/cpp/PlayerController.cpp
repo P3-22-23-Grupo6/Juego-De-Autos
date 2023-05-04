@@ -40,8 +40,8 @@ void PlayerController::Start()
 {
 	// Asignacion de referencias
 	rbComp = gameObject->GetComponent<LocoMotor::RigidBody>();
-
 	rbComp->SetActivationState(LM_DISABLE_DEACTIVATION);
+	meshComp = gameObject->GetComponent<LocoMotor::MeshRenderer>();
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	raceManager = RaceManager::GetInstance();
@@ -75,7 +75,7 @@ void PlayerController::Update(float dt)
 	GetInput();
 
 	//if (raceManager->HasCountDownFinished())
-		MoveShip(dt);
+	MoveShip(dt);
 
 	TurnShip(dt);
 
@@ -146,7 +146,7 @@ void PlayerController::GetInput()
 		|| inputMng->GetButton(LMC_A)
 		|| inputMng->GetButton(LMC_RIGHTSHOULDER);
 
-	reverseAccelerate= inputMng->GetKey(LMKS_S)
+	reverseAccelerate = inputMng->GetKey(LMKS_S)
 		|| inputMng->GetButton(LMC_B)
 		|| inputMng->GetButton(LMC_LEFTSHOULDER);
 
@@ -366,15 +366,15 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 {
 	// Angulo maximo de la inclinacion visual del coche en grados
-	double maxTiltAngle = 50;
+	double maxTiltAngle = 60;
 
 	// Determina cuanto se inclina el coche, es un valor de 0 a 1
 	double tiltAmount = currentAngularVelocity / maxAngularVelocity * 0.25f;
 
 	// Rotar SOLO la parte grafica del coche para mejor sensacion de juego
 	// Teniendo en cuenta la velocidad angular
-	gameObject->GetComponent<MeshRenderer>()->
-		Rotate(LMVector3(0, 0, tiltAmount * maxTiltAngle * direction));
+	if (meshComp != nullptr)
+		meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
 
 	// Actualizar las posiciones del raceManager
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();

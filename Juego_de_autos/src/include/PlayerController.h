@@ -72,6 +72,7 @@ namespace JuegoDeAutos {
 		// Referencias
 		RaceManager* raceManager;
 		LocoMotor::RigidBody* rbComp;
+		LocoMotor::MeshRenderer* meshComp;
 		LocoMotor::InputManager* inputMng;
 		LocoMotor::UITextLM* velocityText;
 		LocoMotor::Camera* cam;
