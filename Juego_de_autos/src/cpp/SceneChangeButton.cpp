@@ -27,6 +27,8 @@ void JuegoDeAutos::SceneChangeButton::Start()
 		_speedButton->CallOnClick([this]() {
 			ChangeVelocity();
 			});
+		_speedButton->SetOnMouseImage("UIPanel2");
+		_speedButton->SetPressedImage("UIPanel3");
 	}
 
 	if (_raceButton != nullptr) {
@@ -34,6 +36,8 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/scene.lua");
 			std::cout << "hola\n";
 		});
+		_raceButton->SetOnMouseImage("UIPanel2");
+		_raceButton->SetPressedImage("UIPanel3");
 	}
 
 	switch (RaceManager::speedMode)
