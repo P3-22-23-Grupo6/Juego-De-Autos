@@ -443,7 +443,7 @@ void PlayerController::UpdateVelocityUI()
 
 	LMVector3 color = LMVector3(1, inverseColor, inverseColor);
 	velocityText->SetTopColor(color.GetX(), color.GetY(), color.GetZ());
-	velocityText->SetBottomColor(color.GetX(), color.GetY() / 2, color.GetZ());
+	velocityText->SetBottomColor(color.GetX(), color.GetY(), color.GetZ());
 
 	inputMng->SetControllerLedColor(colorIntensity, 0, 0);
 }
