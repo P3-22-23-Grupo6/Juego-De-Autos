@@ -72,6 +72,8 @@ namespace JuegoDeAutos {
 
 		void SecondsToTimer(float _sec, int& min, int& sec, int& mil);
 
+		std::string NumToString(int num, int numZeros);
+
 		static RaceManager* _instance;
 		// The number of rounds to complete the race
 		const int _totalRounds = 3;

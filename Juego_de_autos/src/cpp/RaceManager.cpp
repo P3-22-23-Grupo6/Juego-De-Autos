@@ -13,7 +13,6 @@
 
 // Extra
 #include <algorithm>
-#include <iomanip>
 
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
@@ -480,14 +479,18 @@ void RaceManager::CountdownUIChanged()
 
 void RaceManager::UpdateTimer(float dt)
 {
+	if (!countdownFinished) return;
+
 	currentTime += dt * 0.001;
 
 	int min, sec, mil;
 	SecondsToTimer(currentTime, min, sec, mil);
-
-	std::string s = std::to_string(min)
-		+ ":" + std::to_string(sec)
-		+ ":" + std::to_string(mil);
+	std::string s = NumToString(min, 2)
+		+ ":" + NumToString(sec, 2)
+		+ ":" + NumToString(mil, 3);
+	//std::string s = std::to_string(min)
+	//	+ ":" + std::to_string(sec)
+	//	+ ":" + std::to_string(mil);
 
 	timerText->ChangeText(s);
 }
@@ -495,8 +498,34 @@ void RaceManager::UpdateTimer(float dt)
 void RaceManager::SecondsToTimer(float _sec, int& min, int& sec, int& mil)
 {
 	min = floor(_sec / 60);
-	sec = round(_sec - min * 60);
-	mil = round(_sec * 100);
+	sec = floor(_sec - min * 60);
+
+	double entero;
+	double fraccion = std::modf(_sec, &entero);
+	mil = static_cast<int>(std::round(fraccion * 1000.0));
+}
+
+std::string RaceManager::NumToString(int num, int numZeros) {
+	
+	std::string s;
+
+	if (numZeros == 2) {
+		if (num < 10)
+			s = "0" + std::to_string(num);
+		else 
+			s = std::to_string(num);
+	}
+	else if (numZeros == 3) {
+
+		if (num < 100)
+			s = "0" + std::to_string(num);
+		else if (num < 10)
+			s = "00" + std::to_string(num);
+		else
+			s = std::to_string(num);
+	}
+
+	return s;
 }
 
 bool RaceManager::HasCountDownFinished()
