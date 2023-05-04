@@ -19,6 +19,8 @@ namespace JuegoDeAutos {
 		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
 		//void Init(float thrust) {};
 		void InitComponent() override;
+		/// @brief Updates the rotation
+		/// @param dt deltatime
 		void Update(float dt) override;
 		//void OnCollisionEnter(GameObject* other) override;
 
