@@ -23,6 +23,8 @@ namespace JuegoDeAutos {
 		void InitComponent() override;
 		void Update(float dt) override;
 		//void OnCollisionEnter(GameObject* other) override;
+		/// @brief Does things when collides with an object
+		/// @param other the object collided with the entity  
 		void OnCollisionEnter(LocoMotor::GameObject* other);
 
 	private:

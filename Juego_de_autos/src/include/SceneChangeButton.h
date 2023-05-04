@@ -16,7 +16,7 @@ namespace JuegoDeAutos {
 
 
 	private:
-
+		/// @brief Changes the text of the UI 
 		void ChangeVelocity();
 
 		LocoMotor::UIImageLM* _raceButton;
