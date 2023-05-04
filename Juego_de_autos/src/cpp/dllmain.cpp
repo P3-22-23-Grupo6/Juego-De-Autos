@@ -7,6 +7,7 @@
 #include "Checkpoint.h"
 #include "RaceManager.h"
 #include "ScriptManager.h"
+#include "Rotator.h"
 #include "Boost.h"
 #include "EnemyAI.h"
 #include "SceneChangeButton.h"
@@ -40,6 +41,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::MotorApi* moto
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Boost>("Boost");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<SceneChangeButton>("SceneChangeButton");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<EnemyAI>("EnemyAI");
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Rotator>("Rotator");
 
     //motor->RegisterGame("Juego de autos");
 
