@@ -34,5 +34,5 @@ void Boost::Update(float dt) {
 
 void Boost::OnCollisionEnter(GameObject* other)
 {
- other->GetComponent<RigidBody>()->addForce(LMVector3(other->GetTransform()->GetRotation().Forward() * thrust));
+ other->GetComponent<RigidBody>()->AddForce(LMVector3(other->GetTransform()->GetRotation().Forward() * thrust));
 }
