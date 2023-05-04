@@ -376,7 +376,7 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 
 	//std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
 	//std::cout << "GO TO CHECKPOINT NUMBER " << carinfo.at(_playerId).currentCheckpoint << "\n";
-	if (distance < 250)
+	if (distance < 300)
 		return true;
 	else
 		return false;
@@ -387,7 +387,7 @@ void RaceManager::CheckpointReached(std::string carId)
 	//std::cout << "CheckpointReached ";
 
 	carinfo.at(carId).currentCheckpoint++;
-
+	std::cout << "Car " << carId << " reached checkpoint " << carinfo.at(carId).currentCheckpoint << std::endl;
 	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
