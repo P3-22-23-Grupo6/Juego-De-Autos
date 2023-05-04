@@ -123,9 +123,6 @@ void RaceManager::Start()
 
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
 	enemies.push_back(enemy);
-
-	if (gameObject->GetComponent<AudioSource>() != nullptr)
-		gameObject->GetComponent<AudioSource>()->Set2D();
 }
 
 void RaceManager::Update(float dt)
