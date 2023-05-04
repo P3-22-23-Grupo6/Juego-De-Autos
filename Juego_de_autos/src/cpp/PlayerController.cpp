@@ -40,12 +40,22 @@ void PlayerController::Start()
 {
 	// Asignacion de referencias
 	rbComp = gameObject->GetComponent<LocoMotor::RigidBody>();
+	if (rbComp == nullptr) {
+		SetActive(false);
+		return;
+	}
 	rbComp->SetActivationState(LM_DISABLE_DEACTIVATION);
 	meshComp = gameObject->GetComponent<LocoMotor::MeshRenderer>();
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	raceManager = RaceManager::GetInstance();
+	if (raceManager == nullptr) {
+		SetActive(false);
+		return;
+	}
 	acceleration = raceManager->GetSpeed();
+
+	if(gameObject->GetScene()->GetCamera()!=nullptr)
 	cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
 	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
@@ -405,6 +415,7 @@ void PlayerController::AdjustFov()
 	float fovOne = (localVel.Magnitude() / 600);
 	if (fovOne > 1) fovOne = 1;
 	float fov = fovOne * maxExtraFov + initialFov;
+	if(cam!=nullptr)
 	cam->SetFOV(fov);
 }
 

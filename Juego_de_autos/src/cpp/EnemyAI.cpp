@@ -22,10 +22,15 @@ EnemyAI::EnemyAI() {
 
 void JuegoDeAutos::EnemyAI::Start()
 {
-	mySpline = RaceManager::GetInstance()->GetSpline();
+	RaceManager* rmngr = RaceManager::GetInstance();
 	rbComp = gameObject->GetComponent<RigidBody>();
+	if (rmngr == nullptr || rbComp == nullptr) {
+		SetActive(false);
+		return;
+	}
+	mySpline = rmngr->GetSpline();
 	rbComp->UseGravity(LMVector3(0, 0, 0));
-	enemySpeed = RaceManager::GetInstance()->GetSpeed() * 0.00004f;
+	enemySpeed = rmngr->GetSpeed() * 0.00004f;
 
 	LMVector3 from = gameObject->GetTransform()->GetPosition();
 	LMVector3 to;
