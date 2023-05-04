@@ -37,8 +37,6 @@ void JuegoDeAutos::EnemyAI::Start()
 		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
 		// Ignorarlo, esto bloquea el subirse a las paredes
 		float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
-		if (angle > 0.9f)
-			return;
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
 		float pitchIntensity = 1000;
@@ -50,7 +48,7 @@ void JuegoDeAutos::EnemyAI::Start()
 		//LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		//gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement + (mySpline->Interpolate(timeStep) - gameObject->GetTransform()->GetPosition()) * 0.2f);
 	}
-
+	enemySpeed += std::rand() % 80 * 0.0001f;
 }
 
 void EnemyAI::Init(std::vector<std::pair<std::string, std::string>>& params) {
@@ -112,6 +110,7 @@ void EnemyAI::Update(float dt) {
 		//LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		//gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement + (mySpline->Interpolate(timeStep) - gameObject->GetTransform()->GetPosition()) * 0.2f);
 	}
+	else gameObject->GetTransform()->SetUpwards(LMVector3(0,1,0));
 	////LookAt
 	gameObject->GetTransform()->LookAt(mySpline->Interpolate(timeStep + 0.005f) + gameObject->GetTransform()->GetRotation().Right() * startSeparation);
 	////Set Position
