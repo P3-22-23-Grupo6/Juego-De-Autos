@@ -105,6 +105,8 @@ namespace JuegoDeAutos {
 		/// @param controllable True if the ship is controllable
 		void SetControllable(bool controllable);
 
+		void OnCollisionEnter(LocoMotor::GameObject* other) override;
+
 	private:
 
 		// Referencias

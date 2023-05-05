@@ -492,3 +492,8 @@ void JuegoDeAutos::PlayerController::SetControllable(bool controllable)
 {
 	this->activeInput = controllable;
 }
+
+void JuegoDeAutos::PlayerController::OnCollisionEnter(GameObject* other)
+{
+	gameObject->GetComponent<AudioSource>()->PlayOneShot("Assets/Sounds/lowDown.wav", gameObject->GetTransform()->GetPosition());
+}
