@@ -125,10 +125,12 @@ void RaceManager::Start()
 		if (countdtxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
 			countdownText = countdtxt->GetComponent<LocoMotor::UITextLM>();
 	}
+	laptimerText = gameObject->GetScene()->GetObjectByName("laptimerText")->GetComponent<LocoMotor::UITextLM>();
 
+	
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
-
+		
 	ranking.clear();
 	RegisterPlayerCar("Player");
 
