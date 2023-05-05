@@ -435,7 +435,7 @@ void JuegoDeAutos::PlayerController::CheckRespawn()
 	if (gameObject->GetTransform()->GetPosition().GetY() < -900)
 	{
 		LMVector3 lastCheckpointPos = raceManager->GetPlayerLastCheckpointPosition();
-		gameObject->GetTransform()->SetPosition(lastCheckpointPos);
+		gameObject->GetTransform()->SetPosition(lastCheckpointPos + LMVector3(0, 50, 0));
 		rbComp->SetLinearVelocity(LMVector3(0, 0, 0));
 		rbComp->SetAngularVelocity(LMVector3(0, 0, 0));
 	}
