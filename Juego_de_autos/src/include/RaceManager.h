@@ -123,6 +123,11 @@ namespace JuegoDeAutos {
 		// Timer
 		float currentTime;
 
+		// LapTimer
+		float bestlapTime = FLT_MAX;
+		// The time when you completed the last lap
+		float lastlapTime = 0;
+
 		/// End Timer
 		float endTimer = 3;
 		float endTimerStart = -1;

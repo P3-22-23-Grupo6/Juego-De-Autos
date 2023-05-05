@@ -108,7 +108,7 @@ void RaceManager::Start()
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
-		
+
 	ranking.clear();
 	RegisterPlayerCar("Player");
 
@@ -151,7 +151,7 @@ void RaceManager::Start()
 	}
 	for (int i = 1; i < waypointBalls.size(); i++) {
 		waypointBalls[i]->SetScale(LMVector3(3.0f, 3.0f, 3.0f));
-		waypointBalls[i]->SetPosition(mainSpline->Interpolate((float) i / maxBalls));
+		waypointBalls[i]->SetPosition(mainSpline->Interpolate((float)i / maxBalls));
 	}
 }
 
@@ -317,8 +317,8 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	// Ordenar las posiciones de los checkpoints
 	std::sort(checkpointPositions_pairs.begin(), checkpointPositions_pairs.end(), [](const auto& a, const auto& b) {
 		int one = std::stoi(a.first.substr(10));
-		int two = std::stoi(b.first.substr(10));
-		return one < two;
+	int two = std::stoi(b.first.substr(10));
+	return one < two;
 		});
 
 
@@ -425,6 +425,19 @@ void RaceManager::CheckpointReached(std::string carId)
 	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
+
+		float thislapTime = currentTime - lastlapTime;
+		if (thislapTime < bestlapTime)
+			bestlapTime = thislapTime;
+		lastlapTime = currentTime;
+
+		int min, sec, mil;
+		SecondsToTimer(bestlapTime, min, sec, mil);
+		std::string s = NumToString(min, 2)
+			+ ":" + NumToString(sec, 2)
+			+ ":" + NumToString(mil, 3);
+		laptimerText->ChangeText(s);
+
 		if (carId == _playerId && carinfo.at(carId).rounds >= _totalRounds)
 			OnRaceFinished();
 
