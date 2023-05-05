@@ -26,13 +26,17 @@ namespace JuegoDeAutos {
 		void Activate();
 
 	private:
+		//Main method called each frame tu move the enemy along the spline
 		void MoveEnemy();
+		//Spline to follow
 		LocoMotor::Spline* mySpline;
 		float timeStep; //lastTimeStep
 		//STATS
 		float enemySpeed;
+		//Separation from the middle of the road, it stays the same during the race
 		float startSeparation;
 		LocoMotor::RigidBody* rbComp;
+		//Used in the initial Countdown
 		bool _shouldMove;
 	};
 }
