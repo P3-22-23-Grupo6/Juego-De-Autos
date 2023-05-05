@@ -504,14 +504,16 @@ void RaceManager::UpdateRanking()
 	//	if (ranking[i] == _playerId)
 	//		playerPos = i;
 
-	std::string positionString;
+	std::string positionString = std::to_string(playerRacePos) + " ";
 
 	if (playerRacePos == 1)
-		positionString = "1 st";
+		positionString += "st";
 	else if (playerRacePos == 2)
-		positionString = "2 nd";
+		positionString += "nd";
 	else if (playerRacePos == 3)
-		positionString = "3 rd";
+		positionString += "rd";
+	else
+		positionString += "th";
 
 	positionText->ChangeText(positionString);
 
