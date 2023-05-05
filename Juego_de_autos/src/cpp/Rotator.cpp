@@ -24,10 +24,6 @@ void Rotator::Init(std::vector<std::pair<std::string, std::string>>& params) {
 	//_body = nullptr;
 }
 
-void Rotator::InitComponent() {
-
-}
-
 void Rotator::Update(float dt) {
 	LMVector3 up = gameObject->GetTransform()->GetRotation().Up();
 	LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up, rotateVel * dt);
