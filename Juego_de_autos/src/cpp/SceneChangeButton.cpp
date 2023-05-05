@@ -55,7 +55,6 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/scene.lua");
-			std::cout << "hola\n";
 		});
 		_raceButton->SetOnMouseImage("UIPanel2");
 		_raceButton->SetPressedImage("UIPanel3");

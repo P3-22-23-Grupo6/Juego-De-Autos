@@ -64,16 +64,12 @@ RaceManager* RaceManager::GetInstance()
 
 void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 {
-	std::cout << "RACEMANAGER INIT" << params.size() << std::endl << std::endl << std::endl;
 	mainSpline = new Spline();
 	CreateCheckpoints(params);
 }
 
 void RaceManager::Start()
 {
-	std::cout << std::endl << "RACEMANAGER START = gameModeVelocity = " << speedMode
-		<< std::endl << std::endl << std::endl << std::endl;
-
 	inputMng = LocoMotor::InputManager::GetInstance();
 
 	// Referencias
@@ -116,7 +112,6 @@ void RaceManager::Start()
 
 	int i = 1;
 	while (gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)) != nullptr) {
-		std::cout << "EnemyCar0" + std::to_string(i) + " registered" << std::endl;
 		RegisterNPCCar("EnemyCar0" + std::to_string(i));
 		enemies.push_back(gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)));
 		i++;
@@ -142,7 +137,6 @@ void RaceManager::Update(float dt)
 	{
 		GameObject* enemy = enemies[i];
 		std::string enemyName = "EnemyCar0" + std::to_string(i + 1);
-		//std::cout << "s = " << enemyName << std::endl;
 		UpdateCarPosition(enemyName, enemy->GetTransform()->GetPosition());
 
 		if (HasCarReachedCheckpoint(enemyName))
@@ -252,14 +246,14 @@ void RaceManager::Update(float dt)
 
 		}
 	}
-	else 
-		UpdateTimer(dt);
+
+
+	// Update timer
+	UpdateTimer(dt);
 }
 
 void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)
 {
-	std::cout << "CHECKPOINT DEBUG" << std::endl << std::endl
-		<< std::endl << std::endl << std::endl << std::endl;
 
 	// Comprobar si los datos introducidos desde LUA son validos
 	// Informar de los datos mal declarados en LUA y solo tener en cuenta los buenos
@@ -271,7 +265,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 
 		std::string checkName = name.substr(0, 10);
 		std::string checkpointNumber_ = name.substr(10);
-		std::cout << "checkpointNumber = " << checkpointNumber_ << std::endl << std::endl;
 
 		if (checkName == "checkpoint") {
 
@@ -306,15 +299,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		RegisterCheckpointPosition(result * 20);
 	}
 #pragma endregion
-
-
-	std::cout << "CHECKPOINTS = " << _checkpoints.size() << std::endl;
-	for (size_t i = 0; i < _checkpoints.size(); i++)
-	{
-		LMVector3 result = _checkpoints[i];
-		std::cout << "Checkpoint_" << i << " = (" << result.GetX()
-			<< ", " << result.GetY() << ", " << result.GetZ() << ")" << std::endl;
-	}
 }
 
 bool RaceManager::IsInt(const std::string& str) {
@@ -373,7 +357,6 @@ void RaceManager::CheckpointReached(std::string carId)
 {
 
 	carinfo.at(carId).currentCheckpoint++;
-	std::cout << "Car " << carId << " reached checkpoint " << carinfo.at(carId).currentCheckpoint << std::endl;
 	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
