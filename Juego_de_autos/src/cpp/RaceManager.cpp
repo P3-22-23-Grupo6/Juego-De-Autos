@@ -299,7 +299,7 @@ void RaceManager::Update(float dt)
 			endTimerStart = dt * timeConstant;
 		}
 		else {
-			endTimerCurrent = dt * timeConstant;
+			endTimerCurrent += dt * timeConstant;
 			if (endTimerCurrent - endTimerStart > 3 && !ended) {
 				ended = true;
 				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
