@@ -597,6 +597,7 @@ void RaceManager::CountdownUIChanged()
 	}
 	countdownAnimating = true;
 	countdownCurrentSize = 0;
+	if(countdownText)
 	countdownText->SetSize(0, 0);
 }
 
@@ -614,7 +615,7 @@ void RaceManager::UpdateTimer(float dt)
 	//std::string s = std::to_string(min)
 	//	+ ":" + std::to_string(sec)
 	//	+ ":" + std::to_string(mil);
-
+	if(timerText)
 	timerText->ChangeText(s);
 }
 
@@ -670,6 +671,9 @@ void RaceManager::OnRaceFinished() {
 	if (player != nullptr)
 		player->GetComponent<PlayerController>()->SetControllable(false);
 
-	countdownText->ChangeText(std::to_string(playerRacePos));
-	countdownText->SetSize(countdownNormalSize * 1.5f, countdownNormalSize * 1.5f);
+	if (countdownText) {
+		countdownText->ChangeText(std::to_string(playerRacePos));
+		countdownText->SetSize(countdownNormalSize * 1.5f, countdownNormalSize * 1.5f);
+	}
+	
 }
