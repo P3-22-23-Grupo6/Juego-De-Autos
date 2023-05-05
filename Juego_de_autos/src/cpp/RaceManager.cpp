@@ -124,28 +124,8 @@ void RaceManager::Start()
 		player->GetComponent<PlayerController>()->SetControllable(false);
 	}
 
-
-
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
 		gameObject->GetComponent<AudioSource>()->Set2D();
-
-	//SPLINE VISOR PARA DEBUG
-	/*
-	std::vector<GameObject*> waypointBalls = std::vector<GameObject*>();
-	int maxBalls = 100;
-	std::vector<std::pair<std::string, std::string>> pares = std::vector<std::pair<std::string, std::string>>();
-	pares.push_back({ "file", "SphereDebug.mesh" });
-	for (float i = 1; i < maxBalls; i++) {
-		auto wayPointNew = gameObject->GetScene()->AddGameobject("WayPointProc" + std::to_string(i));
-		wayPointNew->AddComponent("Transform");
-		wayPointNew->AddComponent("MeshRenderer", pares);
-		wayPointNew->GetComponent<MeshRenderer>()->PreStart();
-		waypointBalls.push_back(wayPointNew);
-	}
-	for (int i = 1; i < waypointBalls.size(); i++) {
-		waypointBalls[i]->SetScale(LMVector3(3.0f, 3.0f, 3.0f));
-		waypointBalls[i]->SetPosition(mainSpline->Interpolate((float)i / maxBalls));
-	}*/
 }
 
 void RaceManager::Update(float dt)
