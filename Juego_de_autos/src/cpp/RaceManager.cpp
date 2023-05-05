@@ -251,17 +251,17 @@ void RaceManager::Update(float dt)
 				countdownText->ChangeText(countdownNumber);
 
 				if (countDownSeconds == 3) {
-					if (gameObject->GetComponent<AudioSource>() != nullptr) gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/3.ogg");
+					if (countDownSeconds != countDownSecondsLastFrame && gameObject->GetComponent<AudioSource>() != nullptr) gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/3.ogg");
 					countdownText->SetTopColor(1, 0, 0);
 					countdownText->SetBottomColor(0, 0, 0);
 				}
 				else if (countDownSeconds == 2) {
-					if (gameObject->GetComponent<AudioSource>() != nullptr) gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/2.ogg");
+					if (countDownSeconds != countDownSecondsLastFrame && gameObject->GetComponent<AudioSource>() != nullptr) gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/2.ogg");
 					countdownText->SetTopColor(1, .5, 0);
 					countdownText->SetBottomColor(1, 0, 0);
 				}
 				else if (countDownSeconds == 1) {
-					if (gameObject->GetComponent<AudioSource>() != nullptr) gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/1.ogg");
+					if (countDownSeconds != countDownSecondsLastFrame && gameObject->GetComponent<AudioSource>() != nullptr) gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/1.ogg");
 					countdownText->SetTopColor(1, 1, 0);
 					countdownText->SetBottomColor(1, .5, 0);
 				}
