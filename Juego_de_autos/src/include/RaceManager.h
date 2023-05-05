@@ -58,6 +58,8 @@ namespace JuegoDeAutos {
 		void CheckpointReached(std::string carId);
 		/// @brief Speeds the bgm when entering the last lap
 		void OnLastLap();
+		/// @brief What happens when the race finished
+		void OnRaceFinished();
 
 		// Accede a la posicion del siguiente Checkpoint del Jugador
 		/// @brief Gets the position of the next checkpoint the player has to reach
@@ -136,6 +138,8 @@ namespace JuegoDeAutos {
 
 		//Player reference
 		LocoMotor::GameObject* player;
+
+		int playerRacePos = 0;
 	};
 }
 
