@@ -89,7 +89,7 @@ void EnemyAI::MoveEnemy()
 
 	LMVector3 upVector = gameObject->GetTransform()->GetRotation().Up();
 	upVector.Normalize();
-	double raycastDistance = 40;
+	double raycastDistance = 80;
 	upVector = upVector * raycastDistance;
 	to = from - upVector;
 
@@ -100,13 +100,13 @@ void EnemyAI::MoveEnemy()
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
 		//Intensidad con la que se va a actualizar el vector normal del coche
-		float pitchIntensity = 1000;
+		float pitchIntensity = 40;
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
 	}
 	else gameObject->GetTransform()->SetUpwards(LMVector3(0, 1, 0));
 	////LookAt
-	gameObject->GetTransform()->LookAt(mySpline->Interpolate(timeStep + 0.005f) + gameObject->GetTransform()->GetRotation().Right() * startSeparation);
+	//gameObject->GetTransform()->LookAt(mySpline->Interpolate(timeStep));// +gameObject->GetTransform()->GetRotation().Right() * startSeparation);
 }
 
 void EnemyAI::Activate()

@@ -65,6 +65,7 @@ RaceManager* RaceManager::GetInstance()
 void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 {
 	mainSpline = new Spline();
+	mainSpline->SetAutoCalc(true);
 	CreateCheckpoints(params);
 }
 
@@ -295,7 +296,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 		//Add points to Spline
-		mainSpline->AddPoint(result * 20);
+		mainSpline->AddPoint(result * 20 + LMVector3(0,8,0));
 		RegisterCheckpointPosition(result * 20);
 	}
 #pragma endregion
