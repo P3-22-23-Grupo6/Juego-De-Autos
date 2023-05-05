@@ -71,7 +71,11 @@ void EnemyAI::InitComponent() {
 }
 
 void EnemyAI::Update(float dt) {
-	if (!_shouldMove) return;
+	if (!_shouldMove)
+	{
+		_shouldMove = RaceManager::GetInstance()->HasCountDownFinished();
+		return;
+	}
 
 	timeStep += enemySpeed * dt/1000.0f;
 	if (timeStep > 1) {
