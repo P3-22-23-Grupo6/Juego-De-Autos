@@ -128,7 +128,6 @@ namespace JuegoDeAutos {
 		float lastlapTime = 0;
 
 		/// End Timer
-		float endTimer = 3;
 		float endTimerStart = -1;
 		float endTimerCurrent;
 		bool ended = false;

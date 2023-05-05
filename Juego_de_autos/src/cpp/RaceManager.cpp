@@ -7,7 +7,7 @@
 #include "LMSpline.h"
 #include "MeshRenderer.h"
 #include "ScriptManager.h"
-
+#include "Camera.h"
 // Componentes juego
 #include "RaceManager.h"
 #include "Checkpoint.h"
@@ -129,7 +129,8 @@ void RaceManager::Start()
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
 		gameObject->GetComponent<AudioSource>()->Set2D();
 
-	//NO QUITAR AUN HASTA QUE ESTE LA SPLINE
+	//SPLINE VISOR PARA DEBUG
+	/*
 	std::vector<GameObject*> waypointBalls = std::vector<GameObject*>();
 	int maxBalls = 100;
 	std::vector<std::pair<std::string, std::string>> pares = std::vector<std::pair<std::string, std::string>>();
@@ -144,7 +145,7 @@ void RaceManager::Start()
 	for (int i = 1; i < waypointBalls.size(); i++) {
 		waypointBalls[i]->SetScale(LMVector3(3.0f, 3.0f, 3.0f));
 		waypointBalls[i]->SetPosition(mainSpline->Interpolate((float)i / maxBalls));
-	}
+	}*/
 }
 
 void RaceManager::Update(float dt)
@@ -170,7 +171,7 @@ void RaceManager::Update(float dt)
 
 	// Update Laps Text
 	if (lapsText != nullptr) {
-		std::string s = std::to_string(carinfo.at(_playerId).rounds) + " / 3";
+		std::string s = std::to_string(carinfo.at(_playerId).rounds + 1) + " / 3";
 		lapsText->ChangeText(s);
 	}
 
@@ -251,7 +252,7 @@ void RaceManager::Update(float dt)
 		}
 		else {
 			endTimerCurrent += dt * timeConstant;
-			if (endTimerCurrent - endTimerStart > 3 && !ended) {
+			if (endTimerCurrent - endTimerStart > 5 && !ended) {
 				ended = true;
 				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
 			}
@@ -583,7 +584,7 @@ bool RaceManager::HasCountDownFinished()
 
 void RaceManager::OnLastLap() {
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
-		gameObject->GetComponent<AudioSource>()->SetFreq(1.5f);
+		gameObject->GetComponent<AudioSource>()->SetFreq(1.1f);
 }
 
 float RaceManager::GetSpeed() {
@@ -592,11 +593,23 @@ float RaceManager::GetSpeed() {
 
 void RaceManager::OnRaceFinished() {
 	raceCompleted = true;
-	if (player != nullptr)
+	if (player != nullptr) {
 		player->GetComponent<PlayerController>()->SetControllable(false);
+		if (gameObject->GetScene()->GetCamera() != nullptr)
+			gameObject->GetScene()->GetCamera()->GetComponent<Camera>()->SetTarget(nullptr, LMVector3(0, 0, 0));
+	}
 
 	if (countdownText) {
-		countdownText->ChangeText(std::to_string(playerRacePos));
+		std::string placement = std::to_string(playerRacePos);
+		if (playerRacePos == 1)
+			placement += "st";
+		else if (playerRacePos == 2)
+			placement += "nd";
+		else if (playerRacePos == 3)
+			placement += "rd";
+		else
+			placement += "th";
+		countdownText->ChangeText(placement);
 		countdownText->SetSize(countdownNormalSize * 1.5f, countdownNormalSize * 1.5f);
 	}
 	
