@@ -125,7 +125,11 @@ void RaceManager::Start()
 		if (countdtxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
 			countdownText = countdtxt->GetComponent<LocoMotor::UITextLM>();
 	}
-	laptimerText = gameObject->GetScene()->GetObjectByName("laptimerText")->GetComponent<LocoMotor::UITextLM>();
+	GameObject* laptimertxt = gameObject->GetScene()->GetObjectByName("laptimerText");
+	if (laptimertxt != nullptr) {
+		if (laptimertxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
+			laptimerText = laptimertxt->GetComponent<LocoMotor::UITextLM>();
+	}
 
 	
 	if (countdownText != nullptr)
