@@ -21,7 +21,6 @@ void Rotator::Init(std::vector<std::pair<std::string, std::string>>& params) {
 			rotateVel = std::stof(params[i].second);
 		}
 	}
-	//_body = nullptr;
 }
 
 void Rotator::Update(float dt) {

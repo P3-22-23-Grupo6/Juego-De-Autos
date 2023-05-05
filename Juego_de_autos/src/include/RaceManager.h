@@ -7,6 +7,7 @@
 namespace LocoMotor {
 	class UITextLM;
 	class Spline;
+	class InputManager;
 }
 
 namespace JuegoDeAutos {
@@ -16,9 +17,6 @@ namespace JuegoDeAutos {
 		int currentCheckpoint = 0;
 		LocoMotor::LMVector3 position;
 	};
-	//bool operator<(CarInfo const& a, CarInfo const& b) {
-	//	return a.rounds<b.rounds||(a.rounds==b.rounds&&a.checkpoints<b.checkpoints)||(a.rounds == b.rounds && a.checkpoints == b.checkpoints&&())
-	//}
 	class RaceManager : public LocoMotor::Component
 	{
 	public:
@@ -87,6 +85,8 @@ namespace JuegoDeAutos {
 
 		std::string NumToString(int num, int numZeros);
 
+		void ShowFPS();
+
 		static RaceManager* _instance;
 		// The number of rounds to complete the race
 		const int _totalRounds = 3;
@@ -149,6 +149,9 @@ namespace JuegoDeAutos {
 		LocoMotor::GameObject* player;
 
 		int playerRacePos = 0;
+
+		bool showFPS = false;
+		LocoMotor::InputManager* inputMng;
 	};
 }
 
