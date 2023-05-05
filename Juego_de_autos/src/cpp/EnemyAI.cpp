@@ -67,10 +67,6 @@ void EnemyAI::Init(std::vector<std::pair<std::string, std::string>>& params) {
 	//_body = nullptr;
 }
 
-void EnemyAI::InitComponent() {
-
-}
-
 void EnemyAI::Update(float dt) {
 	if (!_shouldMove)
 	{

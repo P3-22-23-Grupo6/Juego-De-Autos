@@ -60,38 +60,11 @@ RaceManager* RaceManager::GetInstance()
 	return _instance;
 }
 
-//void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
-//{
-//	//if (_instance == nullptr)_instance = this;
-//	//else delete this;
-//}
-
-void RaceManager::InitComponent()
-{
-	//std::cout << "RaceManager START" << "\n" << "\n" << "\n" << "\n" << "\n";
-}
-
 void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 {
 	std::cout << "RACEMANAGER INIT" << params.size() << std::endl << std::endl << std::endl;
-
-	//std::string result = checkpointPositions[0];
-	//std::cout << " (" << result << ")" << std::endl;
-
 	mainSpline = new Spline();
 	CreateCheckpoints(params);
-
-
-	//LocoMotor::GameObject* prueba = gameObject->GetScene()->AddGameobject("prueba");
-	//prueba->AddComponent("Transform");
-	//prueba->AddComponent("UITextLM");
-	//prueba->GetComponent<UITextLM>()->SetFont("BrunoAce");
-	//prueba->GetComponent<UITextLM>()->SetPosition(0, .7);
-	//prueba->GetComponent<UITextLM>()->AlignLeft();
-	//prueba->GetComponent<UITextLM>()->ChangeText("HUJIAVFENJKAFE");
-	//prueba->GetComponent<UITextLM>()->SetSize(0.1, 0.1);
-	//prueba->GetComponent<UITextLM>()->SetBottomColor(1, 1, 1);
-	//prueba->GetComponent<UITextLM>()->SetTopColor(1, 1, 1);
 }
 
 void RaceManager::Start()
@@ -100,11 +73,6 @@ void RaceManager::Start()
 		<< std::endl << std::endl << std::endl << std::endl;
 
 	// Referencias
-	//lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
-	//positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
-	//timerText = gameObject->GetScene()->GetObjectByName("timerText")->GetComponent<LocoMotor::UITextLM>();
-	//countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
-
 	GameObject* lapstxt = gameObject->GetScene()->GetObjectByName("lapsText");
 	if (lapstxt != nullptr) {
 		if (lapstxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
@@ -156,29 +124,8 @@ void RaceManager::Start()
 		player->GetComponent<PlayerController>()->SetControllable(false);
 	}
 
-
-
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
 		gameObject->GetComponent<AudioSource>()->Set2D();
-
-	//SPLINE VISOR PARA DEBUG
-	/*
-	std::vector<GameObject*> waypointBalls = std::vector<GameObject*>();
-	int maxBalls = 100;
-	std::vector<std::pair<std::string, std::string>> pares = std::vector<std::pair<std::string, std::string>>();
-	pares.push_back({ "file", "SphereDebug.mesh" });
-	for (float i = 1; i < maxBalls; i++) {
-		auto wayPointNew = gameObject->GetScene()->AddGameobject("WayPointProc" + std::to_string(i));
-		wayPointNew->AddComponent("Transform");
-		wayPointNew->AddComponent("MeshRenderer", pares);
-		wayPointNew->GetComponent<MeshRenderer>()->PreStart();
-		//nuevaSpl->RecalcTangents();
-		waypointBalls.push_back(wayPointNew);
-	}
-	for (int i = 1; i < waypointBalls.size(); i++) {
-		waypointBalls[i]->SetScale(LMVector3(3.0f, 3.0f, 3.0f));
-		waypointBalls[i]->SetPosition(mainSpline->Interpolate((float)i / maxBalls));
-	}*/
 }
 
 void RaceManager::Update(float dt)
@@ -194,30 +141,12 @@ void RaceManager::Update(float dt)
 		if (HasCarReachedCheckpoint(enemyName))
 			CheckpointReached(enemyName);
 	}
-	//UpdateCarPosition("Enemy1", enemy->GetTransform()->GetPosition());
-
-	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
-
 	// Comprobar si algun coche ha llegado a algun checkpoint
 	// En caso afirmativo, notificarlo
 
 
 	if (HasCarReachedCheckpoint(_playerId))
 		CheckpointReached(_playerId);
-
-	//if (HasCarReachedCheckpoint("Enemy1"))
-	//	CheckpointReached("Enemy1");
-
-
-	//for (size_t i = 0; i < enemies.size(); i++)
-	//{
-	//	std::string enemyId = "Enemy" + std::to_string(i);
-
-	//	//if (HasCarReachedCheckpoint(enemyId)){}
-	//		//CheckpointReached(enemyId);
-	//}
-
-
 	UpdateRanking();
 
 	// Update Laps Text
@@ -328,7 +257,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	for (size_t i = 0; i < params.size(); i++) {
 		std::string name = params[i].first;
 		char checkpointNumber = name[name.size() - 1];
-		//name.erase(name.size() - 1, 1); // elimina el �ltimo car�cter
 
 		std::string checkName = name.substr(0, 10);
 		std::string checkpointNumber_ = name.substr(10);
@@ -359,7 +287,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 
 #pragma region Convertir Coordenadas
 	// Convertir las coordenadas de strings a LMVector3
-	//mainSpline->SetAutoCalc(true);
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
@@ -398,7 +325,6 @@ void RaceManager::RegisterPlayerCar(std::string carId)
 {
 	CarInfo carInfo = { 0,0,  LMVector3() };
 	carinfo.insert(std::pair<std::string, CarInfo>(carId, carInfo));
-	//ranking.push_back(carId);
 	_playerId = carId;
 }
 
@@ -427,19 +353,13 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 	float distance = (targetCheckpointPosition - carPosition).Magnitude();
 
 
-	//if (carId == _playerId) {
-	//	std::cout << "PlayerCheckpointIndex = " << checkpointIndex << std::endl;
-	//	std::cout << "PlayerDistance = " << distance << std::endl;
-	//	std::cout << "PlayerRounds = " << carinfo.at(carId).rounds << std::endl;
-	//}
+
 	if (carId == "EnemyCar01") {
 		std::cout << "PlayerCheckpointIndex = " << checkpointIndex << std::endl;
 		std::cout << "PlayerDistance = " << distance << std::endl;
 		std::cout << "PlayerRounds = " << carinfo.at(carId).rounds << std::endl;
 	}
 
-	//std::cout << "DISTANCE TO NEXT CHECKPOINT " << distance << "\n";
-	//std::cout << "GO TO CHECKPOINT NUMBER " << carinfo.at(_playerId).currentCheckpoint << "\n";
 	if (distance < 300)
 		return true;
 	else
@@ -448,7 +368,6 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 
 void RaceManager::CheckpointReached(std::string carId)
 {
-	//std::cout << "CheckpointReached ";
 
 	carinfo.at(carId).currentCheckpoint++;
 	std::cout << "Car " << carId << " reached checkpoint " << carinfo.at(carId).currentCheckpoint << std::endl;
@@ -544,11 +463,6 @@ void RaceManager::UpdateRanking()
 			carsInSameCheckpoint.push_back(enemyName);
 	}
 
-
-	//std::cout << "CARS IN SAME CHECKPOINT = " << std::endl;
-	//for (size_t i = 0; i < carsInSameCheckpoint.size(); i++)
-	//	std::cout << i << " = " << carsInSameCheckpoint[i] << std::endl;
-
 	// Entre los coches que estan en el mismo checkpoint calcular usando distancias cuantos coches estan por delante del jugador
 
 	LMVector3 playerPos = carinfo.at(_playerId).position;
@@ -571,10 +485,6 @@ void RaceManager::UpdateRanking()
 
 	// Posicion del jugador respecto al resto de coches en la carrera
 	playerRacePos = carsAhead + 1;
-	//for (int i = 0; i < ranking.size(); i++)
-	//	if (ranking[i] == _playerId)
-	//		playerPos = i;
-
 	std::string positionString = std::to_string(playerRacePos);
 
 	if (playerRacePos == 1)
@@ -588,9 +498,6 @@ void RaceManager::UpdateRanking()
 
 	std::cout << "playerRacePos = " << playerRacePos << std::endl;
 	positionText->ChangeText(positionString);
-
-
-	//std::cout << "CURRENTPOSITION = " << positionString << std::endl;
 }
 
 void RaceManager::CountdownUIChanged()
@@ -613,9 +520,6 @@ void RaceManager::UpdateTimer(float dt)
 	std::string s = NumToString(min, 2)
 		+ ":" + NumToString(sec, 2)
 		+ ":" + NumToString(mil, 3);
-	//std::string s = std::to_string(min)
-	//	+ ":" + std::to_string(sec)
-	//	+ ":" + std::to_string(mil);
 	if(timerText)
 	timerText->ChangeText(s);
 }

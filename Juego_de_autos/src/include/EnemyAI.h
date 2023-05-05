@@ -20,9 +20,8 @@ namespace JuegoDeAutos {
 		void Start() override;
 
 		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
-		void InitComponent() override;
 		void Update(float dt) override;
-		//Activate the enemy so it starts moving
+		/// @brief Activate the enemy so it starts moving
 		void Activate();
 
 	private:

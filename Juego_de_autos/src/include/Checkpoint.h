@@ -4,8 +4,6 @@
 namespace JuegoDeAutos {
 	class RaceManager;
 
-	//class LocoMotor::GameObject;
-
 	class Checkpoint : public  LocoMotor::Component {
 	public:
 		const static std::string name;
@@ -13,10 +11,7 @@ namespace JuegoDeAutos {
 			return "CheckPoint";
 		};
 		Checkpoint();
-		//Checkpoint(GameObject* player = nullptr, int checkpointIndex = 0);
-
 		void InitComponent() override;
-		void Update(float dt) override;
 
 	private:
 

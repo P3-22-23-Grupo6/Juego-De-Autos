@@ -20,7 +20,6 @@
 
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
-//std::string PlayerController::name = "PlayerController";
 
 PlayerController::PlayerController()
 {
@@ -58,8 +57,6 @@ void PlayerController::Start()
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 	cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
-	//velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
-
 	GameObject* vltxt = gameObject->GetScene()->GetObjectByName("velocityText");
 	if (vltxt != nullptr) {
 		if (vltxt->GetComponent<UITextLM>() != nullptr)
@@ -85,14 +82,9 @@ void PlayerController::Update(float dt)
 	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	UpdateUpDirection(dt);
-
-	// Comprobar si ya se puede mover el coche despues del countdown inicial
-	//if (!raceManager->HasCountDownFinished())
-	//	return;
 	if (activeInput)
 	GetInput();
 
-	//if (raceManager->HasCountDownFinished())
 	MoveShip(dt);
 
 	TurnShip(dt);
@@ -117,7 +109,7 @@ void PlayerController::UpdateUpDirection(float dt)
 
 	if (rbComp->GetRaycastHit(from, to)) {
 		inAir = false;
-		rbComp->UseGravity(LMVector3(0, 0, 0)); // TODO:
+		rbComp->UseGravity(LMVector3(0, 0, 0));
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
 
@@ -126,7 +118,6 @@ void PlayerController::UpdateUpDirection(float dt)
 		float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
 		if (angle > 0.9f)
 			return;
-		//std::cout << "angle = " << angle << std::endl;
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
 		float pitchIntensity = 80;
@@ -285,10 +276,9 @@ void PlayerController::ApplyAngularForces(float dt)
 
 	if (physicsBasedMovement) {
 		if (turnRight)
-			// TODO: quitar la referencia directa a btvector3 abajo tambien
+			
 			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -angularForce * dt);
-		//rbComp->getBody()->applyTorqueImpulse(btVector3(gameObject->GetTransform()->GetRotation().Up().GetX(), gameObject->GetTransform()->GetRotation().Up().GetY(), gameObject->GetTransform()->GetRotation().Up().GetZ()) * -torqueStrengh);
-
+		
 		if (turnLeft)
 			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * dt);
 
@@ -343,8 +333,6 @@ void PlayerController::ApplyAngularForces(float dt)
 		LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up, currentRotationVelocity * dt);
 		gameObject->GetTransform()->SetRotation(newRotation);
 	}
-
-	//std::cout << "Rotation = ( " << r.GetX() << ", " << r.GetY() << ", " << r.GetZ() << ")" << std::endl;
 }
 
 

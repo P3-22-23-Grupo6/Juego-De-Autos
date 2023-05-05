@@ -27,7 +27,6 @@ namespace JuegoDeAutos {
 		~RaceManager();
 		static RaceManager* GetInstance();
 		/// @brief Sets the initial position of the listener to the gameobject's
-		void InitComponent() override;
 
 		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
 
