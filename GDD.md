@@ -191,6 +191,12 @@ No existe una pantalla de Game Over, el jugador solo sabe que ha perdido porque 
 
 ## <a name = "Estetica"> 3. Estética</a>
 
+![Captura de pantalla 2023-05-05 232308](https://user-images.githubusercontent.com/82372508/236571207-758f686a-d23a-4914-93ec-70ad736ee220.png)
+
+![Captura de pantalla 2023-05-05 232435](https://user-images.githubusercontent.com/82372508/236571297-2b2522df-0934-4956-aa60-a2ab44534e5b.png)
+
+![Captura de pantalla 2023-05-05 232457](https://user-images.githubusercontent.com/82372508/236571346-d936d064-c49e-4fed-920b-49e5710909ae.png)
+
 Se busca una estética inspirada principalmente en “F-Zero”. Coches con pocos polígonos y colores vivos.
 Los coches, tanto del jugador como de los rivales, tendrán colores más saturados e interesantes para que destaquen más. El escenario consiste en una playa con colores cálidos y un circuito situado en ella.
 
@@ -206,6 +212,9 @@ Debajo del título, existen dos botones ordenados verticalmente de la siguiente 
 - Jugar: al presionar este botón, se iniciará la carrera.
 
 ### <a name = "Interfaz"> 3.2 Interfaz</a> 
+
+![Captura de pantalla 2023-05-05 232547](https://user-images.githubusercontent.com/82372508/236571489-a0d8618e-885b-46c8-a1b0-5af14ebe46c5.png)
+
 
 La interfaz tendrá una complejidad baja. Constará de dos elementos base para el juego:
 El número de vueltas que lleva el coche del jugador: en la esquina inferior izquierda, se mostrará un texto de forma X / Y, siendo X el número de vueltas que lleva el jugador y siendo Y el número de vueltas totales para terminar la carrera.
