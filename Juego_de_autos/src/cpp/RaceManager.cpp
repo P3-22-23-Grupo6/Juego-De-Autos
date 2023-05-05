@@ -591,6 +591,10 @@ void RaceManager::UpdateRanking()
 
 void RaceManager::CountdownUIChanged()
 {
+	if (gameObject->GetComponent<AudioSource>() != nullptr)
+	{
+		gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/3.ogg");
+	}
 	countdownAnimating = true;
 	countdownCurrentSize = 0;
 	countdownText->SetSize(0, 0);
