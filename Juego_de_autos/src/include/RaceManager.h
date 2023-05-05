@@ -7,6 +7,7 @@
 namespace LocoMotor {
 	class UITextLM;
 	class Spline;
+	class InputManager;
 }
 
 namespace JuegoDeAutos {
@@ -87,6 +88,8 @@ namespace JuegoDeAutos {
 
 		std::string NumToString(int num, int numZeros);
 
+		void ShowFPS();
+
 		static RaceManager* _instance;
 		// The number of rounds to complete the race
 		const int _totalRounds = 3;
@@ -149,6 +152,9 @@ namespace JuegoDeAutos {
 		LocoMotor::GameObject* player;
 
 		int playerRacePos = 0;
+
+		bool showFPS = false;
+		LocoMotor::InputManager* inputMng;
 	};
 }
 
