@@ -1,0 +1,14 @@
+/// Just a simple red quad blended over the scene
+material RedQuad
+{
+    technique
+    {
+        pass
+        {
+            lighting on
+            diffuse 1.0 0.0 0.5 0.5
+            depth_check off
+            scene_blend alpha_blend
+        }
+    }
+}

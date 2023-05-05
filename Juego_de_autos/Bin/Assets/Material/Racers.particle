@@ -1,0 +1,266 @@
+particle_system Racers/Smoke
+{ // p.s. attributes
+    renderer billboard
+    billboard_type point // indica como se orientan los billboards
+    particle_width 3
+    particle_height 3
+    quota 1000 // maximo numero de particulas mostradas a la vez
+    material PartMats/Smoke
+
+    emitter Point
+    { // e.attributes
+        direction 0 0 -1
+        angle 10
+        emission_rate 70
+        time_to_live 6
+        velocity_min 150
+        velocity_max 200
+        colour 0.9 0.9 0.9 0.5
+    }
+
+    // affector ColourImage
+    // { // a.attributes
+    //     image smoke.png
+    //     colour 0.5 0.5 0.5 0.5
+    // }
+
+    // the texture
+    affector Rotator
+    { // a.attributes
+        rotation_range_start 0
+        rotation_range_end 360
+        rotation_speed_range_start -60
+        rotation_speed_range_end 200
+    }
+
+    affector Scaler
+    { // a.attributes
+        rate 5
+    }
+
+    affector DirectionRandomiser
+    { // a.attributes
+        randomness 5
+    }
+
+    affector ColourFader
+    { // a.attributes
+        alpha -0.1
+        red -0.5
+        green -0.5
+        blue -0.5
+    }
+}
+
+particle_system Racers/Fire
+{ // p.s. attributes
+    renderer billboard
+    billboard_type point // indica como se orientan los billboards
+    particle_width 2
+    particle_height 3
+    quota 1000 // maximo numero de particulas mostradas a la vez
+    material PartMats/Smoke
+
+    emitter Point
+    { // e.attributes
+        direction 0 1 -0.5
+        angle 10
+        emission_rate 100
+        time_to_live 0.5
+        velocity_min 10
+        velocity_max 20
+        colour 0.9 0.9 0.0 1.0
+    }
+
+    // affector ColourImage
+    // { // a.attributes
+    //     image smoke.png
+    //     colour 0.5 0.5 0.5 0.5
+    // }
+
+    // the texture
+    affector Rotator
+    { // a.attributes
+        rotation_range_start 0
+        rotation_range_end 360
+        rotation_speed_range_start -60
+        rotation_speed_range_end 200
+    }
+
+    affector Scaler
+    { // a.attributes
+        rate 3
+    }
+
+    affector DirectionRandomiser
+    { // a.attributes
+        randomness 5
+    }
+
+    affector ColourFader
+    { // a.attributes
+        alpha -1.0
+        red -1.0
+        green -2
+        //blue -0.5
+    }
+}
+particle_system Racers/JetEngine1
+{
+	material 		general/Flare
+	particle_width 	25
+	particle_height	25
+	cull_each		false
+	quota			200
+	billboard_type	point
+
+	emitter Point
+	{
+		angle 5
+		emission_rate 100
+        time_to_live    1
+        direction       0 -1 0
+        velocity_min    250
+        velocity_max    300
+        colour_range_start  1 1 0.5
+        colour_range_end    1 0.8 0.3
+		
+	}
+	affector ColourFader
+	{
+		red -0.25
+		green -1
+		blue -1
+	}
+	
+}
+particle_system Racers/JetEngine2
+{
+	material 		general/Flare
+	particle_width 	0.3
+	particle_height	0.3
+	cull_each		false
+	quota			400
+
+    local_space true
+    common_direction 0 0 -1
+
+	emitter Point
+	{
+		angle 6
+		emission_rate 100
+        time_to_live    .2
+        direction       0 0 1
+        velocity_min    0
+        velocity_max    10
+        colour_range_start  0.5 0.8 0.8
+        colour_range_end    0.3 0.8 0.9 
+		position 0.2 0.4 1
+	}
+
+    	emitter Point
+	{
+		angle 6
+		emission_rate 100
+        time_to_live    .2
+        direction       0 0 1
+        velocity_min    0
+        velocity_max    10
+        colour_range_start  0.5 0.8 0.8
+        colour_range_end    0.3 0.8 0.9 
+		position -0.2 0.4 1
+	}
+
+
+	affector ColourFader
+	{
+		red -1
+		green -1
+		blue -0.5
+        alpha -0.2
+	}
+
+    affector Scaler{
+        rate -1 -1
+    }
+}
+
+particle_system Racers/Sparkler{
+    material general/Flare
+    particle_width 	5
+	particle_height	5
+	cull_each		false
+	quota			40
+	billboard_type	point
+
+    emitter Box{
+        width 0.1
+        height 200
+        depth 0.1
+        angle 5
+		emission_rate 10
+        time_to_live    2
+        direction       0 90 0
+        velocity_min    50
+        velocity_max    100
+        colour_range_start  0 0 0
+        colour_range_end    1 1 1
+
+        position 200 30 -240
+    }
+
+    emitter Box{
+    width 0.1
+    height 100
+    depth 0.1
+    angle 5
+    emission_rate 10
+    time_to_live    2
+    direction       0 90 0
+    velocity_min    50
+    velocity_max    100
+    colour_range_start  0 0 0
+    colour_range_end    1 1 1
+
+    position -60 30 -140
+    }
+}
+
+particle_system Racers/Confetti
+{
+	material 		general/Confetti
+    particle_width 	5
+	particle_height	5
+	cull_each		false
+	quota			600
+	billboard_type	oriented_self
+
+    emitter Box
+	{
+        width 250
+        height 170
+        depth 50
+		angle 6
+		emission_rate 60
+        time_to_live    3
+        direction       0 -90 0
+        velocity_min    10
+        velocity_max    100
+        colour_range_start  0 0 0
+        colour_range_end    1 1 1
+        position 50 110 -170
+	}
+
+    affector Scaler{
+        rate -1 -1
+    }
+
+    affector Rotator
+    { // a.attributes
+        rotation_range_start 0
+        rotation_range_end 360
+        rotation_speed_range_start -60
+        rotation_speed_range_end 200
+    }
+
+}

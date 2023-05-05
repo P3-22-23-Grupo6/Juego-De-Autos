@@ -1,0 +1,37 @@
+material Racers/SkyBoxBlue
+{
+    technique
+    {
+        pass
+        {
+            depth_write off
+            lighting off
+
+			texture_unit
+			{
+				texture skyboxCubemap.png
+                //tex_coord_set 0
+                tex_address_mode mirror
+                rotate 0 90
+			}
+        }
+    }
+}
+material Racers/Smoke
+{
+    technique
+    {
+        pass
+        {
+            scene_blend alpha_blend
+            depth_write off
+            diffuse vertexcolour
+            lighting off
+            texture_unit
+            {
+                texture smoke.png
+                tex_address_mode clamp
+            }
+        }
+    }
+}
