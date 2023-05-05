@@ -101,12 +101,14 @@ void RaceManager::Start()
 
 	// Referencias
 	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
+	laptimerText = gameObject->GetScene()->GetObjectByName("laptimerText")->GetComponent<LocoMotor::UITextLM>();
 	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
 	timerText = gameObject->GetScene()->GetObjectByName("timerText")->GetComponent<LocoMotor::UITextLM>();
+	gameObject->GetScene()->GetObjectByName("laptimerText")->GetComponent<LocoMotor::UITextLM>();
 	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
-
+		
 	ranking.clear();
 	RegisterPlayerCar("Player");
 

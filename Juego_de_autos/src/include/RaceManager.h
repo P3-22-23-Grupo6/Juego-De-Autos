@@ -134,6 +134,7 @@ namespace JuegoDeAutos {
 		LocoMotor::UITextLM* positionText;
 		LocoMotor::UITextLM* countdownText;
 		LocoMotor::UITextLM* timerText;
+		LocoMotor::UITextLM* laptimerText;
 
 		std::vector<LocoMotor::GameObject*> enemies;
 
