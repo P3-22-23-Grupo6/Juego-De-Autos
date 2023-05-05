@@ -148,7 +148,6 @@ void RaceManager::Start()
 		RegisterNPCCar("EnemyCar0" + std::to_string(i));
 		enemies.push_back(gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)));
 		i++;
-
 	}
 
 
@@ -184,9 +183,16 @@ void RaceManager::Start()
 void RaceManager::Update(float dt)
 {
 	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
+	for (size_t i = 0; i < enemies.size(); i++)
+	{
+		GameObject* enemy = enemies[i];
+		std::string enemyName = "EnemyCar0" + std::to_string(i+1);
+		std::cout << "s = " << enemyName << std::endl;
+		UpdateCarPosition(enemyName, enemy->GetTransform()->GetPosition());
 
-	//GameObject* enemy = enemies[0];
-	//UpdateCarPosition("Enemy0", enemy->GetTransform()->GetPosition());
+		if (HasCarReachedCheckpoint(enemyName))
+			CheckpointReached(enemyName);
+	}
 	//UpdateCarPosition("Enemy1", enemy->GetTransform()->GetPosition());
 
 	//std::cout << "RACEMANAGER INFO : " << "\n" << "\n" << "\n" << "\n" << "\n";
@@ -197,9 +203,6 @@ void RaceManager::Update(float dt)
 
 	if (HasCarReachedCheckpoint(_playerId))
 		CheckpointReached(_playerId);
-
-	//if (HasCarReachedCheckpoint("Enemy0"))
-	//	CheckpointReached("Enemy0");
 
 	//if (HasCarReachedCheckpoint("Enemy1"))
 	//	CheckpointReached("Enemy1");
@@ -215,8 +218,6 @@ void RaceManager::Update(float dt)
 
 
 	UpdateRanking();
-
-	std::cout << "lapsText = " << lapsText << std::endl;
 
 	// Update Laps Text
 	if (lapsText != nullptr) {
@@ -410,8 +411,6 @@ void RaceManager::RegisterNPCCar(std::string carId)
 
 void RaceManager::UpdateCarPosition(std::string carId, LMVector3 newPosition)
 {
-	//std::cout << "carId = " << carId;
-
 	carinfo.at(carId).position.SetX(newPosition.GetX());
 	carinfo.at(carId).position.SetY(newPosition.GetY());
 	carinfo.at(carId).position.SetZ(newPosition.GetZ());
@@ -427,7 +426,12 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 	float distance = (targetCheckpointPosition - carPosition).Magnitude();
 
 
-	if (carId == _playerId) {
+	//if (carId == _playerId) {
+	//	std::cout << "PlayerCheckpointIndex = " << checkpointIndex << std::endl;
+	//	std::cout << "PlayerDistance = " << distance << std::endl;
+	//	std::cout << "PlayerRounds = " << carinfo.at(carId).rounds << std::endl;
+	//}
+	if (carId == "EnemyCar01") {
 		std::cout << "PlayerCheckpointIndex = " << checkpointIndex << std::endl;
 		std::cout << "PlayerDistance = " << distance << std::endl;
 		std::cout << "PlayerRounds = " << carinfo.at(carId).rounds << std::endl;
@@ -581,6 +585,7 @@ void RaceManager::UpdateRanking()
 	else
 		positionString += "th";
 
+	std::cout << "playerRacePos = " << playerRacePos << std::endl;
 	positionText->ChangeText(positionString);
 
 
