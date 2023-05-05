@@ -19,11 +19,6 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 
 void JuegoDeAutos::SceneChangeButton::Start()
 {
-
-	//_raceButton = gameObject->GetScene()->GetObjectByName("raceButton")->GetComponent<UIImageLM>();
-	//_speedButton = gameObject->GetScene()->GetObjectByName("speedButton")->GetComponent<UIImageLM>();
-	//_speedText = _speedButton->gameObject->GetComponent<UITextLM>();
-
 	GameObject* racebut = gameObject->GetScene()->GetObjectByName("raceButton");
 	if (racebut != nullptr) {
 		if (racebut->GetComponent<UIImageLM>() != nullptr)
