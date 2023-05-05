@@ -13,8 +13,6 @@ namespace JuegoDeAutos {
 		SceneChangeButton();
 		~SceneChangeButton();
 		void Start() override;
-
-
 	private:
 		/// @brief Changes the text of the UI 
 		void ChangeVelocity();

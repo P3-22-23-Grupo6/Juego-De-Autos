@@ -17,9 +17,6 @@ namespace JuegoDeAutos {
 		int currentCheckpoint = 0;
 		LocoMotor::LMVector3 position;
 	};
-	//bool operator<(CarInfo const& a, CarInfo const& b) {
-	//	return a.rounds<b.rounds||(a.rounds==b.rounds&&a.checkpoints<b.checkpoints)||(a.rounds == b.rounds && a.checkpoints == b.checkpoints&&())
-	//}
 	class RaceManager : public LocoMotor::Component
 	{
 	public:

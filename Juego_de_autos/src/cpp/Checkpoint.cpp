@@ -1,11 +1,9 @@
 #include "Checkpoint.h"
-//#include "RenderScene.h"
 #include "Scene.h"
 #include "GameObject.h"
 #include "Transform.h"
 #include "RaceManager.h"
 #include "PlayerController.h"
-//#include "Node.h"
 
 #include "RigidBody.h"
 using namespace JuegoDeAutos;
