@@ -161,7 +161,8 @@ void RaceManager::Start()
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
 		gameObject->GetComponent<AudioSource>()->Set2D();
 
-	//NO QUITAR AUN HASTA QUE ESTE LA SPLINE
+	//SPLINE VISOR PARA DEBUG
+	/*
 	std::vector<GameObject*> waypointBalls = std::vector<GameObject*>();
 	int maxBalls = 100;
 	std::vector<std::pair<std::string, std::string>> pares = std::vector<std::pair<std::string, std::string>>();
@@ -177,7 +178,7 @@ void RaceManager::Start()
 	for (int i = 1; i < waypointBalls.size(); i++) {
 		waypointBalls[i]->SetScale(LMVector3(3.0f, 3.0f, 3.0f));
 		waypointBalls[i]->SetPosition(mainSpline->Interpolate((float)i / maxBalls));
-	}
+	}*/
 }
 
 void RaceManager::Update(float dt)
