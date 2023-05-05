@@ -6,6 +6,8 @@
 #include "UITextLM.h"
 #include "LMSpline.h"
 #include "MeshRenderer.h"
+#include "InputManager.h"
+#include "LMInputs.h"
 #include "ScriptManager.h"
 #include "Camera.h"
 // Componentes juego
@@ -64,6 +66,7 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 {
 	std::cout << "RACEMANAGER INIT" << params.size() << std::endl << std::endl << std::endl;
 	mainSpline = new Spline();
+	mainSpline->SetAutoCalc(true);
 	CreateCheckpoints(params);
 }
 
@@ -71,6 +74,8 @@ void RaceManager::Start()
 {
 	std::cout << std::endl << "RACEMANAGER START = gameModeVelocity = " << speedMode
 		<< std::endl << std::endl << std::endl << std::endl;
+
+	inputMng = LocoMotor::InputManager::GetInstance();
 
 	// Referencias
 	GameObject* lapstxt = gameObject->GetScene()->GetObjectByName("lapsText");
@@ -99,7 +104,7 @@ void RaceManager::Start()
 			laptimerText = laptimertxt->GetComponent<LocoMotor::UITextLM>();
 	}
 
-	
+
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
 
@@ -130,12 +135,15 @@ void RaceManager::Start()
 
 void RaceManager::Update(float dt)
 {
+	if (inputMng->GetKeyDown(LMKS_F))
+		ShowFPS();
+
 	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		GameObject* enemy = enemies[i];
-		std::string enemyName = "EnemyCar0" + std::to_string(i+1);
-		std::cout << "s = " << enemyName << std::endl;
+		std::string enemyName = "EnemyCar0" + std::to_string(i + 1);
+		//std::cout << "s = " << enemyName << std::endl;
 		UpdateCarPosition(enemyName, enemy->GetTransform()->GetPosition());
 
 		if (HasCarReachedCheckpoint(enemyName))
@@ -173,10 +181,10 @@ void RaceManager::Update(float dt)
 				if (enemies.size() > 0)
 					for (size_t i = 0; i < enemies.size(); i++) {
 						EnemyAI* ai = enemies[i]->GetComponent<EnemyAI>();
-						if(ai)
+						if (ai)
 							ai->Activate();
 					}
-						
+
 
 			}
 			else if (countDownSeconds > 0 && countDownSeconds <= 3) {
@@ -217,13 +225,19 @@ void RaceManager::Update(float dt)
 		}
 	}
 
-	if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
-	else {
-		fpsCounterUpdated = 0;
-		UITextLM* fps = gameObject->GetComponent<UITextLM>();
-		if (fps != nullptr)
-			fps->ChangeText(std::to_string(1000 / ((int)dt+1)) + " fps");
+	UITextLM* fps = gameObject->GetComponent<UITextLM>();
+	if (fps != nullptr) {
+		if (showFPS) {
+			if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
+			else {
+				fpsCounterUpdated = 0;
+				if (fps != nullptr)
+					fps->ChangeText(std::to_string(1000 / ((int)dt + 1)) + " fps");
+			}
+		}
+		else fps->ChangeText("");
 	}
+
 
 	//Si termina la carrera a los 3 segundos te envia al menu
 	if (raceCompleted) {
@@ -289,7 +303,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 		//Add points to Spline
-		mainSpline->AddPoint(result * 20);
+		mainSpline->AddPoint(result * 20 + LMVector3(0,8,0));
 		RegisterCheckpointPosition(result * 20);
 	}
 #pragma endregion
@@ -350,14 +364,6 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 
 	float distance = (targetCheckpointPosition - carPosition).Magnitude();
 
-
-
-	if (carId == "EnemyCar01") {
-		std::cout << "PlayerCheckpointIndex = " << checkpointIndex << std::endl;
-		std::cout << "PlayerDistance = " << distance << std::endl;
-		std::cout << "PlayerRounds = " << carinfo.at(carId).rounds << std::endl;
-	}
-
 	if (distance < 300)
 		return true;
 	else
@@ -373,17 +379,20 @@ void RaceManager::CheckpointReached(std::string carId)
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
 
-		float thislapTime = currentTime - lastlapTime;
-		if (thislapTime < bestlapTime)
-			bestlapTime = thislapTime;
-		lastlapTime = currentTime;
+		if (carId == _playerId) {
+			float thislapTime = currentTime - lastlapTime;
+			if (thislapTime < bestlapTime)
+				bestlapTime = thislapTime;
+			lastlapTime = currentTime;
 
-		int min, sec, mil;
-		SecondsToTimer(bestlapTime, min, sec, mil);
-		std::string s = NumToString(min, 2)
-			+ ":" + NumToString(sec, 2)
-			+ ":" + NumToString(mil, 3);
-		laptimerText->ChangeText(s);
+			int min, sec, mil;
+			SecondsToTimer(bestlapTime, min, sec, mil);
+			std::string s = NumToString(min, 2)
+				+ ":" + NumToString(sec, 2)
+				+ ":" + NumToString(mil, 3);
+
+			laptimerText->ChangeText(s);
+		}
 
 		if (carId == _playerId && carinfo.at(carId).rounds >= _totalRounds)
 			OnRaceFinished();
@@ -494,17 +503,16 @@ void RaceManager::UpdateRanking()
 	else
 		positionString += "th";
 
-	std::cout << "playerRacePos = " << playerRacePos << std::endl;
 	positionText->ChangeText(positionString);
 }
 
 void RaceManager::CountdownUIChanged()
 {
-	
+
 	countdownAnimating = true;
 	countdownCurrentSize = 0;
-	if(countdownText)
-	countdownText->SetSize(0, 0);
+	if (countdownText)
+		countdownText->SetSize(0, 0);
 }
 
 void RaceManager::UpdateTimer(float dt)
@@ -518,8 +526,8 @@ void RaceManager::UpdateTimer(float dt)
 	std::string s = NumToString(min, 2)
 		+ ":" + NumToString(sec, 2)
 		+ ":" + NumToString(mil, 3);
-	if(timerText)
-	timerText->ChangeText(s);
+	if (timerText)
+		timerText->ChangeText(s);
 }
 
 void RaceManager::SecondsToTimer(float _sec, int& min, int& sec, int& mil)
@@ -553,6 +561,11 @@ std::string RaceManager::NumToString(int num, int numZeros) {
 	}
 
 	return s;
+}
+
+void JuegoDeAutos::RaceManager::ShowFPS()
+{
+	showFPS = !showFPS;
 }
 
 bool RaceManager::HasCountDownFinished()
@@ -590,5 +603,5 @@ void RaceManager::OnRaceFinished() {
 		countdownText->ChangeText(placement);
 		countdownText->SetSize(countdownNormalSize * 1.5f, countdownNormalSize * 1.5f);
 	}
-	
+
 }
