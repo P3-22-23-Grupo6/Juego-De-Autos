@@ -64,12 +64,15 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	switch (RaceManager::speedMode)
 	{
 	case JuegoDeAutos::RaceManager::low:
+		if(_speedText)
 		_speedText->ChangeText("100cc");
 		break;
 	case JuegoDeAutos::RaceManager::middle:
+		if (_speedText)
 		_speedText->ChangeText("200cc");
 		break;
 	case JuegoDeAutos::RaceManager::high:
+		if (_speedText)
 		_speedText->ChangeText("500cc");
 		break;
 	default:
@@ -92,12 +95,15 @@ void JuegoDeAutos::SceneChangeButton::ChangeVelocity()
 	switch (aux)
 	{
 	case JuegoDeAutos::RaceManager::low:
+		if (_speedText)
 		_speedText->ChangeText("100cc");
 		break;
 	case JuegoDeAutos::RaceManager::middle:
+		if (_speedText)
 		_speedText->ChangeText("200cc");
 		break;
 	case JuegoDeAutos::RaceManager::high:
+		if (_speedText)
 		_speedText->ChangeText("500cc");
 		break;
 	default:
