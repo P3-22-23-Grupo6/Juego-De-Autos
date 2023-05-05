@@ -106,7 +106,7 @@ void RaceManager::Start()
 	//countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
 
 	GameObject* lapstxt = gameObject->GetScene()->GetObjectByName("lapsText");
-	if (lapsText != nullptr) {
+	if (lapstxt != nullptr) {
 		if (lapstxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
 			lapsText = lapstxt->GetComponent<LocoMotor::UITextLM>();
 	}
@@ -215,6 +215,8 @@ void RaceManager::Update(float dt)
 
 
 	UpdateRanking();
+
+	std::cout << "lapsText = " << lapsText << std::endl;
 
 	// Update Laps Text
 	if (lapsText != nullptr) {
