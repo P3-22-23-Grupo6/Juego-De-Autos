@@ -6,6 +6,7 @@
 #include "UITextLM.h"
 #include "LMSpline.h"
 #include "MeshRenderer.h"
+#include "ScriptManager.h"
 
 // Componentes juego
 #include "RaceManager.h"
@@ -255,6 +256,22 @@ void RaceManager::Update(float dt)
 		UITextLM* fps = gameObject->GetComponent<UITextLM>();
 		if (fps != nullptr)
 			fps->ChangeText(std::to_string(1000 / (int)dt) + " fps");
+	}
+
+
+	//Si termina la carrera a los 3 segundos te envia al menu
+	if (raceCompleted) {
+		if (endTimerStart < 0) {
+			endTimerStart = dt * timeConstant;
+		}
+		else {
+			endTimerCurrent = dt * timeConstant;
+			if (endTimerCurrent - endTimerStart > 3 && !ended) {
+				ended = true;
+				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
+			}
+
+		}
 	}
 
 

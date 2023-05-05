@@ -123,6 +123,12 @@ namespace JuegoDeAutos {
 		// Timer
 		float currentTime;
 
+		/// End Timer
+		float endTimer = 3;
+		float endTimerStart = -1;
+		float endTimerCurrent;
+		bool ended = false;
+
 		// UI
 		LocoMotor::UITextLM* lapsText;
 		LocoMotor::UITextLM* positionText;
