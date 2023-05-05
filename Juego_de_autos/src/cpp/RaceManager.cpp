@@ -290,9 +290,8 @@ void RaceManager::Update(float dt)
 		fpsCounterUpdated = 0;
 		UITextLM* fps = gameObject->GetComponent<UITextLM>();
 		if (fps != nullptr)
-			fps->ChangeText(std::to_string(1000 / (int)dt) + " fps");
+			fps->ChangeText(std::to_string(1000 / ((int)dt+1)) + " fps");
 	}
-
 
 	//Si termina la carrera a los 3 segundos te envia al menu
 	if (raceCompleted) {

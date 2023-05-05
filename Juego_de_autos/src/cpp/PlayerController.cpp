@@ -219,7 +219,9 @@ void PlayerController::TurnShip(float dt)
 	// Definir variables necesarios para los calculos de las rotaciones
 	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
 	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
+
 	double yAngVel = gameObject->GetTransform()->GetRotation().Rotate(currentAngularVelocity).GetY();
+	if (yAngVel == 0)yAngVel = 0.0001;
 	int direction = abs(yAngVel) / yAngVel; // -1 : izquierda // 1 : derecha
 
 
