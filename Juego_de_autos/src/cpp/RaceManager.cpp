@@ -121,6 +121,14 @@ void RaceManager::Start()
 	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
 	enemies.push_back(enemy);
 
+
+	if (gameObject->GetScene()->GetObjectByName("coche") != nullptr) {
+		player = gameObject->GetScene()->GetObjectByName("coche");
+		player->GetComponent<PlayerController>()->SetControllable(false);
+	}
+
+
+
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
 		gameObject->GetComponent<AudioSource>()->Set2D();
 
@@ -197,6 +205,9 @@ void RaceManager::Update(float dt)
 				countdownFinished = true;
 				countdownText->SetBottomColor(0, 1, 0);
 				countdownText->ChangeText("GO!");
+				if (player != nullptr)
+					player->GetComponent<PlayerController>()->SetControllable(true);
+
 			}
 			else if (countDownSeconds > 0 && countDownSeconds <= 3) {
 				std::string countdownNumber = std::to_string(countDownSeconds);
