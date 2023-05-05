@@ -101,6 +101,10 @@ namespace JuegoDeAutos {
 		/// @param newAcceleration The acceletration
 		void SetAcceleration(float newAcceleration);
 
+		/// @brief Enables or disables input for the ship
+		/// @param controllable True if the ship is controllable
+		void SetControllable(bool controllable);
+
 	private:
 
 		// Referencias
@@ -160,5 +164,7 @@ namespace JuegoDeAutos {
 		float linearDragIntensity;
 
 		bool physicsBasedMovement = true;
+
+		bool activeInput = false;
 	};
 }

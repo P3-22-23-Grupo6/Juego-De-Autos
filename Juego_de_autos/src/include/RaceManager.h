@@ -133,6 +133,9 @@ namespace JuegoDeAutos {
 
 		// SpeedModes
 		int speeds[3] = { 500, 1000, 2000 };
+
+		//Player reference
+		LocoMotor::GameObject* player;
 	};
 }
 

@@ -81,7 +81,7 @@ void PlayerController::Update(float dt)
 	// Comprobar si ya se puede mover el coche despues del countdown inicial
 	//if (!raceManager->HasCountDownFinished())
 	//	return;
-
+	if (activeInput)
 	GetInput();
 
 	//if (raceManager->HasCountDownFinished())
@@ -478,4 +478,9 @@ void JuegoDeAutos::PlayerController::DisableGyro()
 void JuegoDeAutos::PlayerController::SetAcceleration(float newAcceleration)
 {
 	acceleration = newAcceleration;
+}
+
+void JuegoDeAutos::PlayerController::SetControllable(bool controllable)
+{
+	this->activeInput = controllable;
 }
