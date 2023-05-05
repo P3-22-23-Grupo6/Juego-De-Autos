@@ -21,7 +21,6 @@ void Boost::Init(std::vector<std::pair<std::string, std::string>>& params) {
 			thrust = std::stof(params[i].second);
 		}
 	}
-	//_body = nullptr;
 }
 
 void Boost::InitComponent() {
@@ -34,5 +33,5 @@ void Boost::Update(float dt) {
 
 void Boost::OnCollisionEnter(GameObject* other)
 {
- other->GetComponent<RigidBody>()->AddForce(LMVector3(other->GetTransform()->GetRotation().Forward() * thrust));
+	other->GetComponent<RigidBody>()->AddForce(LMVector3(other->GetTransform()->GetRotation().Forward() * thrust));
 }

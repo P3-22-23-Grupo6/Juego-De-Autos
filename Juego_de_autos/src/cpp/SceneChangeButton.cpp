@@ -20,11 +20,23 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 void JuegoDeAutos::SceneChangeButton::Start()
 {
 
-	_raceButton = gameObject->GetScene()->GetObjectByName("raceButton")->GetComponent<UIImageLM>();
-	_speedButton = gameObject->GetScene()->GetObjectByName("speedButton")->GetComponent<UIImageLM>();
-	_speedText = _speedButton->gameObject->GetComponent<UITextLM>();
+	//_raceButton = gameObject->GetScene()->GetObjectByName("raceButton")->GetComponent<UIImageLM>();
+	//_speedButton = gameObject->GetScene()->GetObjectByName("speedButton")->GetComponent<UIImageLM>();
+	//_speedText = _speedButton->gameObject->GetComponent<UITextLM>();
 
-	AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+	GameObject* racebut = gameObject->GetScene()->GetObjectByName("raceButton");
+	if (racebut != nullptr) {
+		if (racebut->GetComponent<UIImageLM>() != nullptr)
+			_raceButton = racebut->GetComponent<UIImageLM>();
+	}
+	GameObject* speedbut = gameObject->GetScene()->GetObjectByName("speedButton");
+	if (speedbut != nullptr) {
+		if (speedbut->GetComponent<UIImageLM>() != nullptr) {
+			_speedButton = speedbut->GetComponent<UIImageLM>();
+			if (_speedButton->gameObject->GetComponent<UITextLM>() != nullptr)
+				_speedText = _speedButton->gameObject->GetComponent<UITextLM>();
+		}
+	}
 
 	if (_speedButton != nullptr) {
 		_speedButton->CallOnClick([this]() {

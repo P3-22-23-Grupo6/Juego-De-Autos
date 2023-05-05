@@ -100,10 +100,32 @@ void RaceManager::Start()
 		<< std::endl << std::endl << std::endl << std::endl;
 
 	// Referencias
-	lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
-	positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
-	timerText = gameObject->GetScene()->GetObjectByName("timerText")->GetComponent<LocoMotor::UITextLM>();
-	countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
+	//lapsText = gameObject->GetScene()->GetObjectByName("lapsText")->GetComponent<LocoMotor::UITextLM>();
+	//positionText = gameObject->GetScene()->GetObjectByName("positionText")->GetComponent<LocoMotor::UITextLM>();
+	//timerText = gameObject->GetScene()->GetObjectByName("timerText")->GetComponent<LocoMotor::UITextLM>();
+	//countdownText = gameObject->GetScene()->GetObjectByName("countdownText")->GetComponent<LocoMotor::UITextLM>();
+
+	GameObject* lapstxt = gameObject->GetScene()->GetObjectByName("lapsText");
+	if (lapsText != nullptr) {
+		if (lapstxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
+			lapsText = lapstxt->GetComponent<LocoMotor::UITextLM>();
+	}
+	GameObject* postxt = gameObject->GetScene()->GetObjectByName("positionText");
+	if (postxt != nullptr) {
+		if (postxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
+			positionText = postxt->GetComponent<LocoMotor::UITextLM>();
+	}
+	GameObject* timetxt = gameObject->GetScene()->GetObjectByName("timerText");
+	if (timetxt != nullptr) {
+		if (timetxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
+			timerText = timetxt->GetComponent<LocoMotor::UITextLM>();
+	}
+	GameObject* countdtxt = gameObject->GetScene()->GetObjectByName("countdownText");
+	if (countdtxt != nullptr) {
+		if (countdtxt->GetComponent<LocoMotor::UITextLM>() != nullptr)
+			countdownText = countdtxt->GetComponent<LocoMotor::UITextLM>();
+	}
+
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
 
@@ -210,8 +232,12 @@ void RaceManager::Update(float dt)
 				if (player != nullptr)
 					player->GetComponent<PlayerController>()->SetControllable(true);
 				if (enemies.size() > 0)
-					for (size_t i = 0; i < enemies.size(); i++)
-						enemies[i]->GetComponent<EnemyAI>()->Activate();
+					for (size_t i = 0; i < enemies.size(); i++) {
+						EnemyAI* ai = enemies[i]->GetComponent<EnemyAI>();
+						if(ai)
+							ai->Activate();
+					}
+						
 
 			}
 			else if (countDownSeconds > 0 && countDownSeconds <= 3) {

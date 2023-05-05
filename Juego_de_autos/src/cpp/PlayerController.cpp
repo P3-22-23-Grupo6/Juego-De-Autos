@@ -58,7 +58,15 @@ void PlayerController::Start()
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 	cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
-	velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
+	//velocityText = gameObject->GetScene()->GetObjectByName("velocityText")->GetComponent<UITextLM>();
+
+	GameObject* vltxt = gameObject->GetScene()->GetObjectByName("velocityText");
+	if (vltxt != nullptr) {
+		if (vltxt->GetComponent<UITextLM>() != nullptr)
+		{
+			velocityText = vltxt->GetComponent<UITextLM>();
+		}
+	}
 
 	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
 	rbComp->AddForce(forw * 2000);
