@@ -432,7 +432,7 @@ void PlayerController::AdjustFov()
 void JuegoDeAutos::PlayerController::CheckRespawn()
 {
 	// Si la nave se cae al agua, acceder al ultimo chekpoint
-	if (gameObject->GetTransform()->GetPosition().GetY() < -900)
+	if (gameObject->GetTransform()->GetPosition().GetY() < -550)
 	{
 		LMVector3 lastCheckpointPos = raceManager->GetPlayerLastCheckpointPosition();
 		gameObject->GetTransform()->SetPosition(lastCheckpointPos + LMVector3(0, 50, 0));
