@@ -111,15 +111,16 @@ void RaceManager::Start()
 
 	carinfo.at(_playerId).rounds = 0;
 
-	RegisterNPCCar("Enemy0");
-	RegisterNPCCar("Enemy1");
 
 
-	GameObject* enemy = gameObject->GetScene()->GetObjectByName("Enemy0");
-	enemies.push_back(enemy);
+	int i = 1;
+	while (gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)) != nullptr) {
+		std::cout << "EnemyCar0" + std::to_string(i) + " registered" << std::endl;
+		RegisterNPCCar("EnemyCar0" + std::to_string(i));
+		enemies.push_back(gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)));
+		i++;
 
-	enemy = gameObject->GetScene()->GetObjectByName("Enemy1");
-	enemies.push_back(enemy);
+	}
 
 
 	if (gameObject->GetScene()->GetObjectByName("coche") != nullptr) {
@@ -207,6 +208,9 @@ void RaceManager::Update(float dt)
 				countdownText->ChangeText("GO!");
 				if (player != nullptr)
 					player->GetComponent<PlayerController>()->SetControllable(true);
+				if (enemies.size() > 0)
+					for (size_t i = 0; i < enemies.size(); i++)
+						enemies[i]->GetComponent<EnemyAI>()->Activate();
 
 			}
 			else if (countDownSeconds > 0 && countDownSeconds <= 3) {
