@@ -402,9 +402,11 @@ void RaceManager::CheckpointReached(std::string carId)
 	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
-		if (carId == _playerId && carinfo.at(carId).rounds >= _totalRounds) {
-			raceCompleted = true;
-		}
+		if (carId == _playerId && carinfo.at(carId).rounds >= _totalRounds)
+			OnRaceFinished();
+
+		else if (carId == _playerId && carinfo.at(carId).rounds >= _totalRounds - 1)
+			OnLastLap();
 	}
 	// Actualizar el siguiente checkpoint
 }
@@ -499,12 +501,12 @@ void RaceManager::UpdateRanking()
 
 
 	// Posicion del jugador respecto al resto de coches en la carrera
-	int playerRacePos = carsAhead + 1;
+	playerRacePos = carsAhead + 1;
 	//for (int i = 0; i < ranking.size(); i++)
 	//	if (ranking[i] == _playerId)
 	//		playerPos = i;
 
-	std::string positionString = std::to_string(playerRacePos) + " ";
+	std::string positionString = std::to_string(playerRacePos);
 
 	if (playerRacePos == 1)
 		positionString += "st";
@@ -591,4 +593,13 @@ void RaceManager::OnLastLap() {
 
 float RaceManager::GetSpeed() {
 	return speeds[speedMode];
+}
+
+void RaceManager::OnRaceFinished() {
+	raceCompleted = true;
+	if (player != nullptr)
+		player->GetComponent<PlayerController>()->SetControllable(false);
+
+	countdownText->ChangeText(std::to_string(playerRacePos));
+	countdownText->SetSize(countdownNormalSize * 1.5f, countdownNormalSize * 1.5f);
 }
