@@ -18,6 +18,7 @@ EnemyAI::EnemyAI() {
 	timeStep = 0;
 	enemySpeed = 0;
 	startSeparation = 0;
+	_shouldMove = false;
 }
 
 void JuegoDeAutos::EnemyAI::Start()
@@ -48,12 +49,9 @@ void JuegoDeAutos::EnemyAI::Start()
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
 
-		//LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		//double hoverDist = 12; // 7
-		//LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
-		//gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement + (mySpline->Interpolate(timeStep) - gameObject->GetTransform()->GetPosition()) * 0.2f);
 	}
 	enemySpeed += std::rand() % 80 * 0.0001f;
+	MoveEnemy();
 }
 
 void EnemyAI::Init(std::vector<std::pair<std::string, std::string>>& params) {
@@ -73,10 +71,17 @@ void EnemyAI::InitComponent() {
 }
 
 void EnemyAI::Update(float dt) {
+	if (!_shouldMove) return;
+
 	timeStep += enemySpeed * dt/1000.0f;
 	if (timeStep > 1) {
 		timeStep = 0.0f;
 	}
+	MoveEnemy();
+	
+}
+void EnemyAI::MoveEnemy()
+{
 	// Definir el punto inicial y la direccion del raycast
 	LMVector3 from = gameObject->GetTransform()->GetPosition();
 	LMVector3 to;
@@ -88,37 +93,22 @@ void EnemyAI::Update(float dt) {
 	to = from - upVector;
 
 	gameObject->SetPosition(mySpline->Interpolate(timeStep) + gameObject->GetTransform()->GetRotation().Right() * startSeparation);
-	//rbComp->AddForce(mySpline->Interpolate(timeStep));
-	//gameObject->GetTransform()->SetPosition(gameObject->GetTransform()->GetPosition() + 
-	//										(mySpline->Interpolate(timeStep) - gameObject->GetTransform()->GetPosition()) * 0.2f);
-	//LMVector3 newPos = mySpline->Interpolate(timeStep) ;
-	//gameObject->GetTransform()->SetPosition(newPos);
 
 	if (rbComp->GetRaycastHit(from, to)) {
-		
+
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
-	
-		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
-		// Ignorarlo, esto bloquea el subirse a las paredes
-		//float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
-		//if (angle > 0.9f)
-		//	return;
-		
 		//Intensidad con la que se va a actualizar el vector normal del coche
 		float pitchIntensity = 1000;
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
-	
-		//LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		//double hoverDist = 12; // 7
-		//LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
-		//gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement + (mySpline->Interpolate(timeStep) - gameObject->GetTransform()->GetPosition()) * 0.2f);
 	}
-	else gameObject->GetTransform()->SetUpwards(LMVector3(0,1,0));
+	else gameObject->GetTransform()->SetUpwards(LMVector3(0, 1, 0));
 	////LookAt
 	gameObject->GetTransform()->LookAt(mySpline->Interpolate(timeStep + 0.005f) + gameObject->GetTransform()->GetRotation().Right() * startSeparation);
-	////Set Position
-	//double hoverDist = 12; // 7
-	//LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
+}
+
+void EnemyAI::Activate()
+{
+	_shouldMove = true;
 }
