@@ -70,7 +70,7 @@ void PlayerController::Update(float dt)
 {
 	if (inputMng->GetKey(LMKS_0))
 	{
-		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/sc.lua");
+		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
 		return;
 	}
 
