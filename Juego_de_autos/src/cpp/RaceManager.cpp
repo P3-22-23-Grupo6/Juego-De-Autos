@@ -282,7 +282,6 @@ void RaceManager::Update(float dt)
 			else
 				countdownAnimating = false;
 		}
-
 	}
 
 	if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
@@ -299,7 +298,7 @@ void RaceManager::Update(float dt)
 			endTimerStart = dt * timeConstant;
 		}
 		else {
-			endTimerCurrent = dt * timeConstant;
+			endTimerCurrent += dt * timeConstant;
 			if (endTimerCurrent - endTimerStart > 3 && !ended) {
 				ended = true;
 				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
@@ -384,14 +383,6 @@ bool RaceManager::IsInt(const std::string& str) {
 	catch (const std::exception&) {
 		return false;
 	}
-}
-
-bool RaceManager::Compare(const std::pair<std::string, std::string>& p1, const std::pair<std::string, std::string>& p2) {
-	std::string s1 = p1.first;
-	std::string s2 = p2.first;
-	char last_char_s1 = s1.back(); // obtiene el �ltimo car�cter de la cadena s1
-	char last_char_s2 = s2.back(); // obtiene el �ltimo car�cter de la cadena s2
-	return last_char_s1 < last_char_s2; // compara los �ltimos caracteres de las cadenas
 }
 
 void RaceManager::RegisterCheckpointPosition(LMVector3 checkpointPos)
@@ -482,6 +473,9 @@ void RaceManager::CheckpointReached(std::string carId)
 LMVector3 RaceManager::GetPlayerLastCheckpointPosition()
 {
 	int checkpointIndex = carinfo.at(_playerId).currentCheckpoint;
+
+	if (checkpointIndex > 62 && checkpointIndex < 75)
+		checkpointIndex = 62;
 
 	checkpointIndex--;
 	if (checkpointIndex < 0)

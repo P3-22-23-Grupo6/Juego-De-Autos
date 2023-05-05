@@ -40,8 +40,7 @@ namespace JuegoDeAutos {
 		void CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params);
 		/// @brief Checks if the string can be an int type
 		bool IsInt(const std::string& str);
-		
-		bool Compare(const std::pair<std::string, std::string>& p1, const std::pair<std::string, std::string>& p2);
+
 		/// @brief Registers the position of the checkpoint
 		/// @param checkpointPos The position of the checkpiont being registereds
 		void RegisterCheckpointPosition(LocoMotor::LMVector3 checkpointPos);
