@@ -22,13 +22,17 @@ namespace JuegoDeAutos {
 		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
 		void InitComponent() override;
 		void Update(float dt) override;
+		//Activate the enemy so it starts moving
+		void Activate();
 
 	private:
+		void MoveEnemy();
 		LocoMotor::Spline* mySpline;
 		float timeStep; //lastTimeStep
 		//STATS
 		float enemySpeed;
 		float startSeparation;
 		LocoMotor::RigidBody* rbComp;
+		bool _shouldMove;
 	};
 }
