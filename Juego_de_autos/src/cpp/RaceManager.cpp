@@ -558,7 +558,7 @@ bool RaceManager::HasCountDownFinished()
 
 void RaceManager::OnLastLap() {
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
-		gameObject->GetComponent<AudioSource>()->SetFreq(1.1f);
+		gameObject->GetComponent<AudioSource>()->SetFreq(1.05f);
 }
 
 float RaceManager::GetSpeed() {
