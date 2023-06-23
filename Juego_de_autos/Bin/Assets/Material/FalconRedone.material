@@ -13,6 +13,32 @@ material FalconMat {
         }
     }
 }
+material StingerMaterial {
+    
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture Stinger_Atlas_t.png
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
+material ColibriMat {
+    
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture Colibri_Atlas_t.png
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
 material TestMat {
     
     technique {
@@ -125,6 +151,7 @@ material AtlasMaterial {
     
     technique {
         pass {
+            //polygon_mode wireframe
             //diffuse 0.8 0.8 0.8 1.0
             //specular 0.5 0.0 0 0 0
             lighting off
@@ -268,6 +295,7 @@ material SkyMat {
                 texture skyboxCubemap.png
                 tex_address_mode wrap
                 colour_op modulate
+                scroll_anim 0.005 0.0
             }
         }
     }
@@ -392,14 +420,75 @@ material UIPanel {
     }
 }
 
-
-material LocomotorImg {
+material UIPanel2 {
+    technique {
+        pass {
+            lighting off
+            alpha_rejection greater 150
+            filtering trilinear
+            texture_unit {
+                texture PanelTest2.png
+                filtering trilinear
+                tex_address_mode wrap
+                colour_op modulate
+                //mipmap_bias 2.0
+            }
+        }
+    }
+}
+material AO_Decal {
+    technique {
+        pass {
+            lighting off
+            scene_blend alpha_blend
+            texture_unit {
+                texture AO_Decal.png
+                tex_address_mode wrap
+                colour_op modulate
+                //mipmap_bias 2.0
+            }
+        }
+    }
+}
+material UIPanel3 {
     technique {
         pass {
             lighting off
             alpha_rejection greater 150
             texture_unit {
-                texture lmlog.png
+                texture PanelTest3.png
+                filtering trilinear
+                tex_address_mode wrap
+                colour_op modulate
+                //mipmap_bias 2.0
+            }
+        }
+    }
+}
+
+
+material LocomotorImg {
+    technique {
+        pass {
+            lighting off
+            scene_blend alpha_blend
+            texture_unit {
+                texture TituloFinal.png
+                tex_address_mode wrap
+                colour_op modulate
+                //mipmap_bias 2.0
+            }
+        }
+    }
+}
+
+material LogoImg {
+    technique {
+        pass {
+            lighting off
+            scene_blend alpha_blend
+            texture_unit {
+                texture CroppedLogo.png
                 tex_address_mode wrap
                 colour_op modulate
                 //mipmap_bias 2.0
