@@ -565,15 +565,43 @@ float RaceManager::GetSpeed() {
 	return speeds[speedMode];
 }
 
-int RaceManager::GetPlayerLastCheckpointIndex() {
+int RaceManager::GetPlayerLastCheckpointIndex() 
+{
 	return carinfo.at(_playerId).currentCheckpoint;
 }
 
-int RaceManager::GetTotalNumberOfCheckpoints() {
+int RaceManager::GetTotalNumberOfCheckpoints() 
+{
 	return _checkpoints.size();
 }
 
-void RaceManager::OnRaceFinished() {
+LocoMotor::LMVector3 RaceManager::GetFirstEnemyPos() 
+{
+	int enemyMaxRounds = 0, enemyMaxCheckpoints = 0;
+	std::string firstEnemyName = "";
+	for (size_t i = 0; i < ranking.size(); i++)
+	{
+		std::string enemyName = ranking[i];
+
+		int enemyRound = carinfo.at(enemyName).rounds;
+		int enemyCheckpoints = carinfo.at(enemyName).currentCheckpoint;
+
+		if (enemyRound > enemyMaxRounds) {
+			enemyMaxRounds = enemyRound;
+			firstEnemyName = enemyName;
+		}
+		else if (enemyRound == enemyMaxRounds && enemyCheckpoints > enemyMaxCheckpoints) {
+			enemyMaxCheckpoints = enemyCheckpoints;
+			firstEnemyName = enemyName;
+		}
+	}
+	if (firstEnemyName == "")return LMVector3(0, 0, 0);
+	return carinfo.at(firstEnemyName).position;
+	//return gameObject->GetScene()->GetObjectByName(firstEnemyName)->GetTransform()->GetPosition();
+}
+
+void RaceManager::OnRaceFinished() 
+{
 	raceCompleted = true;
 	if (player != nullptr) {
 		player->GetComponent<PlayerController>()->SetControllable(false);

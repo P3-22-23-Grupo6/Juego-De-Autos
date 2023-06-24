@@ -9,6 +9,7 @@
 
 // Componentes juego
 #include "RaceManager.h"
+#include "EnemyAI.h"
 
 #include <iostream>
 
@@ -19,7 +20,7 @@ Projectile::Projectile()
 {
 	raceManager = nullptr;
 	rbComp = nullptr;
-	projectileSpeed = 0.005;
+	projectileSpeed = 0.02;
 	timeStep = 0;
 	totalNumbCheckpoints = 0;
 }
@@ -44,6 +45,7 @@ void JuegoDeAutos::Projectile::Start()
 	rbComp->UseGravity(LMVector3(0, 0, 0));
 	spline = raceManager->GetSpline();
 	totalNumbCheckpoints = raceManager->GetTotalNumberOfCheckpoints();
+	initialPos = gameObject->GetTransform()->GetPosition();
 	SetActive(false);
 }
 
@@ -53,8 +55,9 @@ void Projectile::Update(float dt)
 	if (timeStep > 1) {
 		timeStep = 0.0f;
 	}
-	std::cout << timeStep << "\n";
-	FollowSpline(dt);
+	//std::cout << timeStep << "\n";
+	if (IsCloseToEnemy())FollowEnemyCar(dt);
+	else FollowSpline(dt);
 }
 
 void JuegoDeAutos::Projectile::OnEnable()
@@ -73,8 +76,22 @@ void JuegoDeAutos::Projectile::OnEnable()
 	}
 }
 
+void JuegoDeAutos::Projectile::OnDisable()
+{
+	gameObject->SetPosition(initialPos);
+}
+
+void Projectile::OnCollisionEnter(GameObject* other)
+{
+	if (gameObject->GetComponent<EnemyAI>() != nullptr) {
+		std::cout << "Choque enemigo\n";
+		SetActive(false);
+	}
+}
+
 void JuegoDeAutos::Projectile::FollowSpline(float dt)
 {
+	std::cout << "Siguiendo carretera\n";
 	LMVector3 from = gameObject->GetTransform()->GetPosition();
 	LMVector3 to;
 
@@ -100,6 +117,7 @@ void JuegoDeAutos::Projectile::FollowSpline(float dt)
 
 void JuegoDeAutos::Projectile::FollowEnemyCar(float dt)
 {
+	std::cout << "Siguiendo coche\n";
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();
 	LMVector3 to;
 
@@ -109,9 +127,11 @@ void JuegoDeAutos::Projectile::FollowEnemyCar(float dt)
 	upVector = upVector * raycastDistance;
 	to = pos - upVector;
 
-	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-	forw.Normalize();
-	gameObject->SetPosition(pos + forw * dt * .06f);
+	//LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+	//forw.Normalize();
+	LMVector3 dir = raceManager->GetFirstEnemyPos() - gameObject->GetTransform()->GetPosition();
+	dir.Normalize();
+	gameObject->SetPosition(pos + dir * dt * .6f);
 
 	if (rbComp->GetRaycastHit(pos, to)) {
 
@@ -123,4 +143,10 @@ void JuegoDeAutos::Projectile::FollowEnemyCar(float dt)
 		gameObject->GetTransform()->SetUpwards(newUp);
 	}
 	else gameObject->GetTransform()->SetUpwards(LMVector3(0, 1, 0));
+}
+
+bool Projectile::IsCloseToEnemy() 
+{
+	float minRange = 100;
+	return (raceManager->GetFirstEnemyPos() - gameObject->GetTransform()->GetPosition()).Magnitude() < minRange;
 }

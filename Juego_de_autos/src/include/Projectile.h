@@ -1,9 +1,11 @@
 #pragma once
 #include "Component.h"
+#include "LMVector.h"
 
 namespace LocoMotor {
 	class RigidBody;
 	class Spline;
+	class GameObject;
 }
 
 namespace JuegoDeAutos{
@@ -20,12 +22,16 @@ namespace JuegoDeAutos{
 		void Start()override;
 		void Update(float dt) override;
 		void OnEnable();
+		void OnDisable();
+		void OnCollisionEnter(LocoMotor::GameObject* other);
 	private:
 		void FollowSpline(float dt);
 		void FollowEnemyCar(float dt);
+		bool IsCloseToEnemy();
 		RaceManager* raceManager;
 		LocoMotor::RigidBody* rbComp;
 		LocoMotor::Spline* spline;
+		LocoMotor::LMVector3 initialPos;
 		float projectileSpeed;
 		float timeStep;
 		int totalNumbCheckpoints;

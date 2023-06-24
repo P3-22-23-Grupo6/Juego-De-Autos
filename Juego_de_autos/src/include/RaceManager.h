@@ -74,6 +74,8 @@ namespace JuegoDeAutos {
 
 		int GetTotalNumberOfCheckpoints();
 
+		LocoMotor::LMVector3 GetFirstEnemyPos();
+
 		enum SpeedMode { low, middle, high };
 		static SpeedMode speedMode;
 
