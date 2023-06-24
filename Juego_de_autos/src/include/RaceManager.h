@@ -70,6 +70,10 @@ namespace JuegoDeAutos {
 		
 		float GetSpeed();
 
+		int GetPlayerLastCheckpointIndex();
+
+		int GetTotalNumberOfCheckpoints();
+
 		enum SpeedMode { low, middle, high };
 		static SpeedMode speedMode;
 

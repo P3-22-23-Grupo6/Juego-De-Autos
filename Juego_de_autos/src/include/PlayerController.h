@@ -107,6 +107,8 @@ namespace JuegoDeAutos {
 
 		void OnCollisionEnter(LocoMotor::GameObject* other) override;
 
+		void CreateProjectile();
+
 	private:
 
 		// Referencias

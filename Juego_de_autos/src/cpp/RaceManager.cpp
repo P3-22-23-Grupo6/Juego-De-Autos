@@ -285,8 +285,8 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	// Ordenar las posiciones de los checkpoints
 	std::sort(checkpointPositions_pairs.begin(), checkpointPositions_pairs.end(), [](const auto& a, const auto& b) {
 		int one = std::stoi(a.first.substr(10));
-	int two = std::stoi(b.first.substr(10));
-	return one < two;
+		int two = std::stoi(b.first.substr(10));
+		return one < two;
 		});
 
 
@@ -296,7 +296,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 		//Add points to Spline
-		mainSpline->AddPoint(result * 20 + LMVector3(0,8,0));
+		mainSpline->AddPoint(result * 20 + LMVector3(0, 8, 0));
 		RegisterCheckpointPosition(result * 20);
 	}
 #pragma endregion
@@ -563,6 +563,14 @@ void RaceManager::OnLastLap() {
 
 float RaceManager::GetSpeed() {
 	return speeds[speedMode];
+}
+
+int RaceManager::GetPlayerLastCheckpointIndex() {
+	return carinfo.at(_playerId).currentCheckpoint;
+}
+
+int RaceManager::GetTotalNumberOfCheckpoints() {
+	return _checkpoints.size();
 }
 
 void RaceManager::OnRaceFinished() {
