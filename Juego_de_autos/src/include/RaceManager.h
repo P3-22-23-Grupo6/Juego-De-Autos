@@ -76,6 +76,8 @@ namespace JuegoDeAutos {
 
 		LocoMotor::LMVector3 GetFirstEnemyPos();
 
+		void StunFirstEnemyCar();
+
 		enum SpeedMode { low, middle, high };
 		static SpeedMode speedMode;
 
@@ -158,6 +160,8 @@ namespace JuegoDeAutos {
 
 		bool showFPS = false;
 		LocoMotor::InputManager* inputMng;
+
+		std::string firstEnemyName;
 	};
 }
 

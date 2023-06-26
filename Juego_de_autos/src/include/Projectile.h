@@ -23,11 +23,11 @@ namespace JuegoDeAutos{
 		void Update(float dt) override;
 		void OnEnable();
 		void OnDisable();
-		void OnCollisionEnter(LocoMotor::GameObject* other);
 	private:
 		void FollowSpline(float dt);
 		void FollowEnemyCar(float dt);
-		bool IsCloseToEnemy();
+		bool IsInChaseRange();
+		bool IsInImpactRange();
 		RaceManager* raceManager;
 		LocoMotor::RigidBody* rbComp;
 		LocoMotor::Spline* spline;

@@ -23,6 +23,8 @@ namespace JuegoDeAutos {
 		void Update(float dt) override;
 		/// @brief Activate the enemy so it starts moving
 		void Activate();
+		/// @brief Method to call to stun the enemy car
+		void StunCar();
 
 	private:
 		//Main method called each frame tu move the enemy along the spline
@@ -37,5 +39,10 @@ namespace JuegoDeAutos {
 		LocoMotor::RigidBody* rbComp;
 		//Used in the initial Countdown
 		bool _shouldMove;
+		// Stun variables
+		float stunDuration, stunStartTime, currentTime;
+		bool isStunned;
+		LocoMotor::LMQuaternion initialRotation;
+		float rotationVelocity;
 	};
 }

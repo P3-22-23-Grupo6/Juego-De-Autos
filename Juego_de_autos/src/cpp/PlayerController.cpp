@@ -498,7 +498,7 @@ void JuegoDeAutos::PlayerController::CreateProjectile()
 	GameObject* projectile = gameObject->GetScene()->GetObjectByName("projectile");
 	if (projectile == nullptr)return;
 	if (projectile->GetComponent<Projectile>()->isEnabled())return;
-	projectile->SetPosition(gameObject->GetTransform()->GetPosition());
+	//projectile->SetPosition(gameObject->GetTransform()->GetPosition());
 	projectile->GetComponent<Projectile>()->SetActive(true);
 
 	/*if (gameObject->GetScene()->GetObjectByName("PlayerProjectile") != nullptr)return;

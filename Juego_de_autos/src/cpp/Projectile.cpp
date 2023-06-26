@@ -20,7 +20,7 @@ Projectile::Projectile()
 {
 	raceManager = nullptr;
 	rbComp = nullptr;
-	projectileSpeed = 0.02;
+	projectileSpeed = 0;
 	timeStep = 0;
 	totalNumbCheckpoints = 0;
 }
@@ -28,8 +28,8 @@ Projectile::Projectile()
 void Projectile::Init(std::vector<std::pair<std::string, std::string>>& params)
 {
 	for (int i = 0; i < params.size(); i++) {
-		if (params[i].first == "thrust") {
-			
+		if (params[i].first == "speed") {
+			projectileSpeed = std::stof(params[i].second);
 		}
 	}
 }
@@ -56,15 +56,21 @@ void Projectile::Update(float dt)
 		timeStep = 0.0f;
 	}
 	//std::cout << timeStep << "\n";
-	if (IsCloseToEnemy())FollowEnemyCar(dt);
+	if (IsInChaseRange()) {
+		FollowEnemyCar(dt);
+		if (IsInImpactRange()) {
+			raceManager->StunFirstEnemyCar();
+			SetActive(false);
+		}
+	}
 	else FollowSpline(dt);
 }
 
 void JuegoDeAutos::Projectile::OnEnable()
 {
-	/*if (gameObject->GetScene()->GetObjectByName("coche") != nullptr) {
+	if (gameObject->GetScene()->GetObjectByName("coche") != nullptr) {
 		gameObject->SetPosition(gameObject->GetScene()->GetObjectByName("coche")->GetTransform()->GetPosition());
-	}*/
+	}
 	if (raceManager == nullptr) {
 		SetActive(false);
 		return;
@@ -81,17 +87,9 @@ void JuegoDeAutos::Projectile::OnDisable()
 	gameObject->SetPosition(initialPos);
 }
 
-void Projectile::OnCollisionEnter(GameObject* other)
-{
-	if (gameObject->GetComponent<EnemyAI>() != nullptr) {
-		std::cout << "Choque enemigo\n";
-		SetActive(false);
-	}
-}
 
 void JuegoDeAutos::Projectile::FollowSpline(float dt)
 {
-	std::cout << "Siguiendo carretera\n";
 	LMVector3 from = gameObject->GetTransform()->GetPosition();
 	LMVector3 to;
 
@@ -117,7 +115,6 @@ void JuegoDeAutos::Projectile::FollowSpline(float dt)
 
 void JuegoDeAutos::Projectile::FollowEnemyCar(float dt)
 {
-	std::cout << "Siguiendo coche\n";
 	LMVector3 pos = gameObject->GetTransform()->GetPosition();
 	LMVector3 to;
 
@@ -145,8 +142,14 @@ void JuegoDeAutos::Projectile::FollowEnemyCar(float dt)
 	else gameObject->GetTransform()->SetUpwards(LMVector3(0, 1, 0));
 }
 
-bool Projectile::IsCloseToEnemy() 
+bool Projectile::IsInChaseRange() 
 {
-	float minRange = 100;
+	float minRange = 200;
+	return (raceManager->GetFirstEnemyPos() - gameObject->GetTransform()->GetPosition()).Magnitude() < minRange;
+}
+
+bool Projectile::IsInImpactRange()
+{
+	float minRange = 30;
 	return (raceManager->GetFirstEnemyPos() - gameObject->GetTransform()->GetPosition()).Magnitude() < minRange;
 }

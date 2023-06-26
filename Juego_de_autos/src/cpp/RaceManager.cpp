@@ -33,6 +33,7 @@ RaceManager::RaceManager()
 	raceCompleted = false;
 	fpsCounterUpdated = fpsCounterRefreshRate;
 	mainSpline = nullptr;
+	firstEnemyName = "";
 
 	if (_instance == nullptr)
 	{
@@ -578,7 +579,7 @@ int RaceManager::GetTotalNumberOfCheckpoints()
 LocoMotor::LMVector3 RaceManager::GetFirstEnemyPos() 
 {
 	int enemyMaxRounds = 0, enemyMaxCheckpoints = 0;
-	std::string firstEnemyName = "";
+	std::string possibleFirstEnemyName = "";
 	for (size_t i = 0; i < ranking.size(); i++)
 	{
 		std::string enemyName = ranking[i];
@@ -588,16 +589,31 @@ LocoMotor::LMVector3 RaceManager::GetFirstEnemyPos()
 
 		if (enemyRound > enemyMaxRounds) {
 			enemyMaxRounds = enemyRound;
-			firstEnemyName = enemyName;
+			possibleFirstEnemyName = enemyName;
 		}
 		else if (enemyRound == enemyMaxRounds && enemyCheckpoints > enemyMaxCheckpoints) {
 			enemyMaxCheckpoints = enemyCheckpoints;
-			firstEnemyName = enemyName;
+			possibleFirstEnemyName = enemyName;
 		}
 	}
-	if (firstEnemyName == "")return LMVector3(0, 0, 0);
+	if (possibleFirstEnemyName == "")return LMVector3(0, 0, 0);
+	firstEnemyName = possibleFirstEnemyName;
 	return carinfo.at(firstEnemyName).position;
 	//return gameObject->GetScene()->GetObjectByName(firstEnemyName)->GetTransform()->GetPosition();
+}
+
+void RaceManager::StunFirstEnemyCar() 
+{
+	if (enemies.size() > 0) 
+	{
+		for (size_t i = 0; i < enemies.size(); i++) {
+			std::string enemyName = "EnemyCar0" + std::to_string(i + 1);
+			if (enemyName == firstEnemyName) {
+				enemies[i]->GetComponent<EnemyAI>()->StunCar();
+				return;
+			}
+		}
+	}
 }
 
 void RaceManager::OnRaceFinished() 

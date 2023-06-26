@@ -19,6 +19,11 @@ EnemyAI::EnemyAI() {
 	enemySpeed = 0;
 	startSeparation = 0;
 	_shouldMove = false;
+	currentTime = 0.0f;
+	stunDuration = 2.0f;
+	stunStartTime = 0.0f;
+	isStunned = false;
+	rotationVelocity = 0.8;
 }
 
 void JuegoDeAutos::EnemyAI::Start()
@@ -74,6 +79,21 @@ void EnemyAI::Update(float dt) {
 		return;
 	}
 
+	// Stun logic
+	currentTime += dt * 0.001;
+	if (isStunned) {
+		if (stunDuration + stunStartTime < currentTime) {
+			isStunned = false;
+			gameObject->GetTransform()->SetRotation(initialRotation);
+		}
+		else {
+			LMVector3 up = gameObject->GetTransform()->GetRotation().Up();
+			LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up, rotationVelocity * dt);
+			gameObject->GetTransform()->SetRotation(newRotation);
+			return;
+		}
+	}
+
 	timeStep += enemySpeed * dt/1000.0f;
 	if (timeStep > 1) {
 		timeStep = 0.0f;
@@ -113,3 +133,11 @@ void EnemyAI::Activate()
 {
 	_shouldMove = true;
 }
+
+void EnemyAI::StunCar()
+{
+	stunStartTime = currentTime;
+	initialRotation = gameObject->GetTransform()->GetRotation();
+	isStunned = true;
+}
+
