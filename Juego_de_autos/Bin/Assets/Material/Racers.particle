@@ -229,9 +229,9 @@ particle_system Racers/Sparkler{
 particle_system Racers/Confetti
 {
 	material 		general/Confetti
-    particle_width 	3
+    particle_width 	5
 	particle_height	5
-	cull_each		true
+	cull_each		false
 	quota			600
 	billboard_type	oriented_self
 
@@ -241,7 +241,7 @@ particle_system Racers/Confetti
         height 170
         depth 50
 		angle 6
-		emission_rate 40
+		emission_rate 60
         time_to_live    3
         direction       0 -90 0
         velocity_min    10
