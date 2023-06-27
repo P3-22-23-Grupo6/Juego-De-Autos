@@ -17,6 +17,7 @@ OilBlind::OilBlind() {
 	_farPos = { 200,25,0 };
 	_rm = RaceManager::GetInstance();
 	_splitted = false;
+
 }
 
 void OilBlind::Init(std::vector<std::pair<std::string, std::string>>& params) {
@@ -26,13 +27,24 @@ void OilBlind::Init(std::vector<std::pair<std::string, std::string>>& params) {
 		}
 		
 	}
+	
+}
+
+void OilBlind::Start() {
+	LocoMotor::LMVector3 up = gameObject->GetTransform()->GetRotation().Right();
+	LocoMotor::LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up,90);
+	gameObject->GetTransform()->SetRotation(newRotation);
+
 }
 
 void OilBlind::Update(float dt) {
+
+
+
 	if (_rm->RestoreOil()) {
 		if (_splitted) {
 			_splitted = false;
-			this->gameObject->SetPosition(_oriPos);
+			gameObject->SetPosition(_oriPos);
 		}
 		_rm->SetRestore(false);
 	}
@@ -46,8 +58,8 @@ void OilBlind::OnCollisionEnter(GameObject* other)
 	if (other->GetName() == "coche") {
 		_rm->setBlind(_timeSplitted);
 		//_rm->OnRaceFinished();
-		_oriPos = this->gameObject->GetTransform()->GetPosition();
-		this->gameObject->SetPosition(_farPos);
+		_oriPos = gameObject->GetTransform()->GetPosition();
+		gameObject->SetPosition(_farPos);
 		_splitted = true;
 	}
 	//this->gameObject->GetScene()->RemoveGameobject(this->gameObject->GetName());

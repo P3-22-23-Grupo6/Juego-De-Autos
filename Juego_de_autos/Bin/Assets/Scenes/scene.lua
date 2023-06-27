@@ -41,11 +41,11 @@ Area01_Oil = {
     Transform = {
         position = "0 25 200",
         rotation = "0 0 0",
-        scale = "40 40 40"
+        scale = "5 5 5"
     },
     MeshRenderer = {
-        file =  "Stinger.mesh",
-        static = ""
+        file =  "Torus.001.mesh",
+        
     },
     RigidBodyComponent = {
         mass = 0,
@@ -58,16 +58,6 @@ Area01_Oil = {
         farpos = "200 25 0"
     },
     
-}
-
-oilstain = {
-    UIImageLM = { 
-        posx = ".0",
-        posy = ".0",
-        sizex = "1",
-        sizey = "1",
-        img = "StainClear"
-    }
 }
 
 raceManager = {
@@ -293,6 +283,17 @@ do ---------------------   UI   ------------------------------
             bottomcolor = "1 1 1",
         }
     }
+
+    oilstain = {
+        UIImageLM = { 
+            posx = "0",
+            posy = "0",
+            sizex = "1",
+            sizey = "1",
+            img = "StainClear"
+        }
+    }
+
 end ----------------------------------------------------------
 do ---------------------   AREA01   ------------------------------
     Area01_RoadMain = {

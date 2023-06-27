@@ -16,6 +16,7 @@ namespace JuegoDeAutos {
 		};
 		OilBlind();
 		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
+		void Start()override;
 
 		void Update(float dt) override;
 
