@@ -36,6 +36,40 @@ coche = {
         file = "Racers/JetEngine2"
     }
 }
+
+Area01_Oil = {
+    Transform = {
+        position = "0 25 200",
+        rotation = "0 0 0",
+        scale = "40 40 40"
+    },
+    MeshRenderer = {
+        file =  "Stinger.mesh",
+        static = ""
+    },
+    RigidBodyComponent = {
+        mass = 0,
+        usedAsRaycast = "",
+        isTrigger = ""
+    },
+    OilBlind = {
+        slippedtime = 3,
+        ogpos = "0 25 200",
+        farpos = "200 25 0"
+    },
+    
+}
+
+oilstain = {
+    UIImageLM = { 
+        posx = ".0",
+        posy = ".0",
+        sizex = "1",
+        sizey = "1",
+        img = "StainClear"
+    }
+}
+
 raceManager = {
     Transform = {
         position = "0 0 0",
@@ -719,5 +753,6 @@ entities = { "coche", "mainCam", "raceManager",
             "Area04_Vegetation", "Area04_Extra", "Area04_Terrain", "Area05_Extra",
             "Area01_RoadWalls", "Area02_RoadWalls", "Area03_RoadWalls",
             "Main_Terrain", "Main_Water", "SkyboxMesh",
-            "EnemyCar01", "EnemyCar02", "EnemyCar03", "EnemyCar04"
+            "EnemyCar01", "EnemyCar02", "EnemyCar03", "EnemyCar04",
+            "Area01_Oil", "oilstain"
         }

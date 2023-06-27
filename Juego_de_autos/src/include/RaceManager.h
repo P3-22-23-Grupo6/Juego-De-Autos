@@ -6,6 +6,7 @@
 
 namespace LocoMotor {
 	class UITextLM;
+	class UIImageLM;
 	class Spline;
 	class InputManager;
 }
@@ -64,6 +65,13 @@ namespace JuegoDeAutos {
 
 		/// @brief Returs true when the starting countdown finishes
 		bool HasCountDownFinished();
+
+		/// @brief 
+		void setBlind(float time);
+		void Blinded();
+		void ClearSight();
+		bool RestoreOil();
+		void SetRestore(bool restore);
 
 		/// @brief Get the spline of the map
 		LocoMotor::Spline* GetSpline();
@@ -131,12 +139,23 @@ namespace JuegoDeAutos {
 		float endTimerCurrent;
 		bool ended = false;
 
+		/// Blind Timer
+		float _blindTimerStart = -1;
+		float _blindTime = 0;
+		float _blindTimerCurrent;
+		bool _playerBlind = false;
+
+
 		// UI
 		LocoMotor::UITextLM* lapsText;
 		LocoMotor::UITextLM* positionText;
 		LocoMotor::UITextLM* countdownText;
 		LocoMotor::UITextLM* timerText;
 		LocoMotor::UITextLM* laptimerText;
+
+
+		LocoMotor::UIImageLM* oilStain;
+		bool restoration;
 
 		std::vector<LocoMotor::GameObject*> enemies;
 

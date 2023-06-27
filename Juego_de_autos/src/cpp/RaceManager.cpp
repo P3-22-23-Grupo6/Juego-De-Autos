@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "UITextLM.h"
+#include "UIImageLM.h"
 #include "LMSpline.h"
 #include "MeshRenderer.h"
 #include "InputManager.h"
@@ -100,6 +101,14 @@ void RaceManager::Start()
 			laptimerText = laptimertxt->GetComponent<LocoMotor::UITextLM>();
 	}
 
+	GameObject* stain = gameObject->GetScene()->GetObjectByName("oilstain");
+	if (stain != nullptr) {
+		if (stain->GetComponent<LocoMotor::UIImageLM>() != nullptr)
+			oilStain = stain->GetComponent<LocoMotor::UIImageLM>();
+		
+		 
+	}
+	
 
 	if (countdownText != nullptr)
 		countdownNormalSize = countdownText->GetSizeX();
@@ -232,6 +241,24 @@ void RaceManager::Update(float dt)
 		else fps->ChangeText("");
 	}
 
+	if (_playerBlind) {
+		if (_blindTimerStart < 0) {
+			_blindTimerStart = dt * timeConstant;
+			Blinded();
+		}
+		else {
+			_blindTimerCurrent += dt * timeConstant;
+			if (_blindTimerCurrent - _blindTimerStart > _blindTime&& _playerBlind) {
+				_playerBlind = false;
+				_blindTimerStart = -1;
+				_blindTimerCurrent = 0;
+				ClearSight();
+			}
+
+		}
+
+	}
+
 
 	//Si termina la carrera a los 3 segundos te envia al menu
 	if (raceCompleted) {
@@ -358,9 +385,11 @@ void RaceManager::CheckpointReached(std::string carId)
 {
 
 	carinfo.at(carId).currentCheckpoint++;
-	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
+	//if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
+	if (carinfo.at(carId).currentCheckpoint >= 5) {
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
+		SetRestore(true);
 
 		if (carId == _playerId) {
 			float thislapTime = currentTime - lastlapTime;
@@ -587,4 +616,26 @@ void RaceManager::OnRaceFinished() {
 		countdownText->SetSize(countdownNormalSize * 1.5f, countdownNormalSize * 1.5f);
 	}
 
+}
+
+void RaceManager::setBlind(float time) {
+	_playerBlind = true;
+	_blindTime = time;
+}
+
+void RaceManager::Blinded() {
+	oilStain->ChangeImage("StainImg");
+}
+
+void RaceManager::ClearSight() {
+	oilStain->ChangeImage("StainClear");
+}
+
+bool RaceManager::RestoreOil() {
+	
+	return restoration;
+}
+
+void RaceManager::SetRestore(bool restore) {
+	restoration = restore;
 }

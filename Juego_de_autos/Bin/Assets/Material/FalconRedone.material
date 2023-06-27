@@ -510,3 +510,31 @@ material TestMat2 {
         }
     }
 }
+
+material StainImg {
+    technique {
+        pass {
+            lighting off
+            scene_blend alpha_blend
+            texture_unit {
+                texture stainInk.png
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
+
+material StainClear {
+    technique {
+        pass {
+            lighting off
+            scene_blend alpha_blend
+            texture_unit {
+                texture stainInkclear.png
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
