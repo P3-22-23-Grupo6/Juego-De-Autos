@@ -83,10 +83,12 @@ void EnemyAI::Update(float dt) {
 	currentTime += dt * 0.001;
 	if (isStunned) {
 		if (stunDuration + stunStartTime < currentTime) {
+			// Stun ends
 			isStunned = false;
 			gameObject->GetTransform()->SetRotation(initialRotation);
 		}
 		else {
+			// Stun effect: car's Y axis rotation
 			LMVector3 up = gameObject->GetTransform()->GetRotation().Up();
 			LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up, rotationVelocity * dt);
 			gameObject->GetTransform()->SetRotation(newRotation);

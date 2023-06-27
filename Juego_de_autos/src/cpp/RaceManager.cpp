@@ -599,7 +599,6 @@ LocoMotor::LMVector3 RaceManager::GetFirstEnemyPos()
 	if (possibleFirstEnemyName == "")return LMVector3(0, 0, 0);
 	firstEnemyName = possibleFirstEnemyName;
 	return carinfo.at(firstEnemyName).position;
-	//return gameObject->GetScene()->GetObjectByName(firstEnemyName)->GetTransform()->GetPosition();
 }
 
 void RaceManager::StunFirstEnemyCar() 

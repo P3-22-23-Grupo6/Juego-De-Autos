@@ -69,13 +69,13 @@ namespace JuegoDeAutos {
 		LocoMotor::Spline* GetSpline();
 		
 		float GetSpeed();
-
+		/// @brief Returns the index of the last checkpoint the player reached.
 		int GetPlayerLastCheckpointIndex();
-
+		/// @brief Return the number of checkpoints of the road.
 		int GetTotalNumberOfCheckpoints();
-
+		/// @brief Returns the LMVector3 position of the 1st enemy car.
 		LocoMotor::LMVector3 GetFirstEnemyPos();
-
+		/// @brief Method to call to stun the 1st enemy car.
 		void StunFirstEnemyCar();
 
 		enum SpeedMode { low, middle, high };

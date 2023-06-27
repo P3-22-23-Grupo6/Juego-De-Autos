@@ -107,7 +107,8 @@ namespace JuegoDeAutos {
 
 		void OnCollisionEnter(LocoMotor::GameObject* other) override;
 
-		void CreateProjectile();
+		/// @brief Method to call when the player shoots a projectile.
+		void ShootProjectile();
 
 	private:
 

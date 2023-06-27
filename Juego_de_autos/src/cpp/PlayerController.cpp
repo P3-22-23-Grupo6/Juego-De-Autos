@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string.h>
 
 // Motor
 #include "Transform.h"
@@ -174,7 +173,7 @@ void PlayerController::GetInput()
 
 	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
 
-	if (inputMng->GetKey(LMKS_1))CreateProjectile();
+	if (inputMng->GetKey(LMKS_1))ShootProjectile();
 }
 
 
@@ -492,44 +491,10 @@ void JuegoDeAutos::PlayerController::OnCollisionEnter(GameObject* other)
 	gameObject->GetComponent<AudioSource>()->PlayOneShot("Assets/Sounds/lowDown.wav", gameObject->GetTransform()->GetPosition());
 }
 
-void JuegoDeAutos::PlayerController::CreateProjectile()
+void JuegoDeAutos::PlayerController::ShootProjectile()
 {
-
 	GameObject* projectile = gameObject->GetScene()->GetObjectByName("projectile");
 	if (projectile == nullptr)return;
-	if (projectile->GetComponent<Projectile>()->isEnabled())return;
-	//projectile->SetPosition(gameObject->GetTransform()->GetPosition());
-	projectile->GetComponent<Projectile>()->SetActive(true);
-
-	/*if (gameObject->GetScene()->GetObjectByName("PlayerProjectile") != nullptr)return;
-
-	GameObject* projectile = gameObject->GetScene()->AddGameobject("PlayerProjectile");
-	std::vector<std::pair<std::string, std::string>> parameters;
-
-	// Componente Transform
-	std::string playerX = std::to_string(gameObject->GetTransform()->GetPosition().GetX());
-	std::string playerY = std::to_string(gameObject->GetTransform()->GetPosition().GetY()+20);
-	std::string playerZ = std::to_string(gameObject->GetTransform()->GetPosition().GetZ());
-	std::string pos = playerX + " " + playerY + " " + playerZ;
-	parameters.push_back({ "position",pos });
-	parameters.push_back({ "rotation","0 0 0" });
-	parameters.push_back({ "scale","10 10 10" });
-	projectile->AddComponent("Transform", parameters);
-	std::cout << "create proj\n\n";
-
-	// Componente MeshRenderer
-	parameters.clear();
-	parameters.push_back({ "file","Colibri.mesh" });
-	projectile->AddComponent("MeshRenderer", parameters);
-
-	// Componente RigidBodyComponent
-	parameters.clear();
-	parameters.push_back({ "mass","0" });
-	parameters.push_back({ "friction","0.0" });
-	parameters.push_back({ "isTrigger","" });
-	projectile->AddComponent("RigidBodyComponent", parameters);
-
-	// Componente Projectile
-	parameters.clear();
-	projectile->AddComponent("Projectile", parameters);*/
+	if (!projectile->GetComponent<Projectile>()->isEnabled()) 
+		projectile->GetComponent<Projectile>()->SetActive(true);
 }

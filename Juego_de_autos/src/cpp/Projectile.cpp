@@ -9,9 +9,6 @@
 
 // Componentes juego
 #include "RaceManager.h"
-#include "EnemyAI.h"
-
-#include <iostream>
 
 using namespace LocoMotor;
 using namespace JuegoDeAutos;
@@ -20,6 +17,7 @@ Projectile::Projectile()
 {
 	raceManager = nullptr;
 	rbComp = nullptr;
+	spline = nullptr;
 	projectileSpeed = 0;
 	timeStep = 0;
 	totalNumbCheckpoints = 0;
@@ -55,7 +53,7 @@ void Projectile::Update(float dt)
 	if (timeStep > 1) {
 		timeStep = 0.0f;
 	}
-	//std::cout << timeStep << "\n";
+	
 	if (IsInChaseRange()) {
 		FollowEnemyCar(dt);
 		if (IsInImpactRange()) {
@@ -69,12 +67,15 @@ void Projectile::Update(float dt)
 void JuegoDeAutos::Projectile::OnEnable()
 {
 	if (gameObject->GetScene()->GetObjectByName("coche") != nullptr) {
+		// Moves the projectile to the player car position
 		gameObject->SetPosition(gameObject->GetScene()->GetObjectByName("coche")->GetTransform()->GetPosition());
 	}
 	if (raceManager == nullptr) {
 		SetActive(false);
 		return;
 	}
+	// Calculates the current position of the player in the spline,
+	// so the projectile can follow the spline from that position.
 	int lastPlayerCheckpoint = raceManager->GetPlayerLastCheckpointIndex();
 	timeStep = (float)(lastPlayerCheckpoint - 2) / totalNumbCheckpoints;
 	if (timeStep > 1 || timeStep < 0) {
@@ -84,6 +85,7 @@ void JuegoDeAutos::Projectile::OnEnable()
 
 void JuegoDeAutos::Projectile::OnDisable()
 {
+	// Hides the projectile and remains inactive until a new usage
 	gameObject->SetPosition(initialPos);
 }
 
@@ -99,13 +101,13 @@ void JuegoDeAutos::Projectile::FollowSpline(float dt)
 	upVector = upVector * raycastDistance;
 	to = from - upVector;
 
+	// Follow the spline
 	gameObject->SetPosition(spline->Interpolate(timeStep));
 
 	if (rbComp->GetRaycastHit(from, to)) {
 
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
-		//Intensidad con la que se va a actualizar el vector normal del coche
 		float pitchIntensity = 40;
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
@@ -124,17 +126,15 @@ void JuegoDeAutos::Projectile::FollowEnemyCar(float dt)
 	upVector = upVector * raycastDistance;
 	to = pos - upVector;
 
-	//LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-	//forw.Normalize();
 	LMVector3 dir = raceManager->GetFirstEnemyPos() - gameObject->GetTransform()->GetPosition();
 	dir.Normalize();
+	// Moves the projectile towards the enemy car
 	gameObject->SetPosition(pos + dir * dt * .6f);
 
 	if (rbComp->GetRaycastHit(pos, to)) {
 
 		LMVector3 n = rbComp->GethasRaycastHitNormal(pos, to);
 		n.Normalize();
-		//Intensidad con la que se va a actualizar el vector normal del coche
 		float pitchIntensity = 40;
 		LMVector3 newUp = n * pitchIntensity;
 		gameObject->GetTransform()->SetUpwards(newUp);
@@ -150,6 +150,6 @@ bool Projectile::IsInChaseRange()
 
 bool Projectile::IsInImpactRange()
 {
-	float minRange = 30;
+	float minRange = 50;
 	return (raceManager->GetFirstEnemyPos() - gameObject->GetTransform()->GetPosition()).Magnitude() < minRange;
 }
