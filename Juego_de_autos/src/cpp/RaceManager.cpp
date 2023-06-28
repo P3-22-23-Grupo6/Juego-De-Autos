@@ -388,8 +388,7 @@ void RaceManager::CheckpointReached(std::string carId)
 {
 
 	carinfo.at(carId).currentCheckpoint++;
-	//if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
-	if (carinfo.at(carId).currentCheckpoint >= 5) {
+	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
 	
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
