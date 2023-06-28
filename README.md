@@ -7,3 +7,6 @@
 - Ejecutar Compilar_Todo.bat desde la consola de visual studio
 
 ### Se puede volver al menú pulsando la tecla 0.
+
+### Para probar el proyectil
+Pulsando la tecla 1 del teclado se dispara un proyectil. Debido a la velocidad que tiene configurada actualmente, se aprecia mejor su funcionamiento en el modo de juego de 100cc.
