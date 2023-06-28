@@ -1,12 +1,13 @@
-[Tt]emp/
-[Bb]in/*.exe
-[Bb]in/*.pdb
-[Bb]in/*.dll
-[Bb]in/*.log
-[Bb]in/*.lib
-[Ll]ib/
+Juego_De_Autos/[Tt]emp/
+Juego_De_Autos/[Bb]in/*.exe
+Juego_De_Autos/[Bb]in/*.exp
+Juego_De_Autos/[Bb]in/*.pdb
+Juego_De_Autos/[Bb]in/*.dll
+Juego_De_Autos/[Bb]in/*.log
+Juego_De_Autos/[Bb]in/*.lib
+Juego_De_Autos/[Ll]ib/
 !Dependecies/FMod/core/lib/
-[Oo]bj/
+Juego_De_Autos/[Oo]bj/
 
 .vs/
 
