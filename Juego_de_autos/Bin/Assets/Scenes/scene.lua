@@ -36,6 +36,23 @@ coche = {
         file = "Racers/JetEngine2"
     }
 }
+projectile={
+    Transform = {
+        position = "40 -15 -100",
+        rotation = "0 0 0",
+        scale = "4 4 4"
+    },
+    MeshRenderer = {
+        file =  "projectile.mesh"
+    },
+    RigidBodyComponent = {
+        mass = 0,
+        friction = "0.0"
+    },
+    Projectile = {
+        speed = "0.04"
+    }
+}
 raceManager = {
     Transform = {
         position = "0 0 0",
@@ -657,7 +674,7 @@ EnemyCar02 = {
         playonStart = "Assets/Sounds/engine.wav"
     },
     EnemyAI = {
-        enemySpeed = "2",
+        enemySpeed = "3",
         StartSeparation = "10"
     },
     RigidBodyComponent = {
@@ -679,7 +696,7 @@ EnemyCar03 = {
         playonStart = "Assets/Sounds/engine.wav"
     },
     EnemyAI = {
-        enemySpeed = "2",
+        enemySpeed = "3",
         StartSeparation = "-40"
     },
     RigidBodyComponent = {
@@ -701,7 +718,7 @@ EnemyCar04 = {
         playonStart = "Assets/Sounds/engine.wav"
     },
     EnemyAI = {
-        enemySpeed = "2",
+        enemySpeed = "1",
         StartSeparation = "-70"
     },
     RigidBodyComponent = {
@@ -719,5 +736,5 @@ entities = { "coche", "mainCam", "raceManager",
             "Area04_Vegetation", "Area04_Extra", "Area04_Terrain", "Area05_Extra",
             "Area01_RoadWalls", "Area02_RoadWalls", "Area03_RoadWalls",
             "Main_Terrain", "Main_Water", "SkyboxMesh",
-            "EnemyCar01", "EnemyCar02", "EnemyCar03", "EnemyCar04"
+            "EnemyCar01", "EnemyCar02", "EnemyCar03", "EnemyCar04", "projectile"
         }

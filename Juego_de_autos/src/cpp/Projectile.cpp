@@ -41,6 +41,9 @@ void JuegoDeAutos::Projectile::Start()
 	}
 	rbComp = gameObject->GetComponent<LocoMotor::RigidBody>();
 	rbComp->UseGravity(LMVector3(0, 0, 0));
+	LMVector3 up = gameObject->GetTransform()->GetRotation().Up();
+	LMQuaternion initialRot = gameObject->GetTransform()->GetRotation().Rotate(up, 180);
+	gameObject->GetTransform()->SetRotation(initialRot);
 	spline = raceManager->GetSpline();
 	totalNumbCheckpoints = raceManager->GetTotalNumberOfCheckpoints();
 	initialPos = gameObject->GetTransform()->GetPosition();

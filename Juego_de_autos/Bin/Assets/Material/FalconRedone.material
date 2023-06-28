@@ -166,6 +166,7 @@ material AtlasMaterial {
     }
 }
 
+
 material GridMaterial {
     
     technique {
@@ -510,3 +511,18 @@ material TestMat2 {
         }
     }
 }
+
+material projectilematerial {
+    
+    technique {
+        pass {
+            lighting off
+            texture_unit {
+                texture RustedMetal.jpg
+                tex_address_mode wrap
+                colour_op modulate
+            }
+        }
+    }
+}
+
