@@ -41,12 +41,12 @@ void OilBlind::Update(float dt) {
 
 
 
-	if (_rm->RestoreOil()) {
-		if (_splitted) {
+	if (_rm->RestoreOil()&&_splitted) {
+		//if (_splitted) {
 			_splitted = false;
 			gameObject->SetPosition(_oriPos);
-		}
-		_rm->SetRestore(false);
+		//}
+		//_rm->SetRestore(false);
 	}
 	
 }

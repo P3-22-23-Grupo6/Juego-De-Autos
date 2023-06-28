@@ -155,6 +155,9 @@ void RaceManager::Update(float dt)
 	// Comprobar si algun coche ha llegado a algun checkpoint
 	// En caso afirmativo, notificarlo
 
+	if (RestoreOil()) {
+		SetRestore(false);
+	}
 
 	if (HasCarReachedCheckpoint(_playerId))
 		CheckpointReached(_playerId);
@@ -385,7 +388,8 @@ void RaceManager::CheckpointReached(std::string carId)
 {
 
 	carinfo.at(carId).currentCheckpoint++;
-	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
+	//if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
+	if (carinfo.at(carId).currentCheckpoint >= 5) {
 	
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;

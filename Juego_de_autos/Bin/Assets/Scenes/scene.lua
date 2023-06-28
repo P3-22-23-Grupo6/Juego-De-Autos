@@ -60,6 +60,27 @@ Area01_Oil = {
     
 }
 
+Area02_Oil = {
+    Transform = {
+        position = "50 25 200",
+        rotation = "0 0 0",
+        scale = "5 5 5"
+    },
+    MeshRenderer = {
+        file =  "Torus.001.mesh",
+        
+    },
+    RigidBodyComponent = {
+        mass = 0,
+        usedAsRaycast = "",
+        isTrigger = ""
+    },
+    OilBlind = {
+        slippedtime = 3,
+    },
+    
+}
+
 raceManager = {
     Transform = {
         position = "0 0 0",
@@ -755,5 +776,5 @@ entities = { "coche", "mainCam", "raceManager",
             "Area01_RoadWalls", "Area02_RoadWalls", "Area03_RoadWalls",
             "Main_Terrain", "Main_Water", "SkyboxMesh",
             "EnemyCar01", "EnemyCar02", "EnemyCar03", "EnemyCar04",
-            "Area01_Oil", "oilstain"
+            "Area01_Oil", "oilstain", "Area02_Oil"
         }
