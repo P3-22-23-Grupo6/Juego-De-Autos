@@ -8,7 +8,7 @@
 #define MyAppAssocName MyAppName + " File"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
-#define MyAppRoot "C:\Users\chema\Documents\3_Carrera\P3\Juego\Juego_de_autos\Motor\Bin"
+#define MyAppRoot "D:\datos GFM\uni\P3\recu\Juego-De-Autos\Juego_de_autos\Motor\Bin"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
