@@ -119,13 +119,13 @@ namespace JuegoDeAutos {
 
 		// Paremetros de movimiento
 			// Fisicas
-		float acceleration = 1000;
+		float acceleration = 50;
 		float reversingAcceleration = -800;
 		float maxAngularVelocity = 4;
 		float angularForce = .5f;
 		float angularDragForce = .6f;
 		float linearDragForce = 40;
-		float gravityThrust = -1600;
+		float gravityThrust = -160;
 			// Matematicas
 				// Linear
 				
@@ -142,8 +142,8 @@ namespace JuegoDeAutos {
 		float maxGyroValue = 8;
 
 		// Fov
-		float initialFov = 60;
-		float maxExtraFov = 15;
+		float initialFov = 70;
+		float maxExtraFov = 5;
 
 		// Almacenar informacion
 			// Controles

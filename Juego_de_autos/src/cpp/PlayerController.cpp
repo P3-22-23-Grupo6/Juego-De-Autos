@@ -7,6 +7,7 @@
 #include "RigidBody.h"
 #include "MeshRenderer.h"
 #include "InputManager.h"
+#include "SceneManager.h"
 #include "LMInputs.h"
 #include "UITextLM.h"
 #include "Camera.h"
@@ -47,12 +48,7 @@ void PlayerController::Start()
 	meshComp = gameObject->GetComponent<LocoMotor::MeshRenderer>();
 
 	inputMng = LocoMotor::InputManager::GetInstance();
-	raceManager = RaceManager::GetInstance();
-	if (raceManager == nullptr) {
-		SetActive(false);
-		return;
-	}
-	acceleration = raceManager->GetSpeed();
+	acceleration = 50;// raceManager->GetSpeed();
 
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 	cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
@@ -64,32 +60,23 @@ void PlayerController::Start()
 			velocityText = vltxt->GetComponent<UITextLM>();
 		}
 	}
-
 	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-	rbComp->AddForce(forw * 2000);
-
-	UpdateUpDirection(0.02f);
+	//UpdateUpDirection(0.02f);
 }
 
 void PlayerController::Update(float dt)
 {
-	if (inputMng->GetKey(LMKS_0))
-	{
-		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
-		return;
-	}
-
 	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	UpdateUpDirection(dt);
-	if (activeInput)
+	
 	GetInput();
 
 	MoveShip(dt);
 
-	TurnShip(dt);
+	//TurnShip(dt);
 
-	CheckRespawn();
+	//CheckRespawn();
 }
 
 
@@ -103,41 +90,36 @@ void PlayerController::UpdateUpDirection(float dt)
 
 	LMVector3 upVector = gameObject->GetTransform()->GetRotation().Up();
 	upVector.Normalize();
-	double raycastDistance = 40;
-	upVector = upVector * raycastDistance;
+	upVector = upVector * 10.0f;
 	to = from - upVector;
 
 	if (rbComp->GetRaycastHit(from, to)) {
 		inAir = false;
-		rbComp->UseGravity(LMVector3(0, 0, 0));
+		rbComp->UseGravity(LMVector3(0, 0, 0));//upVector?TODO
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
 
 		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
 		// Ignorarlo, esto bloquea el subirse a las paredes
 		float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
-		if (angle > 0.9f)
-			return;
+		if (angle > 0.9f) return;
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
-		float pitchIntensity = 80;
-		LMVector3 newUp = n * pitchIntensity;
-		gameObject->GetTransform()->SetUpwards(newUp);
+		gameObject->GetTransform()->SetUpwards(n * 7.0f);
 
 		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 12; // 7
+		double hoverDist = 1; // 7
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
 		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
 	}
 	else//No se Detecta suelo, Caida
 	{
 		inAir = true;
-		float autoRotIntensity = 300;
+		float autoRotIntensity = 30;
 		rbComp->UseGravity(LMVector3(0, gravityThrust, 0));
-		gameObject->GetTransform()->SetUpwards(LMVector3(0, autoRotIntensity * dt / 1000, 0));
+		gameObject->GetTransform()->SetUpwards(LMVector3(0, autoRotIntensity * dt / 1000, 0));//1
 	}
-
-
+	//InAir Check
 	if (!inAirLastFrame && inAir)
 		inputMng->RumbleController(.3, .2f);
 
@@ -149,7 +131,6 @@ void PlayerController::UpdateUpDirection(float dt)
 
 void PlayerController::GetInput()
 {
-
 	// Almacenar valores de input
 	accelerate = inputMng->GetKey(LMKS_W)
 		|| inputMng->GetButton(LMC_A)
@@ -173,22 +154,20 @@ void PlayerController::GetInput()
 	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
 }
 
-
 // Gestionar movimiento linear/angular
-
 void PlayerController::MoveShip(float dt)
 {
 	// Aplicar fuerzas
 	ApplyLinearForces(dt);
 
 	// Desaceleracion controlada
-	LinearDrag(dt);
+	//LinearDrag(dt);
 
 	// Mantener la UI actualizada
 	UpdateVelocityUI();
 
 
-	AdjustFov();
+	//AdjustFov();
 }
 
 void PlayerController::TurnShip(float dt)
@@ -235,30 +214,17 @@ void PlayerController::ApplyLinearForces(float dt)
 	if (accelerate && reverseAccelerate)return;
 	if (accelerate) {
 
-		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();//TODO forw en .h
 		forw.Normalize();
 
-		if (physicsBasedMovement) {
-			if (accTriggerValue > 0) rbComp->AddForce(forw * acceleration * accTriggerValue);
-			else rbComp->AddForce(forw * acceleration);
-		}
-		else {
-			LMVector3 pos = gameObject->GetTransform()->GetPosition();
-			gameObject->GetTransform()->SetPosition(pos + forw * dt * .6f);
-		}
+		if (accTriggerValue > 0) rbComp->AddForce(forw * acceleration * accTriggerValue);//controller
+		else rbComp->AddForce(forw * acceleration);//keyboard
 	}
 	else if (reverseAccelerate) {
 		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
 		forw.Normalize();
-
-		if (physicsBasedMovement) {
-			if (reverseAccTriggerValue > 0) rbComp->AddForce(forw * reversingAcceleration * reverseAccTriggerValue);
-			else rbComp->AddForce(forw * reversingAcceleration);
-		}
-		else {
-			LMVector3 pos = gameObject->GetTransform()->GetPosition();
-			gameObject->GetTransform()->SetPosition(pos + forw * dt * .6f);
-		}
+		if (reverseAccTriggerValue > 0) rbComp->AddForce(forw * -acceleration * 0.5f * reverseAccTriggerValue);
+		else rbComp->AddForce(forw * -acceleration * 0.5f);
 	}
 }
 
@@ -337,7 +303,6 @@ void PlayerController::ApplyAngularForces(float dt)
 
 
 // Aplicar Drag
-
 void PlayerController::LinearDrag(float dt)
 {
 	// Desacelerar la velocidad actual para que no haya tanto derrape
@@ -370,7 +335,6 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 
 
 // Tilt
-
 void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 {
 	// Angulo maximo de la inclinacion visual del coche en grados
@@ -392,7 +356,6 @@ void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 
 
 // Metodos extra
-
 void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, int direction)
 {
 	// Limitar la velocidad angular maxima
@@ -431,7 +394,6 @@ void JuegoDeAutos::PlayerController::CheckRespawn()
 
 
 // UI
-
 void PlayerController::UpdateVelocityUI()
 {
 	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
@@ -444,17 +406,11 @@ void PlayerController::UpdateVelocityUI()
 	if (velocityText == nullptr) return;
 	velocityText->ChangeText(std::to_string(velocityClean / 6) + " KM / H");
 
-	// Se utiliza para saber el tono de rojo del texto segun la velocidad actual
-	double highVelocityIndicator = 1000;
-	double colorIntensity = ((double)velocityClean) / highVelocityIndicator;
-	if (colorIntensity > 1) colorIntensity = 1;
-	double inverseColor = 1 - colorIntensity;
-
-	LMVector3 color = LMVector3(1, inverseColor, inverseColor);
+	LMVector3 color = LMVector3(0.8f, 0.1f, 0.2f);
 	velocityText->SetTopColor(color.GetX(), color.GetY(), color.GetZ());
 	velocityText->SetBottomColor(color.GetX(), color.GetY(), color.GetZ());
 
-	inputMng->SetControllerLedColor(colorIntensity, 0, 0);
+	inputMng->SetControllerLedColor(0.5f, 0, 0);
 }
 
 void JuegoDeAutos::PlayerController::EnableGyro()
