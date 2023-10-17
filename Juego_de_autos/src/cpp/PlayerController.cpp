@@ -58,6 +58,7 @@ void PlayerController::Start()
 	carModel->AddComponent("MeshRenderer");
 	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 1, 0));
 	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+	//carModel->GetComponent<MeshRenderer>()->ChangeMaterial("StingerMaterial");
 	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
@@ -78,21 +79,19 @@ void PlayerController::Start()
 
 void PlayerController::Update(float dt)
 {
-	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
-	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	//UpdateUpDirection(dt);
-	tr->SetUpwards(LMVector3(0, 1, 0));//1
+	tr->SetUpwards(LMVector3(0, 1, 0));
 	GetInput();
 
 	MoveShip(dt);
 
 	TurnShip(dt);
-	// Actualizar las posiciones del raceManager
-	LMVector3 pos = tr->GetPosition();
-	if (raceManager != nullptr)
-		raceManager->UpdateCarPosition("Player", pos);
-	//carModel->GetTransform()->SetEulerRotation(LMVector3(0, 90,0));
-	//CheckRespawn();
+	//// Actualizar las posiciones del raceManager
+	//if (raceManager != nullptr)
+	//{
+	//	raceManager->UpdateCarPosition("Player", tr->GetPosition());
+	//	CheckRespawn();
+	//}
 }
 
 
@@ -160,6 +159,9 @@ void PlayerController::GetInput()
 	turnRight = inputMng->GetKey(LMKS_D);
 	turnLeft = inputMng->GetKey(LMKS_A);
 
+	tiltLeft = inputMng->GetKey(LMKS_Q);
+	tiltRight = inputMng->GetKey(LMKS_E);
+
 	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 
 	accTriggerValue = inputMng->GetTriggerValue(1);
@@ -168,14 +170,15 @@ void PlayerController::GetInput()
 	if (reverseAccTriggerValue > 0)reverseAccelerate = true;
 
 	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
+	tilting = (tiltLeft || tiltRight);
 }
 
 // Gestionar movimiento linear/angular
 void PlayerController::MoveShip(float dt)
 {
 	// Aplicar fuerzas
+	TiltShip(dt);
 	ApplyLinearForces(dt);
-
 	// Desaceleracion controlada
 	//LinearDrag(dt);
 
@@ -188,7 +191,6 @@ void PlayerController::MoveShip(float dt)
 
 void PlayerController::TurnShip(float dt)
 {
-
 	// Aplicar fuerzas
 	ApplyAngularForces(dt);
 
@@ -200,8 +202,6 @@ void PlayerController::TurnShip(float dt)
 			rbComp->SetLinearVelocity(forw * currentVel);
 		}
 	}
-
-
 	// Definir variables necesarios para los calculos de las rotaciones
 	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
 	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
@@ -217,14 +217,11 @@ void PlayerController::TurnShip(float dt)
 	if (!turning)
 		AngularDrag(currentAngularVelocity, direction);
 
-
-	// Inclinar el meshRenderer de la nave para darle mejor sensacion al jugar
-	TiltShip(currentAngularVelocity.Magnitude(), direction);
+	// Inclinar el meshRenderer hijo de la nave para darle mejor sensacion al jugar
+	SwayShip(currentAngularVelocity.Magnitude(), direction);
 }
 
-
 // Aplicar fuerzas
-
 void PlayerController::ApplyLinearForces(float dt)
 {
 	if (accelerate && reverseAccelerate)return;
@@ -256,64 +253,49 @@ void PlayerController::ApplyAngularForces(float dt)
 			DisableGyro();
 	}
 
-	if (physicsBasedMovement) {
-		if (turnRight)
-			
-			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt);
+	if (turnRight)
 		
-		if (turnLeft)
-			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt);
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt);
+	
+	if (turnLeft)
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt);
 
 
-		// Si hay un mando conectado, saber si se va a usar el giroscopio o no
-		// Usar el Gyroscopio
-		if (useGyro) {
-			gyroValue = inputMng->GetGyroscopeAngle(InputManager::Horizontal);
-			// Adaptar el valor a la jugabilidad
-			gyroValue *= 30;
-			// Clampear el valor
-			if (gyroValue > maxGyroValue)
-				gyroValue = maxGyroValue;
-			else if (gyroValue < -maxGyroValue)
-				gyroValue = -maxGyroValue;
+	// Si hay un mando conectado, saber si se va a usar el giroscopio o no
+	// Usar el Gyroscopio
+	if (useGyro) {
+		gyroValue = inputMng->GetGyroscopeAngle(InputManager::Horizontal);
+		// Adaptar el valor a la jugabilidad
+		gyroValue *= 30;
+		// Clampear el valor
+		if (gyroValue > maxGyroValue)
+			gyroValue = maxGyroValue;
+		else if (gyroValue < -maxGyroValue)
+			gyroValue = -maxGyroValue;
 
-			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * gyroValue * dt);
-		}
-		// Usar el Joystick
-		else {
-			joystickValue *= .5f;
-			// Giro con joystick
-			if (abs(joystickValue) >= joystickDeadzone)
-				rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * -joystickValue * dt);
-		}
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * gyroValue * dt);
+	}
+	// Usar el Joystick
+	else {
+		joystickValue *= .5f;
+		// Giro con joystick
+		if (abs(joystickValue) >= joystickDeadzone)
+			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * -joystickValue * dt);
+	}
+}
+
+void PlayerController::TiltShip(float dt)
+{
+	if (tiltRight)
+	{
+		std::cout << "\nTILTING RIGHT";
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Right() * -angularForce * dt);
 	}
 
-	else {
-
-		if (turnRight) {
-			float newRotationVelocity = currentRotationVelocity - rotationAcceleration;
-			if (newRotationVelocity > -maxRotationVelocity)
-				currentRotationVelocity -= rotationAcceleration;
-		}
-
-		else if (turnLeft) {
-			float newRotationVelocity = currentRotationVelocity + rotationAcceleration;
-			if (newRotationVelocity < maxRotationVelocity)
-				currentRotationVelocity += rotationAcceleration;
-
-		}
-
-		else {
-			if (currentRotationVelocity > 0.05)
-				currentRotationVelocity -= rotationDecceleration;
-			else if (currentRotationVelocity < -0.05)
-				currentRotationVelocity += rotationDecceleration;
-			else currentRotationVelocity = 0;
-		}
-
-		LMVector3 up = tr->GetRotation().Up();
-		LMQuaternion newRotation = tr->GetRotation().Rotate(up, currentRotationVelocity * dt);
-		tr->SetRotation(newRotation);
+	if (tiltLeft)
+	{
+		std::cout << "\nTILTING RIGHT";
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Right() * angularForce * dt);
 	}
 }
 
@@ -351,7 +333,7 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 
 
 // Tilt
-void PlayerController::TiltShip(float currentAngularVelocity, int direction)
+void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 {
 	// Angulo maximo de la inclinacion visual del coche en grados
 	double maxTiltAngle = 10;
@@ -366,8 +348,6 @@ void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 		//meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
 		//carModel->GetTransform()->SetEulerRotation(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
 	}
-
-	
 }
 
 

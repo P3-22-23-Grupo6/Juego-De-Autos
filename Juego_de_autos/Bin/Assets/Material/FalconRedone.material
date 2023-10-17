@@ -19,7 +19,7 @@ material StingerMaterial {
         pass {
             lighting off
             texture_unit {
-                texture t_testBlue.png
+                texture Stinger_Atlas_t.png
                 tex_address_mode wrap
                 colour_op modulate
             }
@@ -474,22 +474,6 @@ material LocomotorImg {
             scene_blend alpha_blend
             texture_unit {
                 texture TituloFinal.png
-                tex_address_mode wrap
-                colour_op modulate
-                //mipmap_bias 2.0
-            }
-        }
-    }
-}
-
-material ConsolePanel {
-    technique {
-        pass {
-            lighting off
-            scene_blend alpha_blend
-            texture_unit {
-                texture t_Console.png
-                alpha_rejection greater 150
                 tex_address_mode wrap
                 colour_op modulate
                 //mipmap_bias 2.0

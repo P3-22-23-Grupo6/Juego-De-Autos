@@ -53,6 +53,7 @@ namespace JuegoDeAutos {
 		void MoveShip(float dt);
 		/// @brief Moves the ship using angular forces
 		void TurnShip(float dt);
+		void TiltShip(float dt);
 
 		// Dependiendo del Input recogido, estos metodos aplican fuerzas al rigidbody de la nave
 
@@ -80,7 +81,7 @@ namespace JuegoDeAutos {
 		/// @brief Tilts the mesh renderer depending on the actual rotation
 		/// @param currentAngularVelocity Current angular velocity
 		/// @param direction Current direction 
-		void TiltShip(float currentAngularVelocity, int direction);
+		void SwayShip(float currentAngularVelocity, int direction);
 
 		// Limita la velocidad maxima angular para que el coche no pueda girar rapidisimo
 		/// @brief Limits the maximum angular velocity 
@@ -158,6 +159,8 @@ namespace JuegoDeAutos {
 		bool reverseAccelerate;
 		bool turnRight;
 		bool turnLeft;
+		bool tiltLeft;
+		bool tiltRight;
 		float joystickValue;
 		float accTriggerValue;
 		float reverseAccTriggerValue;
@@ -165,14 +168,12 @@ namespace JuegoDeAutos {
 
 		// Devuelve true si se esta girando
 		bool turning;
+		bool tilting;
 		bool inAir;
 		bool inAirLastFrame;
 
 			// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
 		float linearDragIntensity;
-
-		bool physicsBasedMovement = true;
-
 		bool activeInput = false;
 	};
 }
