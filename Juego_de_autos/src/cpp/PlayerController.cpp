@@ -52,13 +52,16 @@ void PlayerController::Start()
 	acceleration = 50;// raceManager->GetSpeed();
 
 	//Create Car Model Child
-	//carModel = sceneMng->AddObjectRuntime("playerCarModel");
-	//carModel->AddComponent("Transform");
-	//carModel->AddComponent("MeshRenderer");
-	//carModel->GetComponent<Transform>()->InitRuntime();
-	//carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
-	//carModel->GetTransform()->Start();
-	//meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
+	carModel = sceneMng->AddObjectRuntime("playerCarModel");
+	carModel->AddComponent("Transform");
+	carModel->AddComponent("MeshRenderer");
+	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 1, 0));
+	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+	carModel->GetTransform()->Start();
+	meshComp = gameObject->GetComponent<LocoMotor::MeshRenderer>();
+
+	gameObject->GetTransform()->AddChild(carModel->GetTransform());
+
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 		cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
