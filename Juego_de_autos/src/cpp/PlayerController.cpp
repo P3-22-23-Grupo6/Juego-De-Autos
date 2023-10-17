@@ -39,6 +39,7 @@ void PlayerController::InitComponent()
 void PlayerController::Start()
 {
 	// Asignacion de referencias
+	tr = gameObject->GetTransform();
 	rbComp = gameObject->GetComponent<LocoMotor::RigidBody>();
 	if (rbComp == nullptr) {
 		SetActive(false);
@@ -58,9 +59,9 @@ void PlayerController::Start()
 	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 1, 0));
 	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
 	carModel->GetTransform()->Start();
-	meshComp = gameObject->GetComponent<LocoMotor::MeshRenderer>();
+	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
-	gameObject->GetTransform()->AddChild(carModel->GetTransform());
+	tr->AddChild(carModel->GetTransform());
 
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 		cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
@@ -72,7 +73,7 @@ void PlayerController::Start()
 			velocityText = vltxt->GetComponent<UITextLM>();
 		}
 	}
-	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+	LMVector3 forw = tr->GetRotation().Forward();
 }
 
 void PlayerController::Update(float dt)
@@ -80,13 +81,17 @@ void PlayerController::Update(float dt)
 	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
 	//UpdateUpDirection(dt);
-	gameObject->GetTransform()->SetUpwards(LMVector3(0, 1, 0));//1
+	tr->SetUpwards(LMVector3(0, 1, 0));//1
 	GetInput();
 
 	MoveShip(dt);
 
 	TurnShip(dt);
-
+	// Actualizar las posiciones del raceManager
+	LMVector3 pos = tr->GetPosition();
+	if (raceManager != nullptr)
+		raceManager->UpdateCarPosition("Player", pos);
+	//carModel->GetTransform()->SetEulerRotation(LMVector3(0, 90,0));
 	//CheckRespawn();
 }
 
@@ -96,10 +101,10 @@ void PlayerController::Update(float dt)
 void PlayerController::UpdateUpDirection(float dt)
 {
 	// Definir el punto inicial y la direccion del raycast
-	LMVector3 from = gameObject->GetTransform()->GetPosition();
+	LMVector3 from = tr->GetPosition();
 	LMVector3 to;
 
-	LMVector3 upVector = gameObject->GetTransform()->GetRotation().Up();
+	LMVector3 upVector = tr->GetRotation().Up();
 	upVector.Normalize();
 	upVector = upVector * 10.0f;
 	to = from - upVector;
@@ -112,23 +117,23 @@ void PlayerController::UpdateUpDirection(float dt)
 
 		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
 		// Ignorarlo, esto bloquea el subirse a las paredes
-		float angle = n.Angle(gameObject->GetTransform()->GetRotation().Up());
+		float angle = n.Angle(tr->GetRotation().Up());
 		if (angle > 0.9f) return;
 
 		//Intensidad con la que se va a actualizar el vector normal del coche
-		gameObject->GetTransform()->SetUpwards(n * 7.0f);
+		tr->SetUpwards(n * 7.0f);
 
 		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
 		double hoverDist = 1; // 7
 		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
-		gameObject->GetTransform()->SetPosition(hitPos + hoverDisplacement);
+		tr->SetPosition(hitPos + hoverDisplacement);
 	}
 	else//No se Detecta suelo, Caida
 	{
 		inAir = true;
 		float autoRotIntensity = 30;
 		rbComp->UseGravity(LMVector3(0, gravityThrust, 0));
-		gameObject->GetTransform()->SetUpwards(LMVector3(0, autoRotIntensity * dt / 1000, 0));//1
+		tr->SetUpwards(LMVector3(0, autoRotIntensity * dt / 1000, 0));//1
 	}
 	//InAir Check
 	if (!inAirLastFrame && inAir)
@@ -190,7 +195,7 @@ void PlayerController::TurnShip(float dt)
 	if (!inAir) {
 		float currentVel = rbComp->GetLinearVelocity().Magnitude();
 		if (!reverseAccelerate) {
-			LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+			LMVector3 forw = tr->GetRotation().Forward();
 			forw.Normalize();
 			rbComp->SetLinearVelocity(forw * currentVel);
 		}
@@ -201,7 +206,7 @@ void PlayerController::TurnShip(float dt)
 	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
 	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
 
-	double yAngVel = gameObject->GetTransform()->GetRotation().Rotate(currentAngularVelocity).GetY();
+	double yAngVel = tr->GetRotation().Rotate(currentAngularVelocity).GetY();
 	if (yAngVel == 0)yAngVel = 0.0001;
 	int direction = abs(yAngVel) / yAngVel; // -1 : izquierda // 1 : derecha
 
@@ -224,14 +229,14 @@ void PlayerController::ApplyLinearForces(float dt)
 {
 	if (accelerate && reverseAccelerate)return;
 	if (accelerate) {
-		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();//TODO forw en .h
+		LMVector3 forw = tr->GetRotation().Forward();//TODO forw en .h
 		forw.Normalize();
 
 		if (accTriggerValue > 0) rbComp->AddForce(forw * acceleration * accTriggerValue);//controller
 		else rbComp->AddForce(forw * acceleration);//keyboard
 	}
 	else if (reverseAccelerate) {
-		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+		LMVector3 forw = tr->GetRotation().Forward();
 		forw = forw * -1;
 		forw.Normalize();
 		if (reverseAccTriggerValue > 0) rbComp->AddForce(forw * -acceleration * 0.5f * reverseAccTriggerValue);
@@ -254,10 +259,10 @@ void PlayerController::ApplyAngularForces(float dt)
 	if (physicsBasedMovement) {
 		if (turnRight)
 			
-			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * -angularForce * dt);
+			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt);
 		
 		if (turnLeft)
-			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * dt);
+			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt);
 
 
 		// Si hay un mando conectado, saber si se va a usar el giroscopio o no
@@ -272,14 +277,14 @@ void PlayerController::ApplyAngularForces(float dt)
 			else if (gyroValue < -maxGyroValue)
 				gyroValue = -maxGyroValue;
 
-			rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * gyroValue * dt);
+			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * gyroValue * dt);
 		}
 		// Usar el Joystick
 		else {
 			joystickValue *= .5f;
 			// Giro con joystick
 			if (abs(joystickValue) >= joystickDeadzone)
-				rbComp->ApplyTorqueImpulse(gameObject->GetTransform()->GetRotation().Up() * angularForce * -joystickValue * dt);
+				rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * -joystickValue * dt);
 		}
 	}
 
@@ -306,9 +311,9 @@ void PlayerController::ApplyAngularForces(float dt)
 			else currentRotationVelocity = 0;
 		}
 
-		LMVector3 up = gameObject->GetTransform()->GetRotation().Up();
-		LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up, currentRotationVelocity * dt);
-		gameObject->GetTransform()->SetRotation(newRotation);
+		LMVector3 up = tr->GetRotation().Up();
+		LMQuaternion newRotation = tr->GetRotation().Rotate(up, currentRotationVelocity * dt);
+		tr->SetRotation(newRotation);
 	}
 }
 
@@ -319,7 +324,7 @@ void PlayerController::LinearDrag(float dt)
 	// Desacelerar la velocidad actual para que no haya tanto derrape
 	LMVector3 localVel = rbComp->GetLinearVelocity();
 
-	LMVector3 forward = gameObject->GetTransform()->GetRotation().Forward();
+	LMVector3 forward = tr->GetRotation().Forward();
 	float angle = localVel.Angle(forward);
 	float intensity = (localVel.Magnitude() * linearDragForce) / 20;
 	linearDragIntensity = intensity;
@@ -349,20 +354,20 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 {
 	// Angulo maximo de la inclinacion visual del coche en grados
-	double maxTiltAngle = 60;
+	double maxTiltAngle = 10;
 
 	// Determina cuanto se inclina el coche, es un valor de 0 a 1
-	double tiltAmount = currentAngularVelocity / maxAngularVelocity * 0.25f;
-
+	double tiltAmount = currentAngularVelocity / maxAngularVelocity;
 	// Rotar SOLO la parte grafica del coche para mejor sensacion de juego
 	// Teniendo en cuenta la velocidad angular
-	if (meshComp != nullptr)
-		meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
+	if (carModel != nullptr)
+	{
+		printf("\n Tilt: %.2f", tiltAmount);
+		//meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
+		//carModel->GetTransform()->SetEulerRotation(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
+	}
 
-	// Actualizar las posiciones del raceManager
-	LMVector3 pos = gameObject->GetTransform()->GetPosition();
-	if (raceManager != nullptr)
-		raceManager->UpdateCarPosition("Player", pos);
+	
 }
 
 
@@ -370,7 +375,7 @@ void PlayerController::TiltShip(float currentAngularVelocity, int direction)
 void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, int direction)
 {
 	// Limitar la velocidad angular maxima
-	if (abs(gameObject->GetTransform()->GetRotation().Rotate(currentAngularVelocity).GetY()) > maxAngularVelocity) {
+	if (abs(tr->GetRotation().Rotate(currentAngularVelocity).GetY()) > maxAngularVelocity) {
 		currentAngularVelocity.Normalize();
 		// Modificar el vector de la velocidad angular actual
 		currentAngularVelocity = currentAngularVelocity * maxAngularVelocity;
@@ -394,10 +399,10 @@ void PlayerController::AdjustFov()
 void JuegoDeAutos::PlayerController::CheckRespawn()
 {
 	// Si la nave se cae al agua, acceder al ultimo chekpoint
-	if (gameObject->GetTransform()->GetPosition().GetY() < -550)
+	if (tr->GetPosition().GetY() < -550)
 	{
 		LMVector3 lastCheckpointPos = raceManager->GetPlayerLastCheckpointPosition();
-		gameObject->GetTransform()->SetPosition(lastCheckpointPos + LMVector3(0, 50, 0));
+		tr->SetPosition(lastCheckpointPos + LMVector3(0, 50, 0));
 		rbComp->SetLinearVelocity(LMVector3(0, 0, 0));
 		rbComp->SetAngularVelocity(LMVector3(0, 0, 0));
 	}
@@ -452,5 +457,5 @@ void JuegoDeAutos::PlayerController::SetControllable(bool controllable)
 
 void JuegoDeAutos::PlayerController::OnCollisionEnter(GameObject* other)
 {
-	gameObject->GetComponent<AudioSource>()->PlayOneShot("Assets/Sounds/lowDown.wav", gameObject->GetTransform()->GetPosition());
+	gameObject->GetComponent<AudioSource>()->PlayOneShot("Assets/Sounds/lowDown.wav", tr->GetPosition());
 }

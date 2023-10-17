@@ -4,6 +4,7 @@
 
 namespace LocoMotor {
 	class RigidBody;
+	class Transform;
 	class InputManager;
 	class SceneManager;
 	class MeshRenderer;
@@ -112,6 +113,7 @@ namespace JuegoDeAutos {
 
 		//CarModel
 		LocoMotor::GameObject* carModel;
+		LocoMotor::Transform* tr;
 		// Referencias
 		RaceManager* raceManager;
 		LocoMotor::RigidBody* rbComp;
