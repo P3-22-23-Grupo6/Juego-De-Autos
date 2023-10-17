@@ -45,13 +45,22 @@ void PlayerController::Start()
 		return;
 	}
 	rbComp->SetActivationState(LM_DISABLE_DEACTIVATION);
-	meshComp = gameObject->GetComponent<LocoMotor::MeshRenderer>();
+	
 
 	inputMng = LocoMotor::InputManager::GetInstance();
+	sceneMng = LocoMotor::SceneManager::GetInstance();
 	acceleration = 50;// raceManager->GetSpeed();
 
+	//Create Car Model Child
+	//carModel = sceneMng->AddObjectRuntime("playerCarModel");
+	//carModel->AddComponent("Transform");
+	//carModel->AddComponent("MeshRenderer");
+	//carModel->GetComponent<Transform>()->InitRuntime();
+	//carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+	//carModel->GetTransform()->Start();
+	//meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
-	cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
+		cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
 	GameObject* vltxt = gameObject->GetScene()->GetObjectByName("velocityText");
 	if (vltxt != nullptr) {
@@ -61,20 +70,19 @@ void PlayerController::Start()
 		}
 	}
 	LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
-	//UpdateUpDirection(0.02f);
 }
 
 void PlayerController::Update(float dt)
 {
 	// Lanza un raycast hacia el suelo y actualiza el vector UP del transform del coche
 	// Con el proposito de seguir la carretera aunque sea una pared o un techo
-	UpdateUpDirection(dt);
-	
+	//UpdateUpDirection(dt);
+	gameObject->GetTransform()->SetUpwards(LMVector3(0, 1, 0));//1
 	GetInput();
 
 	MoveShip(dt);
 
-	//TurnShip(dt);
+	TurnShip(dt);
 
 	//CheckRespawn();
 }
@@ -213,7 +221,6 @@ void PlayerController::ApplyLinearForces(float dt)
 {
 	if (accelerate && reverseAccelerate)return;
 	if (accelerate) {
-
 		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();//TODO forw en .h
 		forw.Normalize();
 
@@ -222,9 +229,10 @@ void PlayerController::ApplyLinearForces(float dt)
 	}
 	else if (reverseAccelerate) {
 		LMVector3 forw = gameObject->GetTransform()->GetRotation().Forward();
+		forw = forw * -1;
 		forw.Normalize();
 		if (reverseAccTriggerValue > 0) rbComp->AddForce(forw * -acceleration * 0.5f * reverseAccTriggerValue);
-		else rbComp->AddForce(forw * -acceleration * 0.5f);
+		else rbComp->AddForce(forw * acceleration);
 	}
 }
 

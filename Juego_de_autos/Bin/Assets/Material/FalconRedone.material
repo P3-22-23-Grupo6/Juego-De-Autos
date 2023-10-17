@@ -19,7 +19,7 @@ material StingerMaterial {
         pass {
             lighting off
             texture_unit {
-                texture Stinger_Atlas_t.png
+                texture t_testBlue.png
                 tex_address_mode wrap
                 colour_op modulate
             }

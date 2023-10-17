@@ -5,6 +5,7 @@
 namespace LocoMotor {
 	class RigidBody;
 	class InputManager;
+	class SceneManager;
 	class MeshRenderer;
 	class UITextLM;
 	class Camera;
@@ -109,11 +110,14 @@ namespace JuegoDeAutos {
 
 	private:
 
+		//CarModel
+		LocoMotor::GameObject* carModel;
 		// Referencias
 		RaceManager* raceManager;
 		LocoMotor::RigidBody* rbComp;
 		LocoMotor::MeshRenderer* meshComp;
 		LocoMotor::InputManager* inputMng;
+		LocoMotor::SceneManager* sceneMng;
 		LocoMotor::UITextLM* velocityText;
 		LocoMotor::Camera* cam;
 

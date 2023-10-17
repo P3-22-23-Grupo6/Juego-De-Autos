@@ -20,6 +20,8 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 void JuegoDeAutos::SceneChangeButton::Start()
 {
 	GameObject* racebut = gameObject->GetScene()->GetObjectByName("raceButton");
+	GameObject* background = gameObject->GetScene()->GetObjectByName("LocomotorImg");
+	
 	if (racebut != nullptr) {
 		if (racebut->GetComponent<UIImageLM>() != nullptr)
 			_raceButton = racebut->GetComponent<UIImageLM>();

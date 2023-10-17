@@ -20,9 +20,6 @@ coche = {
         rotation = "0 0 0",
         scale = "1 1 1"
     },
-    MeshRenderer = {
-        file =  "BlueFalcon.mesh"
-    },
     AudioSource = {
         loops= -1,
         playonStart = "Assets/Sounds/engine.wav"
