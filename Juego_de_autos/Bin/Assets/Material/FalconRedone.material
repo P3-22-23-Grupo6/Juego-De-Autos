@@ -470,10 +470,23 @@ material UIPanel3 {
 material LocomotorImg {
     technique {
         pass {
+            ambient 0.5 0.5 0.5
+            diffuse 0.5 0.5 0.5
+            texture_unit {
+                texture TituloFinal.png
+            }
+        }
+    }
+}
+
+material ConsolePanel {
+    technique {
+        pass {
             lighting off
             scene_blend alpha_blend
             texture_unit {
-                texture TituloFinal.png
+                texture t_Console.png
+                alpha_rejection greater 150
                 tex_address_mode wrap
                 colour_op modulate
                 //mipmap_bias 2.0

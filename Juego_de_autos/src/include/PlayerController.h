@@ -18,6 +18,7 @@ namespace JuegoDeAutos {
 	class PlayerController : public LocoMotor::Component
 	{
 	public:
+		float counter;
 		PlayerController();
 		virtual ~PlayerController();
 
@@ -114,6 +115,7 @@ namespace JuegoDeAutos {
 
 		//CarModel
 		LocoMotor::GameObject* carModel;
+		LocoMotor::GameObject* carBillboard;//TODO Temporal
 		LocoMotor::Transform* tr;
 		// Referencias
 		RaceManager* raceManager;

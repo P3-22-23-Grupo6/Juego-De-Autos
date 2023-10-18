@@ -38,6 +38,7 @@ void PlayerController::InitComponent()
 
 void PlayerController::Start()
 {
+	counter = 0.0f;
 	// Asignacion de referencias
 	tr = gameObject->GetTransform();
 	rbComp = gameObject->GetComponent<LocoMotor::RigidBody>();
@@ -52,16 +53,24 @@ void PlayerController::Start()
 	sceneMng = LocoMotor::SceneManager::GetInstance();
 	acceleration = 50;// raceManager->GetSpeed();
 
+	//Create Billboard
+	carBillboard = sceneMng->AddObjectRuntime("carBillboard");
+	carBillboard->AddComponent("Transform");
+	carBillboard->AddComponent("MeshRenderer");
+	carBillboard->GetComponent<Transform>()->InitRuntime(LMVector3(0, 2, 0));
+	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
+	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial("m_Billboards");
+	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
 	carModel = sceneMng->AddObjectRuntime("playerCarModel");
 	carModel->AddComponent("Transform");
 	carModel->AddComponent("MeshRenderer");
-	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 1, 0));
+	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 5, 0));
 	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
-	//carModel->GetComponent<MeshRenderer>()->ChangeMaterial("StingerMaterial");
 	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
+	tr->AddChild(carBillboard->GetTransform());
 	tr->AddChild(carModel->GetTransform());
 
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
@@ -79,6 +88,8 @@ void PlayerController::Start()
 
 void PlayerController::Update(float dt)
 {
+	counter += dt;
+	//carModel->GetTransform()->SetLocalRotation(LMVector3(0, counter * 0.5f, 0));
 	//UpdateUpDirection(dt);
 	tr->SetUpwards(LMVector3(0, 1, 0));
 	GetInput();
@@ -288,13 +299,11 @@ void PlayerController::TiltShip(float dt)
 {
 	if (tiltRight)
 	{
-		std::cout << "\nTILTING RIGHT";
 		rbComp->ApplyTorqueImpulse(tr->GetRotation().Right() * -angularForce * dt);
 	}
 
 	if (tiltLeft)
 	{
-		std::cout << "\nTILTING RIGHT";
 		rbComp->ApplyTorqueImpulse(tr->GetRotation().Right() * angularForce * dt);
 	}
 }
@@ -344,9 +353,10 @@ void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 	// Teniendo en cuenta la velocidad angular
 	if (carModel != nullptr)
 	{
-		printf("\n Tilt: %.2f", tiltAmount);
+		//printf("\n Tilt: %.2f", tiltAmount);
 		//meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
-		//carModel->GetTransform()->SetEulerRotation(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
+		carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalEulerRotation() + 
+			LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
 	}
 }
 
