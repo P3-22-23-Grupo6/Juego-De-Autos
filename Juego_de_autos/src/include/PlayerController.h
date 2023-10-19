@@ -40,7 +40,7 @@ namespace JuegoDeAutos {
 		/// @brief Updates the direcction Up of the Transform component, so the ship is always at the
 		/// same distance and rotation 
 		/// @param dt delta time 
-		void UpdateUpDirection(float dt);
+		void SetUpwards(float dt);
 
 		// Almacena el input de esta ejecucion
 
@@ -117,6 +117,8 @@ namespace JuegoDeAutos {
 		LocoMotor::GameObject* carModel;
 		LocoMotor::GameObject* carBillboard;//TODO Temporal
 		LocoMotor::Transform* tr;
+		LocoMotor::LMVector3 forw;
+		LocoMotor::LMVector3 lastUpwardDir;
 		// Referencias
 		RaceManager* raceManager;
 		LocoMotor::RigidBody* rbComp;
@@ -131,10 +133,12 @@ namespace JuegoDeAutos {
 		float acceleration = 50;
 		float reversingAcceleration = -800;
 		float maxAngularVelocity = 4;
-		float angularForce = .5f;
+		float angularForce = .1f;
 		float angularDragForce = .6f;
 		float linearDragForce = 40;
-		float gravityThrust = -160;
+		float raycastDistance = 0.5f;
+		float angleThreshold = 0.9f;
+		float gravityMultiplier = 40;
 			// Matematicas
 				// Linear
 				

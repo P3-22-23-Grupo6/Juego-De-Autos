@@ -47,12 +47,13 @@ void PlayerController::Start()
 		return;
 	}
 	rbComp->SetActivationState(LM_DISABLE_DEACTIVATION);
-	
+	//DESACTIVAR GRAVEDAD FISICA PARA EL COCHE
+	rbComp->UseGravity(LMVector3(0, 0, 0));
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
 	acceleration = 50;// raceManager->GetSpeed();
-
+	lastUpwardDir = LMVector3(0,1,0);
 	//Create Billboard
 	carBillboard = sceneMng->AddObjectRuntime("carBillboard");
 	carBillboard->AddComponent("Transform");
@@ -76,27 +77,32 @@ void PlayerController::Start()
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 		cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
+	//Velocity Text
 	GameObject* vltxt = gameObject->GetScene()->GetObjectByName("velocityText");
-	if (vltxt != nullptr) {
-		if (vltxt->GetComponent<UITextLM>() != nullptr)
-		{
-			velocityText = vltxt->GetComponent<UITextLM>();
-		}
+	if (vltxt != nullptr && vltxt->GetComponent<UITextLM>() != nullptr) {
+		velocityText = vltxt->GetComponent<UITextLM>();
 	}
-	LMVector3 forw = tr->GetRotation().Forward();
+	forw = tr->GetRotation().Forward();
 }
 
 void PlayerController::Update(float dt)
 {
 	counter += dt;
 	//carModel->GetTransform()->SetLocalRotation(LMVector3(0, counter * 0.5f, 0));
-	//UpdateUpDirection(dt);
-	tr->SetUpwards(LMVector3(0, 1, 0));
+	
+	//Set Upward Vector
+	SetUpwards(dt);
+	//rbComp->AddForce(LMVector3(0, -1 * gravityMultiplier,0));
+	//Set Forward Vector
+	forw = tr->GetRotation().Forward();
+	forw.Normalize();
+
 	GetInput();
 
 	MoveShip(dt);
 
 	TurnShip(dt);
+	// 
 	//// Actualizar las posiciones del raceManager
 	//if (raceManager != nullptr)
 	//{
@@ -108,51 +114,53 @@ void PlayerController::Update(float dt)
 
 // Gestionar orientacion
 
-void PlayerController::UpdateUpDirection(float dt)
+void PlayerController::SetUpwards(float dt)
 {
+	LMVector3 newUpDirection;
 	// Definir el punto inicial y la direccion del raycast
 	LMVector3 from = tr->GetPosition();
 	LMVector3 to;
-
 	LMVector3 upVector = tr->GetRotation().Up();
 	upVector.Normalize();
-	upVector = upVector * 10.0f;
+	to = to * raycastDistance;
 	to = from - upVector;
 
+	//Grounded
 	if (rbComp->GetRaycastHit(from, to)) {
 		inAir = false;
-		rbComp->UseGravity(LMVector3(0, 0, 0));//upVector?TODO
+		//Get Surface below Normal Vector
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
 
-		// Si hay mucha diferencia entre los vectores UP del suelo y la nave
-		// Ignorarlo, esto bloquea el subirse a las paredes
-		float angle = n.Angle(tr->GetRotation().Up());
-		if (angle > 0.9f) return;
-
-		//Intensidad con la que se va a actualizar el vector normal del coche
-		tr->SetUpwards(n * 7.0f);
-
-		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 1; // 7
-		LMVector3 hoverDisplacement = LMVector3(n.GetX() * hoverDist, n.GetY() * hoverDist, n.GetZ() * hoverDist);
-		tr->SetPosition(hitPos + hoverDisplacement);
+		// Angle difference threshold
+		if (n.Angle(upVector) > angleThreshold) newUpDirection = lastUpwardDir;
+		else newUpDirection = n;
+		//LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
+		//tr->SetPosition(hitPos + n * raycastDistance);
 	}
-	else//No se Detecta suelo, Caida
+	//Not Grounded
+	else
 	{
 		inAir = true;
 		float autoRotIntensity = 30;
-		rbComp->UseGravity(LMVector3(0, gravityThrust, 0));
-		tr->SetUpwards(LMVector3(0, autoRotIntensity * dt / 1000, 0));//1
+		rbComp->AddForce(LMVector3(0, -1 * gravityMultiplier,0));
+		newUpDirection = LMVector3(0, autoRotIntensity * dt / 100.0f, 0);//1;
 	}
+	//Lerp Between last upwards and current, and apply
+	LMVector3 finalDir;
+	finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f);
+	tr->SetUpwards(finalDir);
+
+	lastUpwardDir = finalDir;
+	inAirLastFrame = inAir;
 	//InAir Check
-	if (!inAirLastFrame && inAir)
+	/*if (!inAirLastFrame && inAir)
 		inputMng->RumbleController(.3, .2f);
 
 	if (inAirLastFrame && !inAir)
-		inputMng->RumbleController(1, .2f);
+		inputMng->RumbleController(1, .2f);*/
 
-	inAirLastFrame = inAir;
+	
 }
 
 void PlayerController::GetInput()
@@ -188,15 +196,13 @@ void PlayerController::GetInput()
 void PlayerController::MoveShip(float dt)
 {
 	// Aplicar fuerzas
-	TiltShip(dt);
+	//TiltShip(dt);
 	ApplyLinearForces(dt);
 	// Desaceleracion controlada
 	//LinearDrag(dt);
 
 	// Mantener la UI actualizada
 	UpdateVelocityUI();
-
-
 	//AdjustFov();
 }
 
@@ -204,12 +210,10 @@ void PlayerController::TurnShip(float dt)
 {
 	// Aplicar fuerzas
 	ApplyAngularForces(dt);
-
+	return;
 	if (!inAir) {
 		float currentVel = rbComp->GetLinearVelocity().Magnitude();
 		if (!reverseAccelerate) {
-			LMVector3 forw = tr->GetRotation().Forward();
-			forw.Normalize();
 			rbComp->SetLinearVelocity(forw * currentVel);
 		}
 	}
@@ -235,27 +239,29 @@ void PlayerController::TurnShip(float dt)
 // Aplicar fuerzas
 void PlayerController::ApplyLinearForces(float dt)
 {
-	if (accelerate && reverseAccelerate)return;
+	//if (accelerate && reverseAccelerate)return;
 	if (accelerate) {
-		LMVector3 forw = tr->GetRotation().Forward();//TODO forw en .h
-		forw.Normalize();
-
 		if (accTriggerValue > 0) rbComp->AddForce(forw * acceleration * accTriggerValue);//controller
 		else rbComp->AddForce(forw * acceleration);//keyboard
 	}
 	else if (reverseAccelerate) {
-		LMVector3 forw = tr->GetRotation().Forward();
-		forw = forw * -1;
-		forw.Normalize();
-		if (reverseAccTriggerValue > 0) rbComp->AddForce(forw * -acceleration * 0.5f * reverseAccTriggerValue);
-		else rbComp->AddForce(forw * acceleration);
+		LMVector3 backw = forw;
+		backw = backw * -1;
+		if (reverseAccTriggerValue > 0) rbComp->AddForce(backw * -acceleration * 0.5f * reverseAccTriggerValue);
+		else rbComp->AddForce(backw * acceleration);
 	}
 }
 
 void PlayerController::ApplyAngularForces(float dt)
 {
+	if (turnRight)
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt);
+	
+	if (turnLeft)
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt);
+	
 	// Activar desactivar Gyroscopio
-	if (inputMng->GetButtonDown(LMC_DPAD_UP))
+	/*if (inputMng->GetButtonDown(LMC_DPAD_UP))
 	{
 		useGyro = !useGyro;
 		if (useGyro)
@@ -263,16 +269,6 @@ void PlayerController::ApplyAngularForces(float dt)
 		else
 			DisableGyro();
 	}
-
-	if (turnRight)
-		
-		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt);
-	
-	if (turnLeft)
-		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt);
-
-
-	// Si hay un mando conectado, saber si se va a usar el giroscopio o no
 	// Usar el Gyroscopio
 	if (useGyro) {
 		gyroValue = inputMng->GetGyroscopeAngle(InputManager::Horizontal);
@@ -292,7 +288,7 @@ void PlayerController::ApplyAngularForces(float dt)
 		// Giro con joystick
 		if (abs(joystickValue) >= joystickDeadzone)
 			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * -joystickValue * dt);
-	}
+	}*/
 }
 
 void PlayerController::TiltShip(float dt)
@@ -315,8 +311,7 @@ void PlayerController::LinearDrag(float dt)
 	// Desacelerar la velocidad actual para que no haya tanto derrape
 	LMVector3 localVel = rbComp->GetLinearVelocity();
 
-	LMVector3 forward = tr->GetRotation().Forward();
-	float angle = localVel.Angle(forward);
+	float angle = localVel.Angle(forw);
 	float intensity = (localVel.Magnitude() * linearDragForce) / 20;
 	linearDragIntensity = intensity;
 	localVel.Normalize();
@@ -355,8 +350,8 @@ void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 	{
 		//printf("\n Tilt: %.2f", tiltAmount);
 		//meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
-		carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalEulerRotation() + 
-			LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
+		//carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalEulerRotation() + 
+		//	LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
 	}
 }
 
