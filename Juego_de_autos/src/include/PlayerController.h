@@ -123,35 +123,23 @@ namespace JuegoDeAutos {
 		LocoMotor::Camera* cam;
 
 		// Paremetros de movimiento
-			// Fisicas
 		float acceleration = 50;//r
 		float reversingAcceleration = 50;//r
 		float maxAngularVelocity = 4;
 		float angularForce = 0.4f;//r
 		float angularDragForce = .6f;
-		float linearDragForce = 40;
-		float raycastDistance = 0.5f;//r
-		float angleThreshold = 0.9f;
+		float raycastDistance = 4;//r
+		float angleThreshold = 0.9f;//r
 		float gravityMultiplier = 40;//r
-		float brakingMultiplier = 0.005f;//r
-			// Matematicas
-				// Linear
-				
-				// Rotacion
-		float currentRotationVelocity = 0;
-		float maxRotationVelocity = .1f;
-		float rotationAcceleration = .01f;
-		float rotationDecceleration = .02f;
-
-		// Controles
-		float extraAceleration = 30;
+		
+		//Gamepad
 		float joystickDeadzone = .05f;
 		bool useGyro = false;
 		float maxGyroValue = 8;
 
 		// Fov
-		float initialFov = 70;
-		float maxExtraFov = 5;
+		float initialFov = 50;
+		float maxExtraFov = 50;
 
 		// Almacenar informacion
 			// Controles

@@ -120,14 +120,15 @@ void PlayerController::Update(float dt)
 void PlayerController::SetUpwards(float dt)
 {
 	LMVector3 newUpDirection;
-	// Definir el punto inicial y la direccion del raycast
 	LMVector3 from = tr->GetPosition();
 	LMVector3 to;
+
 	LMVector3 upVector = tr->GetRotation().Up();
 	upVector.Normalize();
-	to = to * raycastDistance;
+	upVector = upVector * raycastDistance;
 	to = from - upVector;
-
+	
+	std::cout << "\nFROM: " << from.ToString() << ", to:" << to.ToString();
 	//Grounded
 	if (rbComp->GetRaycastHit(from, to)) {
 		inAir = false;
@@ -145,11 +146,11 @@ void PlayerController::SetUpwards(float dt)
 		inAir = true;
 		float autoRotIntensity = 30;
 		rbComp->AddForce(LMVector3(0, -1 * gravityMultiplier,0));
-		newUpDirection = LMVector3(0, autoRotIntensity * dt / 100.0f, 0);//1;
+		newUpDirection = LMVector3(0, 1, 0);
 	}
 	//Lerp Between last upwards and current, and apply
 	LMVector3 finalDir;
-	finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f * 2.5f);
+	finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f);
 	tr->SetUpwards(finalDir);
 
 	lastUpwardDir = finalDir;
@@ -202,7 +203,7 @@ void PlayerController::MoveShip(float dt)
 
 	// Mantener la UI actualizada
 	UpdateVelocityUI();
-	//AdjustFov();
+	AdjustFov();
 }
 
 void PlayerController::TurnShip(float dt)
@@ -342,7 +343,7 @@ void PlayerController::AdjustFov()
 {
 	// Actualizar el fov
 	LMVector3 localVel = rbComp->GetLinearVelocity();
-	float fovOne = (localVel.Magnitude() / 600);
+	float fovOne = (localVel.Magnitude() / 100);
 	if (fovOne > 1) fovOne = 1;
 	float fov = fovOne * maxExtraFov + initialFov;
 	if(cam!=nullptr)
