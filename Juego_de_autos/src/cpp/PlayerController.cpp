@@ -88,14 +88,17 @@ void PlayerController::Start()
 void PlayerController::Update(float dt)
 {
 	counter += dt;
-	//carModel->GetTransform()->SetLocalRotation(LMVector3(0, counter * 0.5f, 0));
-	
-	//Set Upward Vector
-	SetUpwards(dt);
-	//rbComp->AddForce(LMVector3(0, -1 * gravityMultiplier,0));
+	/*LMVector3 newPos;
+	newPos = newPos.Lerp(carModel->GetTransform()->GetPosition(), 
+		carModel->GetTransform()->GetPosition() + LMVector3(0, 0.1f + 0.2f * _CMATH_::sin(counter / 100.0f * 0.7f), 0),
+		counter/100.0f *0.1f);
+
+	carModel->GetTransform()->SetPosition(newPos);*/
 	//Set Forward Vector
 	forw = tr->GetRotation().Forward();
 	forw.Normalize();
+	//Set Upward Vector
+	SetUpwards(dt);
 
 	GetInput();
 
@@ -199,7 +202,7 @@ void PlayerController::MoveShip(float dt)
 	//TiltShip(dt);
 	ApplyLinearForces(dt);
 	// Desaceleracion controlada
-	//LinearDrag(dt);
+	LinearDrag(dt);
 
 	// Mantener la UI actualizada
 	UpdateVelocityUI();
