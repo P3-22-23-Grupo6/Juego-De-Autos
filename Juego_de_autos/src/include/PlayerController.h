@@ -65,12 +65,6 @@ namespace JuegoDeAutos {
 		/// @param dt delta time
 		void ApplyAngularForces(float dt);
 
-		// Estos metodos se encargan de aplicar un Drag linear/angular, para que el movimiento de la 
-		// nave se sienta mas controlado y mejorar la experiencia de jugador
-
-		/// @brief Applies a linear drag
-		/// @param dt delta time
-		void LinearDrag(float dt);
 		/// @brief Applies an angular drag
 		/// @param currentAngularVelocity Current angular velocity
 		/// @param direction Current direction 
@@ -130,15 +124,16 @@ namespace JuegoDeAutos {
 
 		// Paremetros de movimiento
 			// Fisicas
-		float acceleration = 50;
-		float reversingAcceleration = 50;
+		float acceleration = 50;//r
+		float reversingAcceleration = 50;//r
 		float maxAngularVelocity = 4;
-		float angularForce = .1f;
+		float angularForce = 0.4f;//r
 		float angularDragForce = .6f;
 		float linearDragForce = 40;
-		float raycastDistance = 0.5f;
+		float raycastDistance = 0.5f;//r
 		float angleThreshold = 0.9f;
-		float gravityMultiplier = 40;
+		float gravityMultiplier = 40;//r
+		float brakingMultiplier = 0.005f;//r
 			// Matematicas
 				// Linear
 				
