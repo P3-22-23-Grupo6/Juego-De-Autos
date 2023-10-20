@@ -123,14 +123,14 @@ namespace JuegoDeAutos {
 		LocoMotor::Camera* cam;
 
 		// Paremetros de movimiento
-		float acceleration = 50;//r
+		float acceleration = 90;//r
 		float reversingAcceleration = 50;//r
 		float maxAngularVelocity = 4;
 		float angularForce = 0.4f;//r
-		float angularDragForce = .6f;
-		float raycastDistance = 4;//r
+		float angularDragForce = .4f;//r
+		float raycastDistance = 2;//r
 		float angleThreshold = 0.9f;//r
-		float gravityMultiplier = 40;//r
+		float gravityMultiplier = 90;//r
 		
 		//Gamepad
 		float joystickDeadzone = .05f;

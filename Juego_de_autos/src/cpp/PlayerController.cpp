@@ -63,16 +63,16 @@ void PlayerController::Start()
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial("m_Billboards");
 	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
-	//carModel = sceneMng->AddObjectRuntime("playerCarModel");
-	//carModel->AddComponent("Transform");
-	//carModel->AddComponent("MeshRenderer");
-	//carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 5, 0));
-	//carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
-	//carModel->GetTransform()->Start();
-	//meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
+	carModel = sceneMng->AddObjectRuntime("playerCarModel");
+	carModel->AddComponent("Transform");
+	carModel->AddComponent("MeshRenderer");
+	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 5, 0));
+	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+	carModel->GetTransform()->Start();
+	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
 	tr->AddChild(carBillboard->GetTransform());
-	//tr->AddChild(carModel->GetTransform());
+	tr->AddChild(carModel->GetTransform());
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 		cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
@@ -103,7 +103,7 @@ void PlayerController::Update(float dt)
 
 	MoveShip(dt);
 
-	TurnShip(dt);
+	//TurnShip(dt);
 	// 
 	//// Actualizar las posiciones del raceManager
 	//if (raceManager != nullptr)
@@ -133,20 +133,8 @@ void PlayerController::SetUpwards(float dt)
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
 
-		if (n.Angle(tr->GetRotation().Up()) > 0.9f) return;
-
-		tr->SetUpwards(n * 100.0f);
-
-		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 1.5f; // 7
-		LMVector3 hoverDisplacement = n * hoverDist;
-		tr->SetPosition(hitPos + hoverDisplacement);
-		rbComp->SetPosition(hitPos + hoverDisplacement);
-		rbComp->SetRotation(tr->GetRotation());
-		// Angle difference threshold
-		//if (n.Angle(upVector) > angleThreshold) newUpDirection = lastUpwardDir;
-		//else newUpDirection = n;
-		return;
+		if (n.Angle(tr->GetRotation().Up()) > 0.9f) newUpDirection = lastUpwardDir;
+		else newUpDirection = n * 100.0f;
 	}
 	//Not Grounded
 	else
@@ -161,6 +149,17 @@ void PlayerController::SetUpwards(float dt)
 	finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f);
 	tr->SetUpwards(finalDir);
 
+	if (!inAir)
+	{
+		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
+		double hoverDist = 2.0f;
+		LMVector3 hoverDisplacement = newUpDirection/100.0f * hoverDist;
+		tr->SetPosition(hitPos + hoverDisplacement);
+		rbComp->SetPosition(hitPos + hoverDisplacement);
+		rbComp->SetRotation(tr->GetRotation());
+	}
+
+
 	lastUpwardDir = finalDir;
 	inAirLastFrame = inAir;
 	//InAir Check
@@ -169,8 +168,6 @@ void PlayerController::SetUpwards(float dt)
 
 	if (inAirLastFrame && !inAir)
 		inputMng->RumbleController(1, .2f);*/
-
-	
 }
 
 void PlayerController::GetInput()
