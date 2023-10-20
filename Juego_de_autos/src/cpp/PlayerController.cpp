@@ -63,17 +63,16 @@ void PlayerController::Start()
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial("m_Billboards");
 	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
-	carModel = sceneMng->AddObjectRuntime("playerCarModel");
-	carModel->AddComponent("Transform");
-	carModel->AddComponent("MeshRenderer");
-	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 5, 0));
-	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
-	carModel->GetTransform()->Start();
-	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
+	//carModel = sceneMng->AddObjectRuntime("playerCarModel");
+	//carModel->AddComponent("Transform");
+	//carModel->AddComponent("MeshRenderer");
+	//carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 5, 0));
+	//carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+	//carModel->GetTransform()->Start();
+	//meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
 	tr->AddChild(carBillboard->GetTransform());
-	tr->AddChild(carModel->GetTransform());
-
+	//tr->AddChild(carModel->GetTransform());
 	if(gameObject->GetScene()->GetCamera()!=nullptr)
 		cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
@@ -125,20 +124,29 @@ void PlayerController::SetUpwards(float dt)
 
 	LMVector3 upVector = tr->GetRotation().Up();
 	upVector.Normalize();
-	upVector = upVector * raycastDistance;
+	upVector = upVector * 10.0f;
 	to = from - upVector;
 	
-	std::cout << "\nFROM: " << from.ToString() << ", to:" << to.ToString();
 	//Grounded
 	if (rbComp->GetRaycastHit(from, to)) {
 		inAir = false;
-		//Get Surface below Normal Vector
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
 
+		if (n.Angle(tr->GetRotation().Up()) > 0.9f) return;
+
+		tr->SetUpwards(n * 100.0f);
+
+		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
+		double hoverDist = 1.5f; // 7
+		LMVector3 hoverDisplacement = n * hoverDist;
+		tr->SetPosition(hitPos + hoverDisplacement);
+		rbComp->SetPosition(hitPos + hoverDisplacement);
+		rbComp->SetRotation(tr->GetRotation());
 		// Angle difference threshold
-		if (n.Angle(upVector) > angleThreshold) newUpDirection = lastUpwardDir;
-		else newUpDirection = n;
+		//if (n.Angle(upVector) > angleThreshold) newUpDirection = lastUpwardDir;
+		//else newUpDirection = n;
+		return;
 	}
 	//Not Grounded
 	else
