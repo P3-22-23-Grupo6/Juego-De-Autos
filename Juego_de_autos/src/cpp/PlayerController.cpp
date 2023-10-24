@@ -63,15 +63,15 @@ void PlayerController::Start()
 	carBillboard = sceneMng->AddObjectRuntime("carBillboard");
 	carBillboard->AddComponent("Transform");
 	carBillboard->AddComponent("MeshRenderer");
-	carBillboard->GetComponent<Transform>()->InitRuntime(LMVector3(0, 2, 0));
+	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 1.5f, 0));
 	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial("m_Billboards");
 	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
 	carModel = sceneMng->AddObjectRuntime("playerCarModel");
 	carModel->AddComponent("Transform");
-	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 5, 0));
 	carModel->AddComponent("MeshRenderer");
+	carModel->GetComponent<Transform>()->InitRuntime(tr->GetPosition());
 	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
 	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
@@ -86,8 +86,8 @@ void PlayerController::Start()
 	}
 	lastPos = tr->GetPosition();
 	tr->SetPosition(lastPos);
-	//tr->AddChild(carBillboard->GetTransform());
-	//tr->AddChild(carModel->GetTransform());
+	tr->AddChild(carBillboard->GetTransform());
+	tr->AddChild(carModel->GetTransform());
 }
 
 void PlayerController::Update(float dt)
