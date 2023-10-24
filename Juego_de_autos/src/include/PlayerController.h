@@ -1,3 +1,4 @@
+
 #pragma once
 #include "Component.h"
 #include "LMVector.h"
@@ -113,6 +114,7 @@ namespace JuegoDeAutos {
 		LocoMotor::Transform* tr;
 		LocoMotor::LMVector3 forw;
 		LocoMotor::LMVector3 lastUpwardDir;
+		LocoMotor::LMVector3 lastPos;
 		// Referencias
 		RaceManager* raceManager;
 		LocoMotor::RigidBody* rbComp;
@@ -123,15 +125,15 @@ namespace JuegoDeAutos {
 		LocoMotor::Camera* cam;
 
 		// Paremetros de movimiento
-		float acceleration = 90;//r
+		float acceleration = 50;//r
 		float reversingAcceleration = 50;//r
 		float maxAngularVelocity = 4;
 		float angularForce = 0.4f;//r
-		float angularDragForce = .4f;//r
-		float raycastDistance = 2;//r
+		float angularDragForce = .6f;
+		float raycastDistance = 4;//r
 		float angleThreshold = 0.9f;//r
 		float gravityMultiplier = 90;//r
-		
+
 		//Gamepad
 		float joystickDeadzone = .05f;
 		bool useGyro = false;
@@ -161,7 +163,7 @@ namespace JuegoDeAutos {
 		bool inAir;
 		bool inAirLastFrame;
 
-			// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
+		// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
 		float linearDragIntensity;
 		bool activeInput = false;
 	};

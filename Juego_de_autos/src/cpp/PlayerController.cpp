@@ -41,6 +41,7 @@ void PlayerController::Start()
 	counter = 0.0f;
 	// Asignacion de referencias
 	tr = gameObject->GetTransform();
+	
 	rbComp = gameObject->GetComponent<LocoMotor::RigidBody>();
 	if (rbComp == nullptr) {
 		SetActive(false);
@@ -52,8 +53,12 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
-	acceleration = 50;// raceManager->GetSpeed();
-	lastUpwardDir = LMVector3(0,1,0);
+	acceleration = 80;// raceManager->GetSpeed();
+	lastUpwardDir = LMVector3(0, 1, 0);
+
+	forw = tr->GetRotation().Forward();
+	rbComp->UseGravity(LMVector3(0, 0, 0));
+
 	//Create Billboard
 	carBillboard = sceneMng->AddObjectRuntime("carBillboard");
 	carBillboard->AddComponent("Transform");
@@ -65,15 +70,13 @@ void PlayerController::Start()
 	//Create Car Model Child
 	carModel = sceneMng->AddObjectRuntime("playerCarModel");
 	carModel->AddComponent("Transform");
-	carModel->AddComponent("MeshRenderer");
 	carModel->GetComponent<Transform>()->InitRuntime(LMVector3(0, 5, 0));
+	carModel->AddComponent("MeshRenderer");
 	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
 	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
-	tr->AddChild(carBillboard->GetTransform());
-	tr->AddChild(carModel->GetTransform());
-	if(gameObject->GetScene()->GetCamera()!=nullptr)
+	if (gameObject->GetScene()->GetCamera() != nullptr)
 		cam = gameObject->GetScene()->GetCamera()->GetComponent<Camera>();
 
 	//Velocity Text
@@ -81,14 +84,17 @@ void PlayerController::Start()
 	if (vltxt != nullptr && vltxt->GetComponent<UITextLM>() != nullptr) {
 		velocityText = vltxt->GetComponent<UITextLM>();
 	}
-	forw = tr->GetRotation().Forward();
+	lastPos = tr->GetPosition();
+	tr->SetPosition(lastPos);
+	//tr->AddChild(carBillboard->GetTransform());
+	//tr->AddChild(carModel->GetTransform());
 }
 
 void PlayerController::Update(float dt)
 {
 	counter += dt;
 	/*LMVector3 newPos; TEST LERPING
-	newPos = newPos.Lerp(carModel->GetTransform()->GetPosition(), 
+	newPos = newPos.Lerp(carModel->GetTransform()->GetPosition(),
 		carModel->GetTransform()->GetPosition() + LMVector3(0, 0.1f + 0.2f * _CMATH_::sin(counter / 100.0f * 0.7f), 0),
 		counter/100.0f *0.1f);
 	carModel->GetTransform()->SetPosition(newPos);*/
@@ -103,7 +109,7 @@ void PlayerController::Update(float dt)
 
 	MoveShip(dt);
 
-	//TurnShip(dt);
+	TurnShip(dt);
 	// 
 	//// Actualizar las posiciones del raceManager
 	//if (raceManager != nullptr)
@@ -126,40 +132,46 @@ void PlayerController::SetUpwards(float dt)
 	upVector.Normalize();
 	upVector = upVector * 10.0f;
 	to = from - upVector;
-	
+
 	//Grounded
 	if (rbComp->GetRaycastHit(from, to)) {
 		inAir = false;
 		LMVector3 n = rbComp->GethasRaycastHitNormal(from, to);
 		n.Normalize();
 
-		if (n.Angle(tr->GetRotation().Up()) > 0.9f) newUpDirection = lastUpwardDir;
-		else newUpDirection = n * 100.0f;
+		if (n.Angle(tr->GetRotation().Up()) > 0.9f) return;
+
+		//Lerp Between last upwards and current, and apply
+		LMVector3 finalDir;
+		LMVector3 newUpDirection = n * 100.0f;
+		//finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f * 20);
+		tr->SetUpwards(newUpDirection);
+
+		lastUpwardDir = finalDir;
+		inAirLastFrame = inAir;
+
+		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
+		double hoverDist = 1.5f; // 7
+		LMVector3 newPos = n * hoverDist + hitPos;
+		LMVector3 finalPos;
+		finalPos = finalPos.Lerp(lastPos, newPos, 1.0f);
+		tr->SetPosition(finalPos);
+		lastPos = finalPos;
+		return;
 	}
 	//Not Grounded
 	else
 	{
 		inAir = true;
 		float autoRotIntensity = 30;
-		rbComp->AddForce(LMVector3(0, -1 * gravityMultiplier,0));
+		rbComp->AddForce(LMVector3(0, -1 * gravityMultiplier, 0));
 		newUpDirection = LMVector3(0, 1, 0);
 	}
 	//Lerp Between last upwards and current, and apply
 	LMVector3 finalDir;
 	finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f);
 	tr->SetUpwards(finalDir);
-
-	if (!inAir)
-	{
-		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 2.0f;
-		LMVector3 hoverDisplacement = newUpDirection/100.0f * hoverDist;
-		tr->SetPosition(hitPos + hoverDisplacement);
-		rbComp->SetPosition(hitPos + hoverDisplacement);
-		rbComp->SetRotation(tr->GetRotation());
-	}
-
-
+	lastPos = finalDir;
 	lastUpwardDir = finalDir;
 	inAirLastFrame = inAir;
 	//InAir Check
@@ -168,6 +180,8 @@ void PlayerController::SetUpwards(float dt)
 
 	if (inAirLastFrame && !inAir)
 		inputMng->RumbleController(1, .2f);*/
+
+
 }
 
 void PlayerController::GetInput()
@@ -254,11 +268,11 @@ void PlayerController::ApplyLinearForces(float dt)
 void PlayerController::ApplyAngularForces(float dt)
 {
 	if (turnRight)
-		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt/100.0f);
-	
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt / 100.0f);
+
 	if (turnLeft)
-		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt/ 100.0f);
-	
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt / 100.0f);
+
 	// Activar desactivar Gyroscopio
 	if (inputMng->GetButtonDown(LMC_DPAD_UP))
 	{
@@ -351,8 +365,8 @@ void PlayerController::AdjustFov()
 	float fovOne = (localVel.Magnitude() / 100);
 	if (fovOne > 1) fovOne = 1;
 	float fov = fovOne * maxExtraFov + initialFov;
-	if(cam!=nullptr)
-	cam->SetFOV(fov);
+	if (cam != nullptr)
+		cam->SetFOV(fov);
 }
 
 void JuegoDeAutos::PlayerController::CheckRespawn()
