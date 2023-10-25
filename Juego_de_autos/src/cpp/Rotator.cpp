@@ -23,6 +23,11 @@ void Rotator::Init(std::vector<std::pair<std::string, std::string>>& params) {
 	}
 }
 
+void JuegoDeAutos::Rotator::InitRuntime(float rotSpeed)
+{
+	rotateVel = rotSpeed;
+}
+
 void Rotator::Update(float dt) {
 	LMVector3 up = gameObject->GetTransform()->GetRotation().Up();
 	LMQuaternion newRotation = gameObject->GetTransform()->GetRotation().Rotate(up, rotateVel * dt);

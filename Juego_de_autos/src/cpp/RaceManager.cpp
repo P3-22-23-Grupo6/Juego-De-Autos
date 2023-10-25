@@ -19,6 +19,7 @@
 
 // Extra
 #include <algorithm>
+#include <Rotator.h>
 
 using namespace JuegoDeAutos;
 using namespace LocoMotor;
@@ -111,13 +112,16 @@ void RaceManager::Start()
 
 
 
-	int i = 1;
+	/*int i = 1;
 	while (gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)) != nullptr) {
 		RegisterNPCCar("EnemyCar0" + std::to_string(i));
 		enemies.push_back(gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)));
 		i++;
-	}
+	}*/
 
+	GameObject* skyboxMesh = gameObject->GetScene()->GetObjectByName("SkyboxMeshNew");
+	skyboxMesh->AddComponent("Rotator");
+	skyboxMesh->GetComponent<Rotator>()->InitRuntime(0.002f);
 
 	if (gameObject->GetScene()->GetObjectByName("coche") != nullptr) {
 		player = gameObject->GetScene()->GetObjectByName("coche");
@@ -226,7 +230,7 @@ void RaceManager::Update(float dt)
 			else {
 				fpsCounterUpdated = 0;
 				if (fps != nullptr)
-					fps->ChangeText(std::to_string(1000 / ((int)dt + 1)) + " fps");
+					fps->ChangeText(std::to_string(1000.0f / ((int)dt + 1)) + " fps");
 			}
 		}
 		else fps->ChangeText("");

@@ -14,6 +14,7 @@ namespace JuegoDeAutos {
 		Rotator();
 
 		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
+		void InitRuntime(float rotSpeed);
 		/// @brief Updates the rotation
 		/// @param dt deltatime
 		void Update(float dt) override;
