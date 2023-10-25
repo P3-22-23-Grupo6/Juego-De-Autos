@@ -53,7 +53,7 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
-	acceleration = 80;// raceManager->GetSpeed();
+	acceleration = 120;// raceManager->GetSpeed();
 	lastUpwardDir = LMVector3(0, 1, 0);
 
 	forw = tr->GetRotation().Forward();
