@@ -305,17 +305,30 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	{
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 		//Add points to Spline
-		mainSpline->AddPoint(result * 20 + LMVector3(0,8,0));
-		RegisterCheckpointPosition(result * 20);
+		mainSpline->AddPoint(result);
+		RegisterCheckpointPosition(result);
 		
 		//Create Waypoint
 		GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
-		std::cout << "\nWayPoint Name: " + wayPointTT->GetName();
 		wayPointTT->AddComponent("Transform");
 		wayPointTT->AddComponent("MeshRenderer");
 		wayPointTT->GetComponent<Transform>()->InitRuntime(result);
 		wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeRed.mesh");
 		wayPointTT->GetTransform()->Start();
+	}
+	//Spline MidPoints
+	int maxPoints = 100;
+	for (int i = 0; i < maxPoints; i++)
+	{
+		//Create Waypoint
+		GameObject* midwayPoint = sceneMng->AddObjectRuntime("midwayPoint" + std::to_string(i));
+		midwayPoint->AddComponent("Transform");
+		midwayPoint->AddComponent("MeshRenderer");
+		midwayPoint->GetComponent<Transform>()->InitRuntime(mainSpline->Interpolate(i / (float)maxPoints), 
+			LMVector3(0,0,0), LMVector3(1,1,1));
+		midwayPoint->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeRed.mesh");
+		midwayPoint->GetComponent<MeshRenderer>()->ChangeMaterial("m_Falcon");
+		midwayPoint->GetTransform()->Start();
 	}
 #pragma endregion
 }

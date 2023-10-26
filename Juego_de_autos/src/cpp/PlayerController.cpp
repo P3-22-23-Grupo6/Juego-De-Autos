@@ -79,10 +79,12 @@ void PlayerController::Start()
 	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
 	carModel = sceneMng->AddObjectRuntime("playerCarModel" + std::to_string(playerIndex));
+	
 	carModel->AddComponent("Transform");
 	carModel->AddComponent("MeshRenderer");
 	carModel->GetComponent<Transform>()->InitRuntime(tr->GetPosition());
-	carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+	if(playerIndex == 0)carModel->GetComponent<MeshRenderer>()->InitRuntime("Stinger.mesh");
+	else if(playerIndex == 1)carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
 	
 	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
@@ -157,7 +159,7 @@ void PlayerController::SetUpwards(float dt)
 		//Lerp Between last upwards and current, and apply
 		LMVector3 finalDir;
 		LMVector3 newUpDirection = n * 100.0f;
-		//finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f * 20);
+		finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 1000.0f);
 		tr->SetUpwards(newUpDirection);
 
 		lastUpwardDir = finalDir;
