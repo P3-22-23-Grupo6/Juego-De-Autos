@@ -8,6 +8,7 @@ namespace LocoMotor {
 	class UITextLM;
 	class Spline;
 	class InputManager;
+	class SceneManager;
 }
 
 namespace JuegoDeAutos {
@@ -152,6 +153,7 @@ namespace JuegoDeAutos {
 
 		bool showFPS = false;
 		LocoMotor::InputManager* inputMng;
+		LocoMotor::SceneManager* sceneMng;
 	};
 }
 

@@ -7,6 +7,7 @@
 #include "LMSpline.h"
 #include "MeshRenderer.h"
 #include "InputManager.h"
+#include "SceneManager.h"
 #include "LMInputs.h"
 #include "ScriptManager.h"
 #include "Camera.h"
@@ -73,7 +74,7 @@ void RaceManager::Init(std::vector<std::pair<std::string, std::string>>& params)
 void RaceManager::Start()
 {
 	inputMng = LocoMotor::InputManager::GetInstance();
-
+	
 	// Referencias
 	GameObject* lapstxt = gameObject->GetScene()->GetObjectByName("lapsText");
 	if (lapstxt != nullptr) {
@@ -130,6 +131,8 @@ void RaceManager::Start()
 
 	if (gameObject->GetComponent<AudioSource>() != nullptr)
 		gameObject->GetComponent<AudioSource>()->Set2D();
+
+	
 }
 
 void RaceManager::Update(float dt)
@@ -282,6 +285,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 				std::cerr << "Error: " << e.what() << std::endl;
 			}
 		}
+		
 	}
 #pragma endregion
 
@@ -295,6 +299,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 
 
 #pragma region Convertir Coordenadas
+	sceneMng = LocoMotor::SceneManager::GetInstance();
 	// Convertir las coordenadas de strings a LMVector3
 	for (size_t i = 0; i < checkpointPositions_pairs.size(); i++)
 	{
@@ -302,6 +307,15 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		//Add points to Spline
 		mainSpline->AddPoint(result * 20 + LMVector3(0,8,0));
 		RegisterCheckpointPosition(result * 20);
+		
+		//Create Waypoint
+		GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
+		std::cout << "\nWayPoint Name: " + wayPointTT->GetName();
+		wayPointTT->AddComponent("Transform");
+		wayPointTT->AddComponent("MeshRenderer");
+		wayPointTT->GetComponent<Transform>()->InitRuntime(result);
+		wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeRed.mesh");
+		wayPointTT->GetTransform()->Start();
 	}
 #pragma endregion
 }
