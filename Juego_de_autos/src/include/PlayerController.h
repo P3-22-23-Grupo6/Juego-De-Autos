@@ -23,6 +23,8 @@ namespace JuegoDeAutos {
 		PlayerController();
 		virtual ~PlayerController();
 
+		void Init(std::vector<std::pair<std::string, std::string>>& params) override;
+
 		void InitComponent() override;
 
 
@@ -141,7 +143,7 @@ namespace JuegoDeAutos {
 
 		// Fov
 		float initialFov = 50;
-		float maxExtraFov = 50;
+		float maxExtraFov = 10;
 
 		// Almacenar informacion
 			// Controles
@@ -166,5 +168,7 @@ namespace JuegoDeAutos {
 		// Guarda la intensidad del drag en cada momento para usarlo como aceleracion extra
 		float linearDragIntensity;
 		bool activeInput = false;
+
+		int playerIndex;//First Player
 	};
 }

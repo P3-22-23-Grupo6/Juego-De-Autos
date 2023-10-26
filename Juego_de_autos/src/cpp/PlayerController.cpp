@@ -31,6 +31,15 @@ PlayerController::~PlayerController()
 {
 }
 
+void JuegoDeAutos::PlayerController::Init(std::vector<std::pair<std::string, std::string>>& params)
+{
+	for (int i = 0; i < params.size(); i++) {
+		if (params[i].first == "PlayerIndex") {
+			playerIndex = std::stof(params[i].second);
+		}
+	}
+}
+
 void PlayerController::InitComponent()
 {
 
@@ -89,6 +98,8 @@ void PlayerController::Start()
 	tr->AddChild(carBillboard->GetTransform());
 	tr->AddChild(carModel->GetTransform());
 }
+
+
 
 void PlayerController::Update(float dt)
 {
@@ -187,25 +198,51 @@ void PlayerController::SetUpwards(float dt)
 void PlayerController::GetInput()
 {
 	// Almacenar valores de input
-	accelerate = inputMng->GetKey(LMKS_W)
-		|| inputMng->GetButton(LMC_A)
-		|| inputMng->GetButton(LMC_RIGHTSHOULDER);
+	if (playerIndex == 1)//SECOND PLAYER
+	{
+		accelerate = inputMng->GetKey(LMKS_UP)
+			|| inputMng->GetButton(LMC_A)
+			|| inputMng->GetButton(LMC_RIGHTSHOULDER);
 
-	reverseAccelerate = inputMng->GetKey(LMKS_S)
-		|| inputMng->GetButton(LMC_B)
-		|| inputMng->GetButton(LMC_LEFTSHOULDER);
+		reverseAccelerate = inputMng->GetKey(LMKS_DOWN)
+			|| inputMng->GetButton(LMC_B)
+			|| inputMng->GetButton(LMC_LEFTSHOULDER);
 
 
-	turnRight = inputMng->GetKey(LMKS_D);
-	turnLeft = inputMng->GetKey(LMKS_A);
+		turnRight = inputMng->GetKey(LMKS_RIGHT);
+		turnLeft = inputMng->GetKey(LMKS_LEFT);
 
-	tiltLeft = inputMng->GetKey(LMKS_Q);
-	tiltRight = inputMng->GetKey(LMKS_E);
+		tiltLeft = inputMng->GetKey(LMKS_Q);
+		tiltRight = inputMng->GetKey(LMKS_E);
 
-	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
+		joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 
-	accTriggerValue = inputMng->GetTriggerValue(1);
-	reverseAccTriggerValue = inputMng->GetTriggerValue(0);
+		accTriggerValue = inputMng->GetTriggerValue(1);
+		reverseAccTriggerValue = inputMng->GetTriggerValue(0);
+	}
+	else
+	{
+		accelerate = inputMng->GetKey(LMKS_W)
+			|| inputMng->GetButton(LMC_A)
+			|| inputMng->GetButton(LMC_RIGHTSHOULDER);
+
+		reverseAccelerate = inputMng->GetKey(LMKS_S)
+			|| inputMng->GetButton(LMC_B)
+			|| inputMng->GetButton(LMC_LEFTSHOULDER);
+
+
+		turnRight = inputMng->GetKey(LMKS_D);
+		turnLeft = inputMng->GetKey(LMKS_A);
+
+		tiltLeft = inputMng->GetKey(LMKS_Q);
+		tiltRight = inputMng->GetKey(LMKS_E);
+
+		joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
+
+		accTriggerValue = inputMng->GetTriggerValue(1);
+		reverseAccTriggerValue = inputMng->GetTriggerValue(0);
+	}
+	
 	if (accTriggerValue > 0)accelerate = true;
 	if (reverseAccTriggerValue > 0)reverseAccelerate = true;
 
@@ -360,6 +397,7 @@ void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, i
 
 void PlayerController::AdjustFov()
 {
+	return;
 	// Actualizar el fov
 	LMVector3 localVel = rbComp->GetLinearVelocity();
 	float fovOne = (localVel.Magnitude() / 100);
