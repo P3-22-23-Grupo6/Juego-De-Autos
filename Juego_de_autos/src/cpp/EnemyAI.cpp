@@ -18,7 +18,7 @@ EnemyAI::EnemyAI() {
 	timeStep = 0;
 	enemySpeed = 0;
 	startSeparation = 0;
-	_shouldMove = false;
+	_shouldMove = true;
 }
 
 void JuegoDeAutos::EnemyAI::Start()

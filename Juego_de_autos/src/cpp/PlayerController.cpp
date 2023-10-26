@@ -62,7 +62,7 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
-	acceleration = 160;// raceManager->GetSpeed();
+	acceleration = 120;// raceManager->GetSpeed();
 	lastUpwardDir = LMVector3(0, 1, 0);
 
 	forw = tr->GetRotation().Forward();
@@ -213,7 +213,9 @@ void PlayerController::GetInput()
 			|| inputMng->GetButton(LMC_LEFTSHOULDER);
 
 
-		turnRight = inputMng->GetKey(LMKS_RIGHT);
+		turnRight = inputMng->GetKey(LMKS_RIGHT)
+		|| inputMng->GetButton(LMC_B)
+		|| inputMng->GetButton(LMC_B);
 		turnLeft = inputMng->GetKey(LMKS_LEFT);
 
 		tiltLeft = inputMng->GetKey(LMKS_Q);
@@ -248,7 +250,7 @@ void PlayerController::GetInput()
 	}
 	
 	if (accTriggerValue > 0)accelerate = true;
-	if (reverseAccTriggerValue > 0)reverseAccelerate = true;
+	if (reverseAccTriggerValue > 0) reverseAccelerate = true;
 
 	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
 	tilting = (tiltLeft || tiltRight);
@@ -275,6 +277,7 @@ void PlayerController::TurnShip(float dt)
 
 	// Definir variables necesarios para los calculos de las rotaciones
 	LMVector3 currentAngularVelocity = rbComp->GetAngularVelocity();
+
 	// Conocer la direccion en la que se esta rotando (izquierda/derecha)
 	double yAngVel = tr->GetRotation().Rotate(currentAngularVelocity).GetY();
 	if (yAngVel == 0)yAngVel = 0.0001;
@@ -298,21 +301,45 @@ void PlayerController::ApplyLinearForces(float dt)
 		if (accTriggerValue > 0) rbComp->AddForce(forw * acceleration * accTriggerValue);//controller
 		else rbComp->AddForce(forw * acceleration);//keyboard
 	}
-	else if (reverseAccelerate) {
-		LMVector3 backw = forw;
-		backw = backw * -1;
-		if (reverseAccTriggerValue > 0) rbComp->AddForce(backw * -acceleration * 0.5f * reverseAccTriggerValue);
-		else rbComp->AddForce(backw * acceleration);
+	else if (reverseAccelerate && !inAir) {
+		if (rbComp->GetLinearVelocity().Magnitude() < 0.2f)
+		{
+			//Retroceder
+		
+		}
+		else//Frenar
+		{
+			LMVector3 backw = forw;
+			backw = backw * -1;
+			if (reverseAccTriggerValue > 0) rbComp->SetLinearVelocity(rbComp->GetLinearVelocity() * 0.9f * -reverseAccTriggerValue);
+			else rbComp->SetLinearVelocity(rbComp->GetLinearVelocity() * 0.9f);
+		}
+		
 	}
+	//if (tiltRight) {
+	//	//rbComp->AddForce();//keyboard
+	//	LMVector3 newDirA = tr->GetRotation().Right();
+	//	newDirA.Normalize();
+	//	rbComp->AddForce(newDirA * acceleration * 5.0f);
+	//}
+	//if (tiltLeft) {
+	//	//rbComp->AddForce();//keyboard
+	//	LMVector3 newDirA = tr->GetRotation().Right();
+	//	newDirA.Normalize();
+	//	rbComp->AddForce(newDirA * -acceleration * 5.0f);
+	//}
+	//if (tilting) rbComp->SetLinearVelocity(rbComp->GetLinearVelocity() * 0.9f);
 }
 
 void PlayerController::ApplyAngularForces(float dt)
 {
+	float multiplierRot = 1.0f;
+	if (tilting && turning ) multiplierRot = 1.2f;
 	if (turnRight)
-		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * -angularForce * dt / 100.0f);
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * -angularForce * dt / 100.0f);
 
 	if (turnLeft)
-		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * dt / 100.0f);
+		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * angularForce * dt / 100.0f);
 
 	// Activar desactivar Gyroscopio
 	if (inputMng->GetButtonDown(LMC_DPAD_UP))
@@ -341,7 +368,7 @@ void PlayerController::ApplyAngularForces(float dt)
 		joystickValue *= .1f;
 		// Giro con joystick
 		if (abs(joystickValue) >= joystickDeadzone)
-			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * -joystickValue);
+			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * angularForce * -joystickValue);
 	}
 }
 
@@ -367,6 +394,7 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 		currentAngularVelocity.GetZ() * angularDragForce);
 
 	// Actualizar velocidad angular
+	//if (tilting) currentAngularVelocity * 5.0f;
 	rbComp->SetAngularVelocity(currentAngularVelocity);
 }
 
