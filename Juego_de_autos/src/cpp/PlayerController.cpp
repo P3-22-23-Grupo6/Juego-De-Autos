@@ -70,13 +70,11 @@ void PlayerController::Start()
 
 	//Create Billboard
 	carBillboard = sceneMng->AddObjectRuntime("carBillboard" + std::to_string(playerIndex));
-	std::cout <<"\n NOMBRE:"<< carBillboard->GetName();
 	carBillboard->AddComponent("Transform");
 	carBillboard->AddComponent("MeshRenderer");
 	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 1.5f, 0));
 	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
 	std::string materialAssigned = "m_RacerGizmo0" + std::to_string(playerIndex);
-	materialAssigned = "m_RacerGizmo02";
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial(materialAssigned);
 	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
