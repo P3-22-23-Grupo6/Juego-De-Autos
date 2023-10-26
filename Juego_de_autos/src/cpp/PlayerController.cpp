@@ -62,7 +62,7 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
-	acceleration = 120;// raceManager->GetSpeed();
+	acceleration = 160;// raceManager->GetSpeed();
 	lastUpwardDir = LMVector3(0, 1, 0);
 
 	forw = tr->GetRotation().Forward();
@@ -72,7 +72,7 @@ void PlayerController::Start()
 	carBillboard = sceneMng->AddObjectRuntime("carBillboard" + std::to_string(playerIndex));
 	carBillboard->AddComponent("Transform");
 	carBillboard->AddComponent("MeshRenderer");
-	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 1.5f, 0));
+	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 0.9f, 0));
 	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
 	std::string materialAssigned = "m_RacerGizmo0" + std::to_string(playerIndex);
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial(materialAssigned);
@@ -338,10 +338,10 @@ void PlayerController::ApplyAngularForces(float dt)
 	}
 	// Usar el Joystick
 	else {
-		joystickValue *= .5f;
+		joystickValue *= .1f;
 		// Giro con joystick
 		if (abs(joystickValue) >= joystickDeadzone)
-			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * -joystickValue * dt);
+			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * angularForce * -joystickValue);
 	}
 }
 

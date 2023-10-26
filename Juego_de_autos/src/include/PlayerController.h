@@ -137,7 +137,7 @@ namespace JuegoDeAutos {
 		float gravityMultiplier = 90;//r
 
 		//Gamepad
-		float joystickDeadzone = .05f;
+		float joystickDeadzone = .001f;
 		bool useGyro = false;
 		float maxGyroValue = 8;
 
