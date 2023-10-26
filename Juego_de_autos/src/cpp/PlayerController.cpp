@@ -69,7 +69,8 @@ void PlayerController::Start()
 	rbComp->UseGravity(LMVector3(0, 0, 0));
 
 	//Create Billboard
-	carBillboard = sceneMng->AddObjectRuntime("carBillboard");
+	carBillboard = sceneMng->AddObjectRuntime("carBillboard" + std::to_string(playerIndex));
+	std::cout <<"\n NOMBRE:"<< carBillboard->GetName();
 	carBillboard->AddComponent("Transform");
 	carBillboard->AddComponent("MeshRenderer");
 	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 1.5f, 0));
@@ -77,7 +78,7 @@ void PlayerController::Start()
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial("m_Billboards");
 	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
-	carModel = sceneMng->AddObjectRuntime("playerCarModel");
+	carModel = sceneMng->AddObjectRuntime("playerCarModel" + std::to_string(playerIndex));
 	carModel->AddComponent("Transform");
 	carModel->AddComponent("MeshRenderer");
 	carModel->GetComponent<Transform>()->InitRuntime(tr->GetPosition());
