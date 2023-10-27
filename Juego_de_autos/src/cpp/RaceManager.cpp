@@ -157,6 +157,7 @@ void RaceManager::Update(float dt)
 		if (showFPS) {
 			if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
 			else {
+				//FPS COLOR DEPENDING FRAMERATE
 				fpsCounterUpdated = 0;
 				if (fps != nullptr)
 				{
