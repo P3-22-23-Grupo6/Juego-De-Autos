@@ -318,6 +318,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		wayPointTT->GetTransform()->Start();
 	}
 	//Spline MidPoints
+	return;
 	int maxPoints = 100;
 	for (int i = 0; i < maxPoints; i++)
 	{

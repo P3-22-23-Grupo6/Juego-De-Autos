@@ -158,7 +158,7 @@ void PlayerController::SetUpwards(float dt)
 
 		//Lerp Between last upwards and current, and apply
 		LMVector3 finalDir;
-		LMVector3 newUpDirection = n * 100.0f;
+		LMVector3 newUpDirection = n	 * 100.0f;
 		finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 1000.0f);
 		tr->SetUpwards(newUpDirection);
 

@@ -3,6 +3,7 @@
 
 namespace LocoMotor {
 	class GameObject;
+	class Transform;
 	class Spline;
 	class RigidBody;
 }
@@ -23,10 +24,11 @@ namespace JuegoDeAutos {
 		void Update(float dt) override;
 		/// @brief Activate the enemy so it starts moving
 		void Activate();
-
+		void SetUpwards();
 	private:
+		LocoMotor::Transform* tr;
 		//Main method called each frame tu move the enemy along the spline
-		void MoveEnemy();
+		void MoveEnemy(float dt);
 		//Spline to follow
 		LocoMotor::Spline* mySpline;
 		float timeStep; //lastTimeStep
@@ -37,5 +39,7 @@ namespace JuegoDeAutos {
 		LocoMotor::RigidBody* rbComp;
 		//Used in the initial Countdown
 		bool _shouldMove;
+		bool grounded;
+		LocoMotor::LMVector3 lastPos;
 	};
 }
