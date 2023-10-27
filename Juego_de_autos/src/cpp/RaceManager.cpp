@@ -140,6 +140,8 @@ void RaceManager::Update(float dt)
 	if (inputMng->GetKeyDown(LMKS_F))
 		ShowFPS();
 
+	
+
 	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
@@ -147,9 +149,10 @@ void RaceManager::Update(float dt)
 		std::string enemyName = "EnemyCar0" + std::to_string(i + 1);
 		UpdateCarPosition(enemyName, enemy->GetTransform()->GetPosition());
 
-		if (HasCarReachedCheckpoint(enemyName))
-			CheckpointReached(enemyName);
+		//if (HasCarReachedCheckpoint(enemyName))
+		//	CheckpointReached(enemyName);
 	}
+	return;
 	// Comprobar si algun coche ha llegado a algun checkpoint
 	// En caso afirmativo, notificarlo
 
@@ -262,7 +265,6 @@ void RaceManager::Update(float dt)
 
 void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)
 {
-
 	// Comprobar si los datos introducidos desde LUA son validos
 	// Informar de los datos mal declarados en LUA y solo tener en cuenta los buenos
 #pragma region Comprobar Datos Validos
@@ -270,7 +272,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 	for (size_t i = 0; i < params.size(); i++) {
 		std::string name = params[i].first;
 		char checkpointNumber = name[name.size() - 1];
-
 		std::string checkName = name.substr(0, 10);
 		std::string checkpointNumber_ = name.substr(10);
 
@@ -313,7 +314,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		wayPointTT->AddComponent("Transform");
 		wayPointTT->AddComponent("MeshRenderer");
 		wayPointTT->GetComponent<Transform>()->InitRuntime(result);
-		wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeRed.mesh");
+		wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugSphereRed.mesh");
 		wayPointTT->GetTransform()->Start();
 	}
 	//Spline MidPoints
@@ -326,8 +327,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		midwayPoint->AddComponent("MeshRenderer");
 		midwayPoint->GetComponent<Transform>()->InitRuntime(mainSpline->Interpolate(i / (float)maxPoints), 
 			LMVector3(0,0,0), LMVector3(1,1,1));
-		midwayPoint->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeRed.mesh");
-		midwayPoint->GetComponent<MeshRenderer>()->ChangeMaterial("m_Falcon");
+		midwayPoint->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeYellow.mesh");
 		midwayPoint->GetTransform()->Start();
 	}
 #pragma endregion
