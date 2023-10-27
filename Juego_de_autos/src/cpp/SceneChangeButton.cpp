@@ -11,12 +11,14 @@ JuegoDeAutos::SceneChangeButton::SceneChangeButton()
 {
 	_startGameButton = nullptr;
 	_selectCarButton = nullptr;
+	_goToIntroButton = nullptr;
 }
 
 JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 {
 	_startGameButton = nullptr;
 	_selectCarButton = nullptr;
+	_goToIntroButton = nullptr;
 }
 
 void JuegoDeAutos::SceneChangeButton::Start()
@@ -24,6 +26,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	//Declare Buttons to add callbacks to
 	GameObject* startGameButton = gameObject->GetScene()->GetObjectByName("startButton");
 	GameObject* selectCarButton = gameObject->GetScene()->GetObjectByName("selectVehicleButton");
+	GameObject* goToIntroButton = gameObject->GetScene()->GetObjectByName("goToIntroButton");
 	
 	//Get Components
 	if (startGameButton != nullptr && startGameButton->GetComponent<UIImageLM>() != nullptr) {
@@ -31,6 +34,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	}
 	if (selectCarButton != nullptr && selectCarButton->GetComponent<UIImageLM>() != nullptr) {
 		_selectCarButton = selectCarButton->GetComponent<UIImageLM>();
+	}
+	if (goToIntroButton != nullptr && goToIntroButton->GetComponent<UIImageLM>() != nullptr) {
+		_goToIntroButton = goToIntroButton->GetComponent<UIImageLM>();
 	}
 	/*GameObject* speedbut = gameObject->GetScene()->GetObjectByName("speedButton");
 	if (speedbut != nullptr) {
@@ -72,7 +78,16 @@ void JuegoDeAutos::SceneChangeButton::Start()
 		_selectCarButton->SetOnMouseImage("m_selectVehicleButtonSelected");
 		_selectCarButton->SetPressedImage("m_selectVehicleButtonSelected");
 	}
-
+	if (_goToIntroButton != nullptr) {
+		_goToIntroButton->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			if (aSrc)
+				aSrc->Play("Assets/Sounds/Select2.wav");
+			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/intro.lua");
+			});
+		_goToIntroButton->SetOnMouseImage("m_BackButtonSelected");
+		_goToIntroButton->SetPressedImage("m_BackButtonSelected");
+	}
 	//switch (RaceManager::speedMode)
 	//{
 	//case JuegoDeAutos::RaceManager::low:
