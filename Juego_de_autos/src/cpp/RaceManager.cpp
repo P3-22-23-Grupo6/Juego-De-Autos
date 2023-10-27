@@ -152,6 +152,38 @@ void RaceManager::Update(float dt)
 		//if (HasCarReachedCheckpoint(enemyName))
 		//	CheckpointReached(enemyName);
 	}
+	UITextLM* fps = gameObject->GetComponent<UITextLM>();
+	if (fps != nullptr) {
+		if (showFPS) {
+			if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
+			else {
+				fpsCounterUpdated = 0;
+				if (fps != nullptr)
+				{
+					int currentFps = 1000 / ((int)dt + 1);
+					fps->ChangeText(std::to_string(currentFps) + " fps");
+					if (currentFps < 70)
+					{
+						fps->SetBottomColor(0.9f, 0.1f, 0.1f);
+						fps->SetTopColor(0.9f, 0.1f, 0.1f);
+					}
+					else if (currentFps > 90)
+					{
+						fps->SetBottomColor(0.1f, 0.9f, 0.3f);
+						fps->SetTopColor(0.1f, 0.9f, 0.3f);
+					}
+					else
+					{
+						fps->SetBottomColor(1.0f, 1.0f, 1.0f);
+						fps->SetTopColor(1.0f, 1.0f, 1.0f);
+					}
+					
+				}
+					
+			}
+		}
+		else fps->ChangeText("");
+	}
 	return;
 	// Comprobar si algun coche ha llegado a algun checkpoint
 	// En caso afirmativo, notificarlo
@@ -229,18 +261,7 @@ void RaceManager::Update(float dt)
 		}
 	}
 
-	UITextLM* fps = gameObject->GetComponent<UITextLM>();
-	if (fps != nullptr) {
-		if (showFPS) {
-			if (fpsCounterUpdated < fpsCounterRefreshRate)fpsCounterUpdated += dt * timeConstant;
-			else {
-				fpsCounterUpdated = 0;
-				if (fps != nullptr)
-					fps->ChangeText(std::to_string(1000.0f / ((int)dt + 1)) + " fps");
-			}
-		}
-		else fps->ChangeText("");
-	}
+
 
 
 	//Si termina la carrera a los 3 segundos te envia al menu

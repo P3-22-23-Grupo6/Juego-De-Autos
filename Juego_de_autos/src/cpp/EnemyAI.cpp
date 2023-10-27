@@ -3,6 +3,8 @@
 #include "Transform.h"
 #include "LMSpline.h"
 #include "RaceManager.h"
+#include "SceneManager.h"
+#include "MeshRenderer.h"
 
 #include "RigidBody.h"
 #include "EnemyAI.h"
@@ -54,6 +56,18 @@ void JuegoDeAutos::EnemyAI::Start()
 
 	//Sinceramente no se me ocurre una mejor forma, esto funciona :L
 	enemySpeed /= 10000.0f;
+
+	//Create Billboard
+	GameObject* carBillboard = LocoMotor::SceneManager::GetInstance()->AddObjectRuntime("enemyBillboard" + std::to_string(startSeparation));
+	carBillboard->AddComponent("Transform");
+	carBillboard->AddComponent("MeshRenderer");
+	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 0.9f, 0));
+	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
+	std::string materialAssigned = "m_RacerGizmo02";
+	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial(materialAssigned);
+	carBillboard->GetTransform()->Start();
+
+	tr->AddChild(carBillboard->GetTransform());
 }
 
 

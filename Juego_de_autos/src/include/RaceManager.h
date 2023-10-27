@@ -151,7 +151,7 @@ namespace JuegoDeAutos {
 
 		int playerRacePos = 0;
 
-		bool showFPS = false;
+		bool showFPS = true;
 		LocoMotor::InputManager* inputMng;
 		LocoMotor::SceneManager* sceneMng;
 	};
