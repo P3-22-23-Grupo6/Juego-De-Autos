@@ -17,8 +17,8 @@ namespace JuegoDeAutos {
 		/// @brief Changes the text of the UI 
 		void ChangeVelocity();
 
-		LocoMotor::UIImageLM* _raceButton;
-		LocoMotor::UIImageLM* _speedButton;
+		LocoMotor::UIImageLM* _startGameButton;
+		LocoMotor::UIImageLM* _selectCarButton;
 		LocoMotor::UITextLM* _speedText;
 	};
 }

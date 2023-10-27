@@ -9,24 +9,30 @@
 using namespace LocoMotor;
 JuegoDeAutos::SceneChangeButton::SceneChangeButton()
 {
-	_raceButton = nullptr;
+	_startGameButton = nullptr;
+	_selectCarButton = nullptr;
 }
 
 JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 {
-	_raceButton = nullptr;
+	_startGameButton = nullptr;
+	_selectCarButton = nullptr;
 }
 
 void JuegoDeAutos::SceneChangeButton::Start()
 {
-	GameObject* racebut = gameObject->GetScene()->GetObjectByName("raceButton");
-	GameObject* background = gameObject->GetScene()->GetObjectByName("LocomotorImg");
+	//Declare Buttons to add callbacks to
+	GameObject* startGameButton = gameObject->GetScene()->GetObjectByName("startButton");
+	GameObject* selectCarButton = gameObject->GetScene()->GetObjectByName("selectVehicleButton");
 	
-	if (racebut != nullptr) {
-		if (racebut->GetComponent<UIImageLM>() != nullptr)
-			_raceButton = racebut->GetComponent<UIImageLM>();
+	//Get Components
+	if (startGameButton != nullptr && startGameButton->GetComponent<UIImageLM>() != nullptr) {
+		_startGameButton = startGameButton->GetComponent<UIImageLM>();
 	}
-	GameObject* speedbut = gameObject->GetScene()->GetObjectByName("speedButton");
+	if (selectCarButton != nullptr && selectCarButton->GetComponent<UIImageLM>() != nullptr) {
+		_selectCarButton = selectCarButton->GetComponent<UIImageLM>();
+	}
+	/*GameObject* speedbut = gameObject->GetScene()->GetObjectByName("speedButton");
 	if (speedbut != nullptr) {
 		if (speedbut->GetComponent<UIImageLM>() != nullptr) {
 			_speedButton = speedbut->GetComponent<UIImageLM>();
@@ -44,36 +50,46 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			});
 		_speedButton->SetOnMouseImage("UIPanel2");
 		_speedButton->SetPressedImage("UIPanel3");
-	}
+	}*/
 
-	if (_raceButton != nullptr) {
-		_raceButton->CallOnClick([this]() {
+	if (_startGameButton != nullptr) {
+		_startGameButton->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			if (aSrc)
+				aSrc->Play("Assets/Sounds/Select2.wav");
+			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
+		});
+		_startGameButton->SetOnMouseImage("UIPanel2");
+		_startGameButton->SetPressedImage("UIPanel3");
+	}
+	if (_selectCarButton != nullptr) {
+		_selectCarButton->CallOnClick([this]() {
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/testArea.lua");
-		});
-		_raceButton->SetOnMouseImage("UIPanel2");
-		_raceButton->SetPressedImage("UIPanel3");
+			});
+		_selectCarButton->SetOnMouseImage("m_selectVehicleButtonSelected");
+		_selectCarButton->SetPressedImage("m_selectVehicleButtonSelected");
 	}
 
-	switch (RaceManager::speedMode)
-	{
-	case JuegoDeAutos::RaceManager::low:
-		if(_speedText)
-		_speedText->ChangeText("100cc");
-		break;
-	case JuegoDeAutos::RaceManager::middle:
-		if (_speedText)
-		_speedText->ChangeText("200cc");
-		break;
-	case JuegoDeAutos::RaceManager::high:
-		if (_speedText)
-		_speedText->ChangeText("500cc");
-		break;
-	default:
-		break;
-	}
+	//switch (RaceManager::speedMode)
+	//{
+	//case JuegoDeAutos::RaceManager::low:
+	//	if(_speedText)
+	//	_speedText->ChangeText("100cc");
+	//	break;
+	//case JuegoDeAutos::RaceManager::middle:
+	//	if (_speedText)
+	//	_speedText->ChangeText("200cc");
+	//	break;
+	//case JuegoDeAutos::RaceManager::high:
+	//	if (_speedText)
+	//	_speedText->ChangeText("500cc");
+	//	break;
+	//default:
+	//	break;
+	//}
 }
 
 void JuegoDeAutos::SceneChangeButton::ChangeVelocity()
