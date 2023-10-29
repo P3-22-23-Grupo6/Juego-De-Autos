@@ -25,6 +25,7 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 {
 	_startGameButton = nullptr;
 	_goToIntroButton = nullptr;
+	_vehicleInfoPanel = nullptr;
 	_vehiclePortraitImg = nullptr;
 	_selectPlayerOne = nullptr;
 	_selectPlayerTwo = nullptr;
@@ -39,6 +40,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	//CAR SELECTION
 	GameObject* selectCarButton = gameObject->GetScene()->GetObjectByName("selectVehicleButton");
 	GameObject* goToIntroButton = gameObject->GetScene()->GetObjectByName("goToIntroButton");
+	GameObject* vehicleInfoPanel = gameObject->GetScene()->GetObjectByName("carInfoPanel");
 	GameObject* vehiclePortrait = gameObject->GetScene()->GetObjectByName("Vehicle_Portrait");
 	GameObject* arrowLeft_Car = gameObject->GetScene()->GetObjectByName("arrowLeftButton");
 	GameObject* arrowRight_Car = gameObject->GetScene()->GetObjectByName("arrowRightButton");
@@ -65,6 +67,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	}
 	if (vehiclePortrait != nullptr && vehiclePortrait->GetComponent<UIImageLM>() != nullptr) {
 		_vehiclePortraitImg = vehiclePortrait->GetComponent<UIImageLM>();
+	}
+	if (vehicleInfoPanel != nullptr && vehicleInfoPanel->GetComponent<UIImageLM>() != nullptr) {
+		_vehicleInfoPanel = vehicleInfoPanel->GetComponent<UIImageLM>();
 	}
 	if (selectPlayerOne != nullptr && selectPlayerOne->GetComponent<UIImageLM>() != nullptr) {
 		_selectPlayerOne = selectPlayerOne->GetComponent<UIImageLM>();
@@ -276,13 +281,14 @@ void JuegoDeAutos::SceneChangeButton::ChangeVehicle()
 	switch (vehicleIndex){
 	
 	default: break;
-	case 0: newPortrait = "Portrait_Falcon"; break;
-	case 1: newPortrait = "Portrait_Eagle"; break;
+	case 0: newPortrait = "Portrait_Falcon"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelFalcon"); break;
+	case 1: newPortrait = "Portrait_Eagle"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelEagle"); break;
 	//case 2: newPortrait = "Portrait_Flamingo"; break;
 	//case 2: newPortrait = "Portrait_Robin"; break;
 	}
 	std::cout << "\n\nChanging to: " << newPortrait<<vehicleIndex;
 	_vehiclePortraitImg->ChangeImage(newPortrait);
+	
 }
 
 void JuegoDeAutos::SceneChangeButton::ChangeTrack(bool nextTrack)
