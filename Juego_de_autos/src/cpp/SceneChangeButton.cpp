@@ -283,7 +283,7 @@ void JuegoDeAutos::SceneChangeButton::ChangeVehicle()
 	default: break;
 	case 0: newPortrait = "Portrait_Falcon"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelFalcon"); break;
 	case 1: newPortrait = "Portrait_Eagle"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelEagle"); break;
-	case 2: newPortrait = "Portrait_Generic"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelGeneric"); break;
+	case 2: newPortrait = "Portrait_Generic"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelFlamingo"); break;
 	case 3: newPortrait = "Portrait_Generic"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelGeneric"); break;
 	}
 	_vehiclePortraitImg->ChangeImage(newPortrait);
