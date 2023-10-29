@@ -5,7 +5,9 @@
 #include "UIImageLM.h"
 #include "UITextLM.h"
 #include "ScriptManager.h"
+#include "MeshRenderer.h"
 #include "AudioSource.h"
+
 using namespace LocoMotor;
 JuegoDeAutos::SceneChangeButton::SceneChangeButton()
 {
@@ -26,21 +28,28 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 	_vehiclePortraitImg = nullptr;
 	_selectPlayerOne = nullptr;
 	_selectPlayerTwo = nullptr;
+	_trackArrowRightButton = nullptr;
+	_trackArrowLeftButton = nullptr;
 }
 
 void JuegoDeAutos::SceneChangeButton::Start()
 {
 	//Declare Buttons to add callbacks to
 	GameObject* startGameButton = gameObject->GetScene()->GetObjectByName("startButton");
+	//CAR SELECTION
 	GameObject* selectCarButton = gameObject->GetScene()->GetObjectByName("selectVehicleButton");
 	GameObject* goToIntroButton = gameObject->GetScene()->GetObjectByName("goToIntroButton");
 	GameObject* vehiclePortrait = gameObject->GetScene()->GetObjectByName("Vehicle_Portrait");
-
 	GameObject* arrowLeft_Car = gameObject->GetScene()->GetObjectByName("arrowLeftButton");
 	GameObject* arrowRight_Car = gameObject->GetScene()->GetObjectByName("arrowRightButton");
 	GameObject* selectPlayerOne = gameObject->GetScene()->GetObjectByName("selectPlayerOne");
 	GameObject* selectPlayerTwo = gameObject->GetScene()->GetObjectByName("selectPlayerTwo");
-	
+	//TRACK SELECTION
+	GameObject* trackPreview00 = gameObject->GetScene()->GetObjectByName("trackMesh00");
+	GameObject* trackPreview01 = gameObject->GetScene()->GetObjectByName("trackMesh01");
+	GameObject* trackArrowRightButton = gameObject->GetScene()->GetObjectByName("trackArrowRightButton");
+	GameObject* trackArrowLeftButton = gameObject->GetScene()->GetObjectByName("trackArrowLeftButton");
+
 	//Get Components
 	if (startGameButton != nullptr && startGameButton->GetComponent<UIImageLM>() != nullptr) {
 		_startGameButton = startGameButton->GetComponent<UIImageLM>();
@@ -63,6 +72,19 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	if (selectPlayerTwo != nullptr && selectPlayerTwo->GetComponent<UIImageLM>() != nullptr) {
 		_selectPlayerTwo = selectPlayerTwo->GetComponent<UIImageLM>();
 	}
+	//TRACKS
+	if (trackPreview00 != nullptr && trackPreview00->GetComponent<MeshRenderer>() != nullptr) {
+		trackMesh00 = trackPreview00->GetComponent<MeshRenderer>();
+	}
+	if (trackPreview01 != nullptr && trackPreview01->GetComponent<MeshRenderer>() != nullptr) {
+		trackMesh01 = trackPreview01->GetComponent<MeshRenderer>();
+	}
+	if (trackArrowRightButton != nullptr && trackArrowRightButton->GetComponent<UIImageLM>() != nullptr) {
+		_trackArrowRightButton = trackArrowRightButton->GetComponent<UIImageLM>();
+	}
+	if (trackArrowLeftButton != nullptr && trackArrowLeftButton->GetComponent<UIImageLM>() != nullptr) {
+		_trackArrowLeftButton = trackArrowLeftButton->GetComponent<UIImageLM>();
+	}
 
 	if (_startGameButton != nullptr) {
 		_startGameButton->CallOnClick([this]() {
@@ -70,7 +92,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/carSelectMenu.lua");
-		});
+			});
 		_startGameButton->SetOnMouseImage("UIPanel2");
 		_startGameButton->SetPressedImage("UIPanel3");
 	}
@@ -144,35 +166,61 @@ void JuegoDeAutos::SceneChangeButton::Start()
 		_arrowRight_Car->SetOnMouseImage("ArrowRight01");
 		_arrowRight_Car->SetPressedImage("ArrowRight01");
 	}
-	////PLAYER SELECT ONE
-	//if (_playerSelect1Button != nullptr) {
-	//	_playerSelect1Button->CallOnClick([this]() {
-	//		AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
-	//		//Play Sound
-	//		if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
-	//		
-	//		_playerSelect1Button->SetOnMouseImage("m_PlayerReady");
-	//		_playerSelect1Button->SetOnMouseImage("m_PlayerReady");
-	//		_playerSelect1Button->SetPressedImage("m_PlayerReady");
-	//		});
+	//TRACK ARROW LEFT
+	if (_trackArrowLeftButton != nullptr) {
+		_trackArrowLeftButton->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			//Play Sound
+			if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
+			ChangeTrack(false);
+			});
 
-	//	_playerSelect1Button->SetOnMouseImage("m_PlayerOneSelect01");
-	//	_playerSelect1Button->SetPressedImage("m_PlayerOneSelect01");
-	//}
-	//if (_playerSelect2Button != nullptr) {
-	//	_playerSelect2Button->CallOnClick([this]() {
-	//		AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
-	//		//Play Sound
-	//		if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
-	//		
-	//		_playerSelect2Button->SetOnMouseImage("m_PlayerReady");
-	//		_playerSelect2Button->SetOnMouseImage("m_PlayerReady");
-	//		_playerSelect2Button->SetPressedImage("m_PlayerReady");
-	//		});
+		_trackArrowLeftButton->SetOnMouseImage("ArrowLeft01");
+		_trackArrowLeftButton->SetPressedImage("ArrowLeft01");
 
-	//	_playerSelect2Button->SetOnMouseImage("m_PlayerTwoSelect01");
-	//	_playerSelect2Button->SetPressedImage("m_PlayerTwoSelect01");
-	//}
+		//TRACK ARROW RIGHT
+		if (_trackArrowRightButton != nullptr) {
+			_trackArrowRightButton->CallOnClick([this]() {
+				AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+				//Play Sound
+				if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
+				//Select Previous Car	
+				ChangeTrack(true);
+				});
+
+			_trackArrowRightButton->SetOnMouseImage("ArrowRight01");
+			_trackArrowRightButton->SetPressedImage("ArrowRight01");
+		}
+		////PLAYER SELECT ONE
+		//if (_playerSelect1Button != nullptr) {
+		//	_playerSelect1Button->CallOnClick([this]() {
+		//		AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+		//		//Play Sound
+		//		if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
+		//		
+		//		_playerSelect1Button->SetOnMouseImage("m_PlayerReady");
+		//		_playerSelect1Button->SetOnMouseImage("m_PlayerReady");
+		//		_playerSelect1Button->SetPressedImage("m_PlayerReady");
+		//		});
+
+		//	_playerSelect1Button->SetOnMouseImage("m_PlayerOneSelect01");
+		//	_playerSelect1Button->SetPressedImage("m_PlayerOneSelect01");
+		//}
+		//if (_playerSelect2Button != nullptr) {
+		//	_playerSelect2Button->CallOnClick([this]() {
+		//		AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+		//		//Play Sound
+		//		if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
+		//		
+		//		_playerSelect2Button->SetOnMouseImage("m_PlayerReady");
+		//		_playerSelect2Button->SetOnMouseImage("m_PlayerReady");
+		//		_playerSelect2Button->SetPressedImage("m_PlayerReady");
+		//		});
+
+		//	_playerSelect2Button->SetOnMouseImage("m_PlayerTwoSelect01");
+		//	_playerSelect2Button->SetPressedImage("m_PlayerTwoSelect01");
+		//}
+	}
 }
 
 void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
@@ -235,4 +283,18 @@ void JuegoDeAutos::SceneChangeButton::ChangeVehicle()
 	}
 	std::cout << "\n\nChanging to: " << newPortrait<<vehicleIndex;
 	_vehiclePortraitImg->ChangeImage(newPortrait);
+}
+
+void JuegoDeAutos::SceneChangeButton::ChangeTrack(bool nextTrack)
+{
+	//Esta hecho con el culo pero arrays/listas petan en cambio de escena yalosiento
+	if(trackIndex == 0) trackMesh00->SetVisible(false);
+	else trackMesh01->SetVisible(false);
+
+	trackIndex += nextTrack ? 1 : -1;
+	if (trackIndex < 0) trackIndex = 1;
+	if (trackIndex > 1) trackIndex = 0;
+
+	if (trackIndex == 0) trackMesh00->SetVisible(true);
+	else trackMesh01->SetVisible(true);
 }
