@@ -69,7 +69,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
-			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
+			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/carSelectMenu.lua");
 		});
 		_startGameButton->SetOnMouseImage("UIPanel2");
 		_startGameButton->SetPressedImage("UIPanel3");
@@ -188,7 +188,7 @@ void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
 		playerTwoReady = true;
 	}
 	if(playerTwoReady && playerOneReady) 
-		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/intro.lua");
+		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/trackSelectMenu.lua");
 }
 
 void JuegoDeAutos::SceneChangeButton::ChangeVelocity()
