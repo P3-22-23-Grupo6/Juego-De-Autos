@@ -148,8 +148,8 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
 			//Select Next Car
-			vehicleIndex++;
-			if (vehicleIndex > 1) vehicleIndex = 0;
+			vehicleIndex--;
+			if (vehicleIndex < 0) vehicleIndex = 3;
 			ChangeVehicle();
 			});
 
@@ -163,8 +163,8 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			//Play Sound
 			if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
 			//Select Previous Car	
-			vehicleIndex--;
-			if (vehicleIndex < 0) vehicleIndex = 1;
+			vehicleIndex++;
+			if (vehicleIndex > 3) vehicleIndex = 0;
 			ChangeVehicle();
 			});
 
@@ -283,12 +283,10 @@ void JuegoDeAutos::SceneChangeButton::ChangeVehicle()
 	default: break;
 	case 0: newPortrait = "Portrait_Falcon"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelFalcon"); break;
 	case 1: newPortrait = "Portrait_Eagle"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelEagle"); break;
-	//case 2: newPortrait = "Portrait_Flamingo"; break;
-	//case 2: newPortrait = "Portrait_Robin"; break;
+	case 2: newPortrait = "Portrait_Generic"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelGeneric"); break;
+	case 3: newPortrait = "Portrait_Generic"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelGeneric"); break;
 	}
-	std::cout << "\n\nChanging to: " << newPortrait<<vehicleIndex;
 	_vehiclePortraitImg->ChangeImage(newPortrait);
-	
 }
 
 void JuegoDeAutos::SceneChangeButton::ChangeTrack(bool nextTrack)
