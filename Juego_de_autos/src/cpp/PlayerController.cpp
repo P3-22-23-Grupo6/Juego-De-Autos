@@ -83,7 +83,7 @@ void PlayerController::Start()
 	carModel->AddComponent("Transform");
 	carModel->AddComponent("MeshRenderer");
 	carModel->GetComponent<Transform>()->InitRuntime(tr->GetPosition());
-	if(playerIndex == 0)carModel->GetComponent<MeshRenderer>()->InitRuntime("Stinger.mesh");
+	if(playerIndex == 0)carModel->GetComponent<MeshRenderer>()->InitRuntime("Eagle.mesh");
 	else if(playerIndex == 1)carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
 	
 	carModel->GetTransform()->Start();
