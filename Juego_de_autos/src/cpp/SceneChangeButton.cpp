@@ -27,6 +27,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	GameObject* startGameButton = gameObject->GetScene()->GetObjectByName("startButton");
 	GameObject* selectCarButton = gameObject->GetScene()->GetObjectByName("selectVehicleButton");
 	GameObject* goToIntroButton = gameObject->GetScene()->GetObjectByName("goToIntroButton");
+
+	GameObject* arrowLeft_Car = gameObject->GetScene()->GetObjectByName("arrowLeftButton");
+	GameObject* arrowRight_Car = gameObject->GetScene()->GetObjectByName("arrowRightButton");
 	
 	//Get Components
 	if (startGameButton != nullptr && startGameButton->GetComponent<UIImageLM>() != nullptr) {
@@ -37,6 +40,12 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	}
 	if (goToIntroButton != nullptr && goToIntroButton->GetComponent<UIImageLM>() != nullptr) {
 		_goToIntroButton = goToIntroButton->GetComponent<UIImageLM>();
+	}
+	if (arrowLeft_Car != nullptr && arrowLeft_Car->GetComponent<UIImageLM>() != nullptr) {
+		_arrowLeft_Car = arrowLeft_Car->GetComponent<UIImageLM>();
+	}
+	if (arrowRight_Car != nullptr && arrowRight_Car->GetComponent<UIImageLM>() != nullptr) {
+		_arrowRight_Car = arrowRight_Car->GetComponent<UIImageLM>();
 	}
 	/*GameObject* speedbut = gameObject->GetScene()->GetObjectByName("speedButton");
 	if (speedbut != nullptr) {
@@ -87,6 +96,28 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			});
 		_goToIntroButton->SetOnMouseImage("m_BackButtonSelected");
 		_goToIntroButton->SetPressedImage("m_BackButtonSelected");
+	}
+	//ARROW LEFT
+	if (_arrowLeft_Car != nullptr) {
+		_arrowLeft_Car->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			if (aSrc)
+				aSrc->Play("Assets/Sounds/Select2.wav");
+			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/intro.lua");
+			});
+		_arrowLeft_Car->SetOnMouseImage("ArrowLeft01");
+		_arrowLeft_Car->SetPressedImage("ArrowLeft01");
+	}
+	//ARROW RIGHT
+	if (_arrowRight_Car != nullptr) {
+		_arrowRight_Car->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			if (aSrc)
+				aSrc->Play("Assets/Sounds/Select2.wav");
+			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/intro.lua");
+			});
+		_arrowRight_Car->SetOnMouseImage("ArrowRight01");
+		_arrowRight_Car->SetPressedImage("ArrowRight01");
 	}
 	//switch (RaceManager::speedMode)
 	//{

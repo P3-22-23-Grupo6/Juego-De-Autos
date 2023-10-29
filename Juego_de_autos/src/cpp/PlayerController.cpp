@@ -98,9 +98,9 @@ void PlayerController::Start()
 		velocityText = vltxt->GetComponent<UITextLM>();
 	}
 	lastPos = tr->GetPosition();
-	tr->SetPosition(lastPos);
 	tr->AddChild(carBillboard->GetTransform());
 	tr->AddChild(carModel->GetTransform());
+	tr->SetPosition(lastPos);
 }
 
 

@@ -20,6 +20,8 @@ namespace JuegoDeAutos {
 		LocoMotor::UIImageLM* _startGameButton;
 		LocoMotor::UIImageLM* _selectCarButton;
 		LocoMotor::UIImageLM* _goToIntroButton;
+		LocoMotor::UIImageLM* _arrowLeft_Car;
+		LocoMotor::UIImageLM* _arrowRight_Car;
 		LocoMotor::UITextLM* _speedText;
 	};
 }
