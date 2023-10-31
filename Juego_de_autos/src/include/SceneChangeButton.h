@@ -23,6 +23,10 @@ namespace JuegoDeAutos {
 		//True if add One to the right
 		void ChangeTrack(bool nextTrack);
 		int vehicleIndex;
+		//START INTRO SCENE
+		LocoMotor::UIImageLM* _onePlayerButton;
+		LocoMotor::UIImageLM* _twoPlayerButton;
+		//CAR SCENE
 		LocoMotor::UIImageLM* _startGameButton;
 		LocoMotor::UIImageLM* _goToIntroButton;
 		LocoMotor::UIImageLM* _vehiclePortraitImg;

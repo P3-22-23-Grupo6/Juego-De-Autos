@@ -1,2 +1,0 @@
-Error: LUA: Gameobject 'gizmo_Axis' has been declared but not defined
-Error: LUA: Gameobject 'consoleDebug' has been declared but not defined

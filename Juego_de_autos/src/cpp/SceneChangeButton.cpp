@@ -11,6 +11,8 @@
 using namespace LocoMotor;
 JuegoDeAutos::SceneChangeButton::SceneChangeButton()
 {
+	_onePlayerButton = nullptr;
+	_twoPlayerButton = nullptr;
 	_startGameButton = nullptr;
 	_goToIntroButton = nullptr;
 	_arrowLeft_Car = nullptr;
@@ -24,6 +26,8 @@ JuegoDeAutos::SceneChangeButton::SceneChangeButton()
 
 JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 {
+	_onePlayerButton = nullptr;
+	_twoPlayerButton = nullptr;
 	_startGameButton = nullptr;
 	_goToIntroButton = nullptr;
 	_vehicleInfoPanel = nullptr;
@@ -39,6 +43,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 {
 	//Declare Buttons to add callbacks to
 	GameObject* startGameButton = gameObject->GetScene()->GetObjectByName("startButton");
+	//INTRO
+	GameObject* onePlayerButton = gameObject->GetScene()->GetObjectByName("OnePlayerButton");
+	GameObject* twoPlayerButton = gameObject->GetScene()->GetObjectByName("TwoPlayerButton");
 	//CAR SELECTION
 	GameObject* selectCarButton = gameObject->GetScene()->GetObjectByName("selectVehicleButton");
 	GameObject* goToIntroButton = gameObject->GetScene()->GetObjectByName("goToIntroButton");
@@ -56,6 +63,12 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	GameObject* trackPortraitImg = gameObject->GetScene()->GetObjectByName("Portrait_Track");
 
 	//Get Components
+	if (onePlayerButton != nullptr && onePlayerButton->GetComponent<UIImageLM>() != nullptr) {
+		_onePlayerButton = onePlayerButton->GetComponent<UIImageLM>();
+	}
+	if (twoPlayerButton != nullptr && twoPlayerButton->GetComponent<UIImageLM>() != nullptr) {
+		_twoPlayerButton = twoPlayerButton->GetComponent<UIImageLM>();
+	}
 	if (startGameButton != nullptr && startGameButton->GetComponent<UIImageLM>() != nullptr) {
 		_startGameButton = startGameButton->GetComponent<UIImageLM>();
 	}
@@ -96,16 +109,26 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	if (trackPortraitImg != nullptr && trackPortraitImg->GetComponent<UIImageLM>() != nullptr) {
 		_trackPortraitImg = trackPortraitImg->GetComponent<UIImageLM>();
 	}
-
-	if (_startGameButton != nullptr) {
-		_startGameButton->CallOnClick([this]() {
+	//PLAYER BUTTON INTRO
+	if (_onePlayerButton != nullptr) {
+		_onePlayerButton->CallOnClick([this]() {
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/carSelectMenu.lua");
 			});
-		_startGameButton->SetOnMouseImage("UIPanel2");
-		_startGameButton->SetPressedImage("UIPanel3");
+		_onePlayerButton->SetOnMouseImage("m_OnePlayerButton01");
+		_onePlayerButton->SetPressedImage("m_OnePlayerButton01");
+	}
+	if (_twoPlayerButton != nullptr) {
+		_twoPlayerButton->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			if (aSrc)
+				aSrc->Play("Assets/Sounds/Select2.wav");
+			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/carSelectMenu.lua");
+			});
+		_twoPlayerButton->SetOnMouseImage("m_TwoPlayerButton01");
+		_twoPlayerButton->SetPressedImage("m_TwoPlayerButton01");
 	}
 
 	if (_goToIntroButton != nullptr) {
