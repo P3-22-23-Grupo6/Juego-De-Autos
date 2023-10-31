@@ -30,6 +30,8 @@ RaceManager* RaceManager::_instance = nullptr;
 
 RaceManager::SpeedMode RaceManager::speedMode;
 
+int RaceManager::numberOfPlayer;
+
 RaceManager::RaceManager()
 {
 	raceCompleted = false;

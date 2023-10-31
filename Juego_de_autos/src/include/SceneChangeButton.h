@@ -14,6 +14,7 @@ namespace JuegoDeAutos {
 		~SceneChangeButton();
 		void Start() override;
 	private:
+		void SetUIVisibility();
 		/// @brief Changes the text of the UI 
 		void SetPlayerReady(int playerIndex);// 0:PlayerOne, 1: Player Two
 		int playerOneCarIndex;int playerTwoCarIndex;

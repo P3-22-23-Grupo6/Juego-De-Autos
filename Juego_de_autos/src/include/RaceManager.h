@@ -73,6 +73,10 @@ namespace JuegoDeAutos {
 
 		enum SpeedMode { low, middle, high };
 		static SpeedMode speedMode;
+		
+		//void SetNumberOfPlayers(int value);
+		//int GetNumberOfPlayers();
+		static int numberOfPlayer;
 
 	private:
 		 

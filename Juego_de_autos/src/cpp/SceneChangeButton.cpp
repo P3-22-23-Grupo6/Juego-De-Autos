@@ -115,6 +115,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
+			RaceManager::GetInstance()->numberOfPlayer = 1;
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/carSelectMenu.lua");
 			});
 		_onePlayerButton->SetOnMouseImage("m_OnePlayerButton01");
@@ -125,6 +126,8 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
+			RaceManager::GetInstance()->numberOfPlayer = 2;
+			SetUIVisibility();
 			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/carSelectMenu.lua");
 			});
 		_twoPlayerButton->SetOnMouseImage("m_TwoPlayerButton01");
@@ -225,38 +228,14 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			_trackArrowRightButton->SetOnMouseImage("ArrowRight01");
 			_trackArrowRightButton->SetPressedImage("ArrowRight01");
 		}
-		////PLAYER SELECT ONE
-		//if (_playerSelect1Button != nullptr) {
-		//	_playerSelect1Button->CallOnClick([this]() {
-		//		AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
-		//		//Play Sound
-		//		if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
-		//		
-		//		_playerSelect1Button->SetOnMouseImage("m_PlayerReady");
-		//		_playerSelect1Button->SetOnMouseImage("m_PlayerReady");
-		//		_playerSelect1Button->SetPressedImage("m_PlayerReady");
-		//		});
-
-		//	_playerSelect1Button->SetOnMouseImage("m_PlayerOneSelect01");
-		//	_playerSelect1Button->SetPressedImage("m_PlayerOneSelect01");
-		//}
-		//if (_playerSelect2Button != nullptr) {
-		//	_playerSelect2Button->CallOnClick([this]() {
-		//		AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
-		//		//Play Sound
-		//		if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
-		//		
-		//		_playerSelect2Button->SetOnMouseImage("m_PlayerReady");
-		//		_playerSelect2Button->SetOnMouseImage("m_PlayerReady");
-		//		_playerSelect2Button->SetPressedImage("m_PlayerReady");
-		//		});
-
-		//	_playerSelect2Button->SetOnMouseImage("m_PlayerTwoSelect01");
-		//	_playerSelect2Button->SetPressedImage("m_PlayerTwoSelect01");
-		//}
 	}
+	SetUIVisibility();
 }
 
+void JuegoDeAutos::SceneChangeButton::SetUIVisibility()
+{
+	if (_selectPlayerTwo != nullptr) _selectPlayerTwo->SetInteractive(RaceManager::numberOfPlayer == 2);// ->SetActive(NumberOfPlayers == 2);
+}
 void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
 {
 	if (playerIndex == 0)
@@ -269,7 +248,11 @@ void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
 		playerOneCarIndex = vehicleIndex;
 		playerTwoReady = true;
 	}
-	if(playerTwoReady && playerOneReady) 
+	//ONE PLAYER
+	if(RaceManager::numberOfPlayer == 1 && playerOneReady) 
+		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/trackSelectMenu.lua");
+	//TWO PLAYER
+	else if(playerTwoReady && playerOneReady) 
 		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/trackSelectMenu.lua");
 }
 
