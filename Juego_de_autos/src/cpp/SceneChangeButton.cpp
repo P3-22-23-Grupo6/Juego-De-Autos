@@ -234,7 +234,10 @@ void JuegoDeAutos::SceneChangeButton::Start()
 
 void JuegoDeAutos::SceneChangeButton::SetUIVisibility()
 {
+	//Car Selection
 	if (_selectPlayerTwo != nullptr) _selectPlayerTwo->SetInteractive(RaceManager::numberOfPlayer == 2);// ->SetActive(NumberOfPlayers == 2);
+	if (_selectPlayerOne != nullptr && RaceManager::numberOfPlayer == 1)
+		_selectPlayerOne->SetPosition(0.7f, 0.74f);
 }
 void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
 {
