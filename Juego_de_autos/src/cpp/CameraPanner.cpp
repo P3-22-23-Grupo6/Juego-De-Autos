@@ -33,6 +33,8 @@ void JuegoDeAutos::CameraPanner::Start()
 void JuegoDeAutos::CameraPanner::Update(float dt)
 {
 	counter += 0.02f;
+	tr->SetPosition(tr->GetPosition() + LMVector3(0.1f, 0, 1) * dt / 100.0f * panSpeed);
+	return;
 	if (tr == nullptr) return;
 	//ES UNA MIERDA PERO BRO STD::LERP SOLO FUNCIONA EN C++ 20 Y TENGO QYE HACER TODO SOLO ESTO Y EL DELTA TIME VA MAL Y TODO FEO PUTA VIDA TETE
 	LMVector3 targetPos = LMVector3(CustomLerp(-10, 10, 0.001f * panSpeed) * side, 3, 20);
