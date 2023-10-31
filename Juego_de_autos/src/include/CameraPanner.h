@@ -18,8 +18,10 @@ namespace JuegoDeAutos {
 		/// @param other the object collided with the entity  
 		void Start() override;
 		void Update(float dt) override;
+		double CustomLerp(double a, double b, double t);
 	private:
 		float panSpeed;
+		float counter;
 		LocoMotor::Transform* tr;
 		int side;
 		float bufferTime;
