@@ -21,5 +21,7 @@ namespace JuegoDeAutos {
 	private:
 		float panSpeed;
 		LocoMotor::Transform* tr;
+		int side;
+		float bufferTime;
 	};
 }

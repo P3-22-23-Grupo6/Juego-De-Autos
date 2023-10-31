@@ -13,6 +13,8 @@ const std::string CameraPanner::name = "CameraPanner";
 
 CameraPanner::CameraPanner() {
 	tr = nullptr;
+	side = 1;
+	bufferTime = 0.0f;
 }
 
 void CameraPanner::Init(std::vector<std::pair<std::string, std::string>>& params) {
@@ -31,8 +33,17 @@ void JuegoDeAutos::CameraPanner::Start()
 void JuegoDeAutos::CameraPanner::Update(float dt)
 {
 	if (tr == nullptr) return;
-	//LMVector3 newPos;
-	//newPos = newPos.Lerp(tr->GetPosition(), LMVector3(10 + sin(90), 3, 20), dt * 5.0f);
-	tr->SetPosition(tr->GetPosition() + LMVector3(1, 0, 0)* panSpeed * dt/100.0f);
-	//std::cout << "LERPING\n";
+	//ES UNA MIERDA PERO BRO STD::LERP SOLO FUNCIONA EN C++ 20 Y TENGO QYE HACER TODO SOLO ESTO Y EL DELTA TIME VA MAL Y TODO FEO PUTA VIDA TETE
+	LMVector3 newPos;
+	LMVector3 targetPos = LMVector3(4 * side, 3, 20);
+	newPos = newPos.Lerp(tr->GetPosition(), targetPos, dt/1000.0f * panSpeed);
+	tr->SetPosition(newPos);
+	if (LMVector3(targetPos - tr->GetPosition()).Magnitude() < 0.1f && bufferTime <= 0.0f)
+	{
+		side *= -1;
+		bufferTime = 1.0f;
+	}
+	if (bufferTime > 0.0f) bufferTime -= dt / 1000.0f;
+	else bufferTime = 0.0f;
+	tr->LookAt(LMVector3(0, 0, 0));
 }
