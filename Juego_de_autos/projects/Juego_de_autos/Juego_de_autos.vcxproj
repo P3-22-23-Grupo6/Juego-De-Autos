@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\cpp\Boost.cpp" />
+    <ClCompile Include="..\..\src\cpp\CameraPanner.cpp" />
     <ClCompile Include="..\..\src\cpp\Checkpoint.cpp" />
     <ClCompile Include="..\..\src\cpp\dllmain.cpp" />
     <ClCompile Include="..\..\src\cpp\EnemyAI.cpp" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\include\Boost.h" />
+    <ClInclude Include="..\..\src\include\CameraPanner.h" />
     <ClInclude Include="..\..\src\include\Checkpoint.h" />
     <ClInclude Include="..\..\src\include\EnemyAI.h" />
     <ClInclude Include="..\..\src\include\framework.h" />

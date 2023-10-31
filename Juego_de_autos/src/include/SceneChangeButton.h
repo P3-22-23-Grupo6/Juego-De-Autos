@@ -36,6 +36,7 @@ namespace JuegoDeAutos {
 		int trackIndex;
 		LocoMotor::UIImageLM* _trackArrowLeftButton;
 		LocoMotor::UIImageLM* _trackArrowRightButton;
+		LocoMotor::UIImageLM* _trackPortraitImg;
 		LocoMotor::MeshRenderer* trackMesh00;
 		LocoMotor::MeshRenderer* trackMesh01;
 	};

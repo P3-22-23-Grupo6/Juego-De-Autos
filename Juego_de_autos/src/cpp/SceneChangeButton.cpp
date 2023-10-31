@@ -18,6 +18,7 @@ JuegoDeAutos::SceneChangeButton::SceneChangeButton()
 	_vehiclePortraitImg = nullptr;
 	_selectPlayerOne = nullptr;
 	_selectPlayerTwo = nullptr;
+	_trackPortraitImg = nullptr;
 	vehicleIndex = 0;
 }
 
@@ -29,6 +30,7 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 	_vehiclePortraitImg = nullptr;
 	_selectPlayerOne = nullptr;
 	_selectPlayerTwo = nullptr;
+	_trackPortraitImg = nullptr;
 	_trackArrowRightButton = nullptr;
 	_trackArrowLeftButton = nullptr;
 }
@@ -51,6 +53,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	GameObject* trackPreview01 = gameObject->GetScene()->GetObjectByName("trackMesh01");
 	GameObject* trackArrowRightButton = gameObject->GetScene()->GetObjectByName("trackArrowRightButton");
 	GameObject* trackArrowLeftButton = gameObject->GetScene()->GetObjectByName("trackArrowLeftButton");
+	GameObject* trackPortraitImg = gameObject->GetScene()->GetObjectByName("Portrait_Track");
 
 	//Get Components
 	if (startGameButton != nullptr && startGameButton->GetComponent<UIImageLM>() != nullptr) {
@@ -89,6 +92,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 	}
 	if (trackArrowLeftButton != nullptr && trackArrowLeftButton->GetComponent<UIImageLM>() != nullptr) {
 		_trackArrowLeftButton = trackArrowLeftButton->GetComponent<UIImageLM>();
+	}
+	if (trackPortraitImg != nullptr && trackPortraitImg->GetComponent<UIImageLM>() != nullptr) {
+		_trackPortraitImg = trackPortraitImg->GetComponent<UIImageLM>();
 	}
 
 	if (_startGameButton != nullptr) {
@@ -291,14 +297,17 @@ void JuegoDeAutos::SceneChangeButton::ChangeVehicle()
 
 void JuegoDeAutos::SceneChangeButton::ChangeTrack(bool nextTrack)
 {
+	//Change IMAGE
+	std::string newPortrait = trackIndex == 0 ? "Portrait_TrackOne" : "Portrait_TrackTwo";
+	_trackPortraitImg->ChangeImage(newPortrait);
+
 	//Esta hecho con el culo pero arrays/listas petan en cambio de escena yalosiento
 	if(trackIndex == 0) trackMesh00->SetVisible(false);
 	else trackMesh01->SetVisible(false);
-
 	trackIndex += nextTrack ? 1 : -1;
 	if (trackIndex < 0) trackIndex = 1;
 	if (trackIndex > 1) trackIndex = 0;
-
+	
 	if (trackIndex == 0) trackMesh00->SetVisible(true);
 	else trackMesh01->SetVisible(true);
 }
