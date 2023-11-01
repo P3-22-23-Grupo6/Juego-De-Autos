@@ -83,8 +83,16 @@ void PlayerController::Start()
 	carModel->AddComponent("Transform");
 	carModel->AddComponent("MeshRenderer");
 	carModel->GetComponent<Transform>()->InitRuntime(tr->GetPosition());
-	if(playerIndex == 0)carModel->GetComponent<MeshRenderer>()->InitRuntime("Eagle.mesh");
-	else if(playerIndex == 1)carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+
+	int carIndexTemp = playerIndex == 0 ? raceManager->carModelPlayerOne : raceManager->carModelPlayerTwo;
+	switch (carIndexTemp)
+	{
+		default: break;
+		case 0: carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh"); break;
+		case 1: carModel->GetComponent<MeshRenderer>()->InitRuntime("Eagle.mesh"); break;
+		case 2: carModel->GetComponent<MeshRenderer>()->InitRuntime("Pelican.mesh"); break;
+		case 3: carModel->GetComponent<MeshRenderer>()->InitRuntime("Flamingo.mesh"); break;
+	}
 	
 	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();

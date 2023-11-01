@@ -30,6 +30,9 @@ RaceManager* RaceManager::_instance = nullptr;
 
 RaceManager::SpeedMode RaceManager::speedMode;
 
+RaceManager::CarModel RaceManager::carModelPlayerOne;
+RaceManager::CarModel RaceManager::carModelPlayerTwo;
+
 int RaceManager::numberOfPlayer;
 
 RaceManager::RaceManager()

@@ -72,7 +72,9 @@ namespace JuegoDeAutos {
 		float GetSpeed();
 
 		enum SpeedMode { low, middle, high };
+		enum CarModel { Falcon, Eagle, Pelican, Flamingo };
 		static SpeedMode speedMode;
+		static CarModel carModelPlayerOne, carModelPlayerTwo;
 		
 		//void SetNumberOfPlayers(int value);
 		//int GetNumberOfPlayers();

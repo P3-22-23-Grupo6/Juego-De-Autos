@@ -204,7 +204,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
 			//Select Next Car
 			vehicleIndex--;
-			if (vehicleIndex < 0) vehicleIndex = 3;
+			if (vehicleIndex < 0) vehicleIndex = 4;
 			ChangeVehicle();
 			});
 
@@ -219,7 +219,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
 			//Select Previous Car	
 			vehicleIndex++;
-			if (vehicleIndex > 3) vehicleIndex = 0;
+			if (vehicleIndex > 4) vehicleIndex = 0;
 			ChangeVehicle();
 			});
 
@@ -259,8 +259,10 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
-
-			ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/testArea.lua");
+			if(RaceManager::numberOfPlayer == 1)
+				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/OnePlayer.lua");
+			else 
+				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/testArea.lua");
 			});
 		_selectTrackButton->SetOnMouseImage("m_selectSelected");
 		_selectTrackButton->SetPressedImage("m_selectSelected");
@@ -294,15 +296,18 @@ void JuegoDeAutos::SceneChangeButton::SetUIVisibility()
 }
 void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
 {
+	if (vehicleIndex >= 4) vehicleIndex = rand() % (3 - 0 + 1) + 0;
 	if (playerIndex == 0)
 	{
-		playerOneCarIndex = vehicleIndex;
 		playerOneReady = true;
+		RaceManager::CarModel aux = (RaceManager::CarModel)vehicleIndex;
+		RaceManager::carModelPlayerOne = aux;
 	}
 	else
 	{
-		playerOneCarIndex = vehicleIndex;
 		playerTwoReady = true;
+		RaceManager::CarModel aux = (RaceManager::CarModel)vehicleIndex;
+		RaceManager::carModelPlayerTwo = aux;
 	}
 	//ONE PLAYER
 	if ((RaceManager::numberOfPlayer == 1 && playerOneReady) || (playerTwoReady && playerOneReady))
@@ -351,7 +356,8 @@ void JuegoDeAutos::SceneChangeButton::ChangeVehicle()
 	case 0: newPortrait = "Portrait_Falcon"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelFalcon"); break;
 	case 1: newPortrait = "Portrait_Eagle"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelEagle"); break;
 	case 2: newPortrait = "Portrait_Pelican"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelPelican"); break;
-	case 3: newPortrait = "Portrait_Generic"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelGeneric"); break;
+	case 3: newPortrait = "Portrait_Flamingo"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelFlamingo"); break;
+	case 4: newPortrait = "Portrait_Generic"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelGeneric"); break;
 	}
 	_vehiclePortraitImg->ChangeImage(newPortrait);
 }
