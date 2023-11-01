@@ -74,8 +74,6 @@ void PlayerController::Start()
 	carBillboard->AddComponent("MeshRenderer");
 	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 0.9f, 0));
 	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
-	std::string materialAssigned = "m_RacerGizmo0" + std::to_string(playerIndex);
-	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial(materialAssigned);
 	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
 	carModel = sceneMng->AddObjectRuntime("playerCarModel" + std::to_string(playerIndex));
@@ -88,12 +86,15 @@ void PlayerController::Start()
 	switch (carIndexTemp)
 	{
 		default: break;
-		case 0: carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh"); break;
+		case 0: carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
+			
+			break;
 		case 1: carModel->GetComponent<MeshRenderer>()->InitRuntime("Eagle.mesh"); break;
 		case 2: carModel->GetComponent<MeshRenderer>()->InitRuntime("Pelican.mesh"); break;
 		case 3: carModel->GetComponent<MeshRenderer>()->InitRuntime("Flamingo.mesh"); break;
 	}
-	
+	std::string materialAssigned = "m_RacerGizmo0" + std::to_string(carIndexTemp);
+	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial(materialAssigned);
 	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
