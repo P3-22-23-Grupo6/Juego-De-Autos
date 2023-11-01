@@ -41,6 +41,7 @@ JuegoDeAutos::SceneChangeButton::~SceneChangeButton()
 
 void JuegoDeAutos::SceneChangeButton::Start()
 {
+	vehicleIndex = 0;
 	//Declare Buttons to add callbacks to
 	GameObject* startGameButton = gameObject->GetScene()->GetObjectByName("startButton");
 	//INTRO
@@ -214,30 +215,40 @@ void JuegoDeAutos::SceneChangeButton::Start()
 
 		_trackArrowLeftButton->SetOnMouseImage("ArrowLeft01");
 		_trackArrowLeftButton->SetPressedImage("ArrowLeft01");
-
-		//TRACK ARROW RIGHT
-		if (_trackArrowRightButton != nullptr) {
-			_trackArrowRightButton->CallOnClick([this]() {
-				AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
-				//Play Sound
-				if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
-				//Select Previous Car	
-				ChangeTrack(true);
-				});
-
-			_trackArrowRightButton->SetOnMouseImage("ArrowRight01");
-			_trackArrowRightButton->SetPressedImage("ArrowRight01");
-		}
 	}
+	//TRACK ARROW RIGHT
+	if (_trackArrowRightButton != nullptr) {
+		_trackArrowRightButton->CallOnClick([this]() {
+			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
+			//Play Sound
+			if (aSrc) aSrc->Play("Assets/Sounds/Select2.wav");
+			//Select Previous Car	
+			ChangeTrack(true);
+			});
+
+		_trackArrowRightButton->SetOnMouseImage("ArrowRight01");
+		_trackArrowRightButton->SetPressedImage("ArrowRight01");
+	}
+	sceneType = SCENE_TYPE::CAR_SELECT;
 	SetUIVisibility();
 }
 
 void JuegoDeAutos::SceneChangeButton::SetUIVisibility()
 {
+	//SCENE VISIBILITY
+	if (_vehiclePortraitImg != nullptr) _vehiclePortraitImg->SetVisibility(sceneType == SCENE_TYPE::CAR_SELECT);
+	if (_vehicleInfoPanel != nullptr) _vehicleInfoPanel->SetVisibility(sceneType == SCENE_TYPE::CAR_SELECT);
+	if (_selectPlayerOne != nullptr) _selectPlayerOne->SetInteractive(sceneType == SCENE_TYPE::CAR_SELECT);
+	if (_selectPlayerTwo != nullptr) _selectPlayerTwo->SetInteractive(sceneType == SCENE_TYPE::CAR_SELECT);
+	if (_arrowLeft_Car != nullptr) _arrowLeft_Car->SetInteractive(sceneType == SCENE_TYPE::CAR_SELECT);
+	if (_arrowRight_Car != nullptr) _arrowRight_Car->SetInteractive(sceneType == SCENE_TYPE::CAR_SELECT);
 	//Car Selection
-	if (_selectPlayerTwo != nullptr) _selectPlayerTwo->SetInteractive(RaceManager::numberOfPlayer == 2);// ->SetActive(NumberOfPlayers == 2);
-	if (_selectPlayerOne != nullptr && RaceManager::numberOfPlayer == 1)
-		_selectPlayerOne->SetPosition(0.7f, 0.74f);
+	if (_selectPlayerTwo != nullptr) _selectPlayerTwo->SetInteractive(RaceManager::numberOfPlayer == 2 && sceneType == SCENE_TYPE::CAR_SELECT);
+	if (_selectPlayerOne != nullptr)
+	{
+		if(RaceManager::numberOfPlayer == 1) _selectPlayerOne->SetPosition(0.7f, 0.74f);
+		_selectPlayerOne->SetInteractive(sceneType == SCENE_TYPE::CAR_SELECT);
+	}
 }
 void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
 {
@@ -252,11 +263,10 @@ void JuegoDeAutos::SceneChangeButton::SetPlayerReady(int playerIndex)
 		playerTwoReady = true;
 	}
 	//ONE PLAYER
-	if(RaceManager::numberOfPlayer == 1 && playerOneReady) 
-		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/trackSelectMenu.lua");
-	//TWO PLAYER
-	else if(playerTwoReady && playerOneReady) 
-		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/trackSelectMenu.lua");
+	if ((RaceManager::numberOfPlayer == 1 && playerOneReady) || (playerTwoReady && playerOneReady))
+		//ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/trackSelectMenu.lua");
+		sceneType = SCENE_TYPE::TRACK_SELECT;
+		SetUIVisibility();
 }
 
 void JuegoDeAutos::SceneChangeButton::ChangeVelocity()
@@ -293,8 +303,8 @@ void JuegoDeAutos::SceneChangeButton::ChangeVelocity()
 void JuegoDeAutos::SceneChangeButton::ChangeVehicle()
 {
 	std::string newPortrait = "Portrait_Falcon";
-	switch (vehicleIndex){
-	
+	switch (vehicleIndex)
+	{
 	default: break;
 	case 0: newPortrait = "Portrait_Falcon"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelFalcon"); break;
 	case 1: newPortrait = "Portrait_Eagle"; _vehicleInfoPanel->ChangeImage("m_carInfoPanelEagle"); break;

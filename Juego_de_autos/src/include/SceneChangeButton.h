@@ -14,6 +14,12 @@ namespace JuegoDeAutos {
 		~SceneChangeButton();
 		void Start() override;
 	private:
+		enum SCENE_TYPE
+		{
+			CAR_SELECT,
+			TRACK_SELECT
+		};
+		SCENE_TYPE sceneType;
 		void SetUIVisibility();
 		/// @brief Changes the text of the UI 
 		void SetPlayerReady(int playerIndex);// 0:PlayerOne, 1: Player Two
