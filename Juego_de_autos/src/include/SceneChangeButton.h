@@ -20,6 +20,12 @@ namespace JuegoDeAutos {
 			TRACK_SELECT
 		};
 		SCENE_TYPE sceneType;
+		enum TRACK_TYPE
+		{
+			CIRCUITO_PLAYA,
+			SALA_DEBUG
+		};
+		TRACK_TYPE trackType;
 		void SetUIVisibility();
 		/// @brief Changes the text of the UI 
 		void SetPlayerReady(int playerIndex);// 0:PlayerOne, 1: Player Two
@@ -28,7 +34,8 @@ namespace JuegoDeAutos {
 		void ChangeVelocity();
 		void ChangeVehicle();
 		//True if add One to the right
-		void ChangeTrack(bool nextTrack);
+		void ChangeTrack();
+		void ResetValues();
 		int vehicleIndex;
 		//START INTRO SCENE
 		LocoMotor::UIImageLM* _onePlayerButton;
@@ -47,6 +54,7 @@ namespace JuegoDeAutos {
 		int trackIndex;
 		LocoMotor::UIImageLM* _trackArrowLeftButton;
 		LocoMotor::UIImageLM* _trackArrowRightButton;
+		LocoMotor::UIImageLM* _selectTrackButton;
 		LocoMotor::UIImageLM* _trackPortraitImg;
 		LocoMotor::MeshRenderer* trackMesh00;
 		LocoMotor::MeshRenderer* trackMesh01;
