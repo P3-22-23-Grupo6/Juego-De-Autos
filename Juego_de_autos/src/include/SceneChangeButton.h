@@ -1,5 +1,8 @@
 #pragma once
 #include "Component.h"
+#include <coroutine>
+#include <iostream>
+
 namespace LocoMotor {
 	class UIImageLM;
 	class UITextLM;
@@ -58,6 +61,8 @@ namespace JuegoDeAutos {
 		LocoMotor::UIImageLM* _trackPortraitImg;
 		LocoMotor::MeshRenderer* trackMesh00;
 		LocoMotor::MeshRenderer* trackMesh01;
+
 	};
+
 }
 

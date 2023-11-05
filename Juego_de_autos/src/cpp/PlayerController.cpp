@@ -37,6 +37,9 @@ void JuegoDeAutos::PlayerController::Init(std::vector<std::pair<std::string, std
 		if (params[i].first == "PlayerIndex") {
 			playerIndex = std::stof(params[i].second);
 		}
+		if (params[i].first == "PlayerSpeed") {
+			acceleration = std::stof(params[i].second);
+		}
 	}
 }
 
@@ -62,7 +65,7 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
-	acceleration = 120;// raceManager->GetSpeed();
+	//acceleration = 120;// raceManager->GetSpeed();
 	lastUpwardDir = LMVector3(0, 1, 0);
 
 	forw = tr->GetRotation().Forward();
@@ -417,8 +420,7 @@ void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 	if (carModel == nullptr) return;
 	//printf("\n Tilt: %.2f", tiltAmount);
 	//meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
-	//carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalEulerRotation() + 
-	//	LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
+	//carModel->GetTransform()->SetLocalRotation(tr->GetLocalRotation() * tr->GetRotation().Right() * (tiltAmount * maxTiltAngle * direction));
 }
 
 

@@ -116,14 +116,12 @@ void RaceManager::Start()
 
 	carinfo.at(_playerId).rounds = 0;
 
-
-
-	/*int i = 1;
+	int i = 1;
 	while (gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)) != nullptr) {
 		RegisterNPCCar("EnemyCar0" + std::to_string(i));
 		enemies.push_back(gameObject->GetScene()->GetObjectByName("EnemyCar0" + std::to_string(i)));
 		i++;
-	}*/
+	}
 
 	GameObject* skyboxMesh = gameObject->GetScene()->GetObjectByName("SkyboxMeshNew");
 	skyboxMesh->AddComponent("Rotator");
@@ -144,7 +142,8 @@ void RaceManager::Update(float dt)
 {
 	if (inputMng->GetKeyDown(LMKS_F))
 		ShowFPS();
-
+	if (inputMng->GetKeyDown(LMKS_M))
+		ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/Intro.lua");
 	
 
 	// Actualizar la posicion de todos los coches enemigos (la del player se hace desde el propio script de PlayerController)
