@@ -190,12 +190,8 @@ void RaceManager::Update(float dt)
 		else fps->ChangeText("");
 	}
 	return;
-	// Comprobar si algun coche ha llegado a algun checkpoint
-	// En caso afirmativo, notificarlo
-
-
-	if (HasCarReachedCheckpoint(_playerId))
-		CheckpointReached(_playerId);
+	// Comprobar si algun coche ha llegado a algun checkpoint y notificarlo 
+	if (HasCarReachedCheckpoint(_playerId)) CheckpointReached(_playerId);
 	UpdateRanking();
 
 	// Update Laps Text

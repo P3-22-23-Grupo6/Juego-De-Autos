@@ -259,6 +259,9 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			AudioSource* aSrc = gameObject->GetComponent<AudioSource>();
 			if (aSrc)
 				aSrc->Play("Assets/Sounds/Select2.wav");
+
+			if (trackIndex == 1)
+				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/SalaDebug.lua");
 			if(RaceManager::numberOfPlayer == 1)
 				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/OnePlayer.lua");
 			else 
