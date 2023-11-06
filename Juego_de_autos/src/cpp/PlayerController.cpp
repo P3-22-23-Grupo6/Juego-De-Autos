@@ -178,7 +178,7 @@ void PlayerController::SetUpwards(float dt)
 		inAirLastFrame = inAir;
 
 		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
-		double hoverDist = 1.5f; // 7
+		double hoverDist = 1.0f; // 7
 		LMVector3 newPos = n * hoverDist + hitPos;
 		LMVector3 finalPos;
 		finalPos = finalPos.Lerp(lastPos, newPos, 1.0f);
@@ -190,7 +190,7 @@ void PlayerController::SetUpwards(float dt)
 	else
 	{
 		inAir = true;
-		float autoRotIntensity = 30;
+		float autoRotIntensity = 100;
 		rbComp->AddForce(LMVector3(0, -1 * gravityMultiplier, 0));
 		newUpDirection = LMVector3(0, 1, 0);
 	}
@@ -293,8 +293,8 @@ void PlayerController::ApplyLinearForces(float dt)
 		{
 			LMVector3 backw = forw;
 			backw = backw * -1;
-			if (reverseAccTriggerValue > 0) rbComp->SetLinearVelocity(rbComp->GetLinearVelocity() * 0.9f * -reverseAccTriggerValue);
-			else rbComp->SetLinearVelocity(rbComp->GetLinearVelocity() * 0.9f);
+			if (reverseAccTriggerValue > 0) rbComp->SetLinearVelocity(rbComp->GetLinearVelocity() * 0.95f * -reverseAccTriggerValue);
+			else rbComp->SetLinearVelocity(rbComp->GetLinearVelocity() * 0.95f);
 		}
 		
 	}
@@ -316,7 +316,7 @@ void PlayerController::ApplyLinearForces(float dt)
 void PlayerController::ApplyAngularForces(float dt)
 {
 	float multiplierRot = 1.0f;
-	if (tilting && turning ) multiplierRot = 1.15f;
+	if (tilting && turning ) multiplierRot = 1.35f;
 	if (turnRight)
 		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * -angularForce * dt / 100.0f);
 
@@ -336,7 +336,7 @@ void PlayerController::ApplyAngularForces(float dt)
 	if (useGyro) {
 		gyroValue = inputMng->GetGyroscopeAngle(InputManager::Horizontal);
 		// Adaptar el valor a la jugabilidad
-		gyroValue *= 30;
+		gyroValue *= 2;
 		// Clampear el valor
 		if (gyroValue > maxGyroValue)
 			gyroValue = maxGyroValue;
@@ -347,7 +347,7 @@ void PlayerController::ApplyAngularForces(float dt)
 	}
 	// Usar el Joystick
 	else {
-		joystickValue *= .035f;
+		joystickValue *= .042f;
 		// Giro con joystick
 		if (abs(joystickValue) >= joystickDeadzone)
 			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * angularForce * -joystickValue);

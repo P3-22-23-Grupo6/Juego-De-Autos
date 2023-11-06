@@ -132,7 +132,7 @@ namespace JuegoDeAutos {
 		float maxAngularVelocity = 4;
 		float angularForce = 0.25f;//r
 		float angularDragForce = .6f;
-		float raycastDistance = 4;//r
+		float raycastDistance = 2;//r
 		float angleThreshold = 0.9f;//r
 		float gravityMultiplier = 90;//r
 

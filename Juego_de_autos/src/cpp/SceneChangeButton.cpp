@@ -263,7 +263,7 @@ void JuegoDeAutos::SceneChangeButton::Start()
 			if (trackIndex == 1)
 				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/SalaDebug.lua");
 			if(RaceManager::numberOfPlayer == 1)
-				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/OnePlayer.lua");
+				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/testAreaDos.lua");
 			else 
 				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/testArea.lua");
 			});
