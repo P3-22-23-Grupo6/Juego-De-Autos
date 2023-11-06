@@ -167,7 +167,7 @@ void RaceManager::Update(float dt)
 				{
 					int currentFps = 1000 / ((int)dt + 1);
 					fps->ChangeText(std::to_string(currentFps) + " fps");
-					if (currentFps < 70)
+					if (currentFps < 40)
 					{
 						fps->SetBottomColor(0.9f, 0.1f, 0.1f);
 						fps->SetTopColor(0.9f, 0.1f, 0.1f);
@@ -175,7 +175,7 @@ void RaceManager::Update(float dt)
 					else if (currentFps > 90)
 					{
 						fps->SetBottomColor(0.1f, 0.9f, 0.3f);
-						fps->SetTopColor(0.1f, 0.9f, 0.3f);
+						fps->SetTopColor(0.2f, 0.9f, 0.4f);
 					}
 					else
 					{
@@ -329,6 +329,7 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		LMVector3 result = LMVector3::StringToVector(checkpointPositions_pairs[i].second);
 		//Add points to Spline
 		mainSpline->AddPoint(result);
+		mainSpline->RecalcTangents();
 		RegisterCheckpointPosition(result);
 		
 		//Create Waypoint
@@ -340,7 +341,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		wayPointTT->GetTransform()->Start();
 	}
 	//Spline MidPoints
-	return;
 	int maxPoints = 100;
 	for (int i = 0; i < maxPoints; i++)
 	{

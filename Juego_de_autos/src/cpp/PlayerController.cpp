@@ -228,11 +228,11 @@ void PlayerController::GetInput()
 
 	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 
-	accTriggerValue = inputMng->GetTriggerValue(1);
-	reverseAccTriggerValue = inputMng->GetTriggerValue(0);
-	
-	if (accTriggerValue > 0)accelerate = true;
-	if (reverseAccTriggerValue > 0) reverseAccelerate = true;
+	//accTriggerValue = inputMng->GetTriggerValue(1);
+	//reverseAccTriggerValue = inputMng->GetTriggerValue(0);
+	//
+	//if (accTriggerValue > 0)accelerate = true;
+	//if (reverseAccTriggerValue > 0) reverseAccelerate = true;
 
 	turning = (turnLeft || turnRight || abs(joystickValue) > joystickDeadzone);
 	tilting = (tiltLeft || tiltRight);
@@ -316,7 +316,7 @@ void PlayerController::ApplyLinearForces(float dt)
 void PlayerController::ApplyAngularForces(float dt)
 {
 	float multiplierRot = 1.0f;
-	if (tilting && turning ) multiplierRot = 1.35f;
+	if (tilting && turning ) multiplierRot = 1.9f;
 	if (turnRight)
 		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * -angularForce * dt / 100.0f);
 
