@@ -213,53 +213,23 @@ void PlayerController::SetUpwards(float dt)
 
 void PlayerController::GetInput()
 {
-	// Almacenar valores de input
-	if (playerIndex == 1)//SECOND PLAYER
-	{
-		accelerate = inputMng->GetKey(LMKS_UP)
-			|| inputMng->GetButton(LMC_A)
-			|| inputMng->GetButton(LMC_RIGHTSHOULDER);
+	
+	accelerate = inputMng->GetKey(LMKS_UP)
+		|| inputMng->GetButton(LMC_A);
 
-		reverseAccelerate = inputMng->GetKey(LMKS_DOWN)
-			|| inputMng->GetButton(LMC_B)
-			|| inputMng->GetButton(LMC_LEFTSHOULDER);
-
-
-		turnRight = inputMng->GetKey(LMKS_RIGHT)
-		|| inputMng->GetButton(LMC_B)
+	reverseAccelerate = inputMng->GetKey(LMKS_DOWN)
 		|| inputMng->GetButton(LMC_B);
-		turnLeft = inputMng->GetKey(LMKS_LEFT);
 
-		tiltLeft = inputMng->GetKey(LMKS_Q);
-		tiltRight = inputMng->GetKey(LMKS_E);
+	turnRight = inputMng->GetKey(LMKS_RIGHT);
+	turnLeft = inputMng->GetKey(LMKS_LEFT);
 
-		joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
+	tiltLeft = inputMng->GetButton(LMC_LEFTSHOULDER);
+	tiltRight = inputMng->GetButton(LMC_RIGHTSHOULDER);
 
-		accTriggerValue = inputMng->GetTriggerValue(1);
-		reverseAccTriggerValue = inputMng->GetTriggerValue(0);
-	}
-	else
-	{
-		accelerate = inputMng->GetKey(LMKS_W)
-			|| inputMng->GetButton(LMC_A)
-			|| inputMng->GetButton(LMC_RIGHTSHOULDER);
+	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
 
-		reverseAccelerate = inputMng->GetKey(LMKS_S)
-			|| inputMng->GetButton(LMC_B)
-			|| inputMng->GetButton(LMC_LEFTSHOULDER);
-
-
-		turnRight = inputMng->GetKey(LMKS_D);
-		turnLeft = inputMng->GetKey(LMKS_A);
-
-		tiltLeft = inputMng->GetKey(LMKS_Q);
-		tiltRight = inputMng->GetKey(LMKS_E);
-
-		joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
-
-		accTriggerValue = inputMng->GetTriggerValue(1);
-		reverseAccTriggerValue = inputMng->GetTriggerValue(0);
-	}
+	accTriggerValue = inputMng->GetTriggerValue(1);
+	reverseAccTriggerValue = inputMng->GetTriggerValue(0);
 	
 	if (accTriggerValue > 0)accelerate = true;
 	if (reverseAccTriggerValue > 0) reverseAccelerate = true;
@@ -346,7 +316,7 @@ void PlayerController::ApplyLinearForces(float dt)
 void PlayerController::ApplyAngularForces(float dt)
 {
 	float multiplierRot = 1.0f;
-	if (tilting && turning ) multiplierRot = 1.2f;
+	if (tilting && turning ) multiplierRot = 1.15f;
 	if (turnRight)
 		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * -angularForce * dt / 100.0f);
 
@@ -377,7 +347,7 @@ void PlayerController::ApplyAngularForces(float dt)
 	}
 	// Usar el Joystick
 	else {
-		joystickValue *= .1f;
+		joystickValue *= .035f;
 		// Giro con joystick
 		if (abs(joystickValue) >= joystickDeadzone)
 			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * angularForce * -joystickValue);
