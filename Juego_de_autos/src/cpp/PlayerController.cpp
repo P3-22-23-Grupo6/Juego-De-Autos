@@ -131,6 +131,19 @@ void PlayerController::Update(float dt)
 	SetUpwards(dt);
 
 	GetInput();
+	//Tilting/Drifting
+	if (tilting && tiltAmount < 2.0f) tiltAmount += 0.02f;
+	else if (!tilting) tiltAmount = 1.0f;
+	//Air Tilt
+	if (inAir)
+	{
+		if (airTime < 10.0f) airTime += 0.1f;
+	}
+	else
+	{
+		if (airTime > 0.0f) airTime -= 0.3f;
+		else airTime = 0.0f;
+	}
 
 	MoveShip(dt);
 
@@ -382,13 +395,18 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 // Tilt
 void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 {
-	double maxTiltAngle = (0.2f * rbComp->GetLinearVelocity().Magnitude()) + 5;
-	double tiltAmount = currentAngularVelocity / maxAngularVelocity;
+	double maxTiltAngle = (0.4f * rbComp->GetLinearVelocity().Magnitude()) + 5;
+	double angularTilt = currentAngularVelocity / maxAngularVelocity;
 
 	if (carModel == nullptr) return;
 
 	//printf("\n Tilt: %.2f", tiltAmount);
-	carModel->GetTransform()->SetLocalRotation(tr->GetRotation().Rotate(tr->GetRotation().Forward(), (tiltAmount * maxTiltAngle * -direction)));
+	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Forward(),
+		(angularTilt * maxTiltAngle * 1.25f * -direction)));
+	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Up(),
+		(angularTilt * maxTiltAngle * direction * tiltAmount)));
+	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Right(),
+		(direction * -airTime * 5.0f)));
 }
 
 

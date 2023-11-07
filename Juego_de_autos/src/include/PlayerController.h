@@ -138,12 +138,15 @@ namespace JuegoDeAutos {
 
 		//Gamepad
 		float joystickDeadzone = .001f;
+		float tiltAmount = 1.0f;
 		bool useGyro = false;
 		float maxGyroValue = 8;
 
 		// Fov
 		float initialFov = 50;
 		float maxExtraFov = 10;
+		
+		float airTime = 0.0f;
 
 		// Almacenar informacion
 			// Controles
