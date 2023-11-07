@@ -75,9 +75,8 @@ void PlayerController::Start()
 	carBillboard = sceneMng->AddObjectRuntime("carBillboard" + std::to_string(playerIndex));
 	carBillboard->AddComponent("Transform");
 	carBillboard->AddComponent("MeshRenderer");
-	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 0.9f, 0));
+	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 1.f, 0));
 	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
-	carBillboard->GetTransform()->Start();
 	//Create Car Model Child
 	carModel = sceneMng->AddObjectRuntime("playerCarModel" + std::to_string(playerIndex));
 	
@@ -98,7 +97,6 @@ void PlayerController::Start()
 	}
 	std::string materialAssigned = "m_RacerGizmo0" + std::to_string(carIndexTemp);
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial(materialAssigned);
-	carModel->GetTransform()->Start();
 	meshComp = carModel->GetComponent<LocoMotor::MeshRenderer>();
 
 	if (gameObject->GetScene()->GetCamera() != nullptr)
@@ -384,13 +382,13 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 // Tilt
 void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 {
-	double maxTiltAngle = 10;
+	double maxTiltAngle = (0.2f * rbComp->GetLinearVelocity().Magnitude()) + 5;
 	double tiltAmount = currentAngularVelocity / maxAngularVelocity;
 
 	if (carModel == nullptr) return;
+
 	//printf("\n Tilt: %.2f", tiltAmount);
-	//meshComp->Rotate(LMVector3(0, tiltAmount * direction * 30, tiltAmount * maxTiltAngle * direction));
-	//carModel->GetTransform()->SetLocalRotation(tr->GetLocalRotation() * tr->GetRotation().Right() * (tiltAmount * maxTiltAngle * direction));
+	carModel->GetTransform()->SetLocalRotation(tr->GetRotation().Rotate(tr->GetRotation().Forward(), (tiltAmount * maxTiltAngle * -direction)));
 }
 
 
