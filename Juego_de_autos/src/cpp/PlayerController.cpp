@@ -396,18 +396,18 @@ void PlayerController::AngularDrag(LMVector3 currentAngularVelocity, int directi
 // Tilt
 void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 {
-	double maxTiltAngle = (0.4f * rbComp->GetLinearVelocity().Magnitude()) + 5;
+	double maxTiltAngle = (2.0f * rbComp->GetLinearVelocity().Magnitude()) + 5;
 	double angularTilt = currentAngularVelocity / maxAngularVelocity;
 
 	if (carModel == nullptr) return;
 
 	//printf("\n Tilt: %.2f", tiltAmount);
 	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Forward(),
-		(angularTilt * maxTiltAngle * 1.25f * -direction)));
-	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Up(),
-		(angularTilt * maxTiltAngle * direction * tiltAmount)));
+		(angularTilt * maxTiltAngle  * -direction)));
+	//carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Up(),
+	//	(angularTilt * maxTiltAngle * direction * tiltAmount)));
 	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Right(),
-		(direction * -airTime * 2.0f)));
+		(-airTime * 2.0f)));
 }
 
 
@@ -429,7 +429,7 @@ void PlayerController::AdjustFov()
 {
 	// Actualizar el fov
 	LMVector3 localVel = rbComp->GetLinearVelocity();
-	float fovOne = (localVel.Magnitude() / 100);
+	float fovOne = (localVel.Magnitude() / 60);
 	if (fovOne > 1) fovOne = 1;
 	float fov = fovOne * maxExtraFov + initialFov;
 	if (cam != nullptr)

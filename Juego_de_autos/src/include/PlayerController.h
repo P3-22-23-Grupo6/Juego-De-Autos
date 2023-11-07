@@ -129,8 +129,8 @@ namespace JuegoDeAutos {
 		// Paremetros de movimiento
 		float acceleration = 50;//r
 		float reversingAcceleration = 50;//r
-		float maxAngularVelocity = 4;
-		float angularForce = 0.25f;//r
+		float maxAngularVelocity = 6;
+		float angularForce = 0.5f;//r
 		float angularDragForce = .6f;
 		float raycastDistance = 2;//r
 		float angleThreshold = 0.9f;//r
@@ -144,7 +144,7 @@ namespace JuegoDeAutos {
 
 		// Fov
 		float initialFov = 50;
-		float maxExtraFov = 10;
+		float maxExtraFov = 20;
 		
 		float airTime = 0.0f;
 
