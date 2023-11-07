@@ -71,18 +71,19 @@ void PlayerController::Start()
 	forw = tr->GetRotation().Forward();
 	rbComp->UseGravity(LMVector3(0, 0, 0));
 
+	
+	//Create Car Model Child
+	carModel = sceneMng->AddObjectRuntime("playerCarModel" + std::to_string(playerIndex));
+	carModel->AddComponent("Transform");
+	carModel->AddComponent("MeshRenderer");
+	carModel->GetComponent<Transform>()->InitRuntime(tr->GetPosition());
+
 	//Create Billboard
 	carBillboard = sceneMng->AddObjectRuntime("carBillboard" + std::to_string(playerIndex));
 	carBillboard->AddComponent("Transform");
 	carBillboard->AddComponent("MeshRenderer");
 	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 1.f, 0));
 	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
-	//Create Car Model Child
-	carModel = sceneMng->AddObjectRuntime("playerCarModel" + std::to_string(playerIndex));
-	
-	carModel->AddComponent("Transform");
-	carModel->AddComponent("MeshRenderer");
-	carModel->GetComponent<Transform>()->InitRuntime(tr->GetPosition());
 
 	int carIndexTemp = playerIndex == 0 ? raceManager->carModelPlayerOne : raceManager->carModelPlayerTwo;
 	switch (carIndexTemp)
@@ -108,8 +109,8 @@ void PlayerController::Start()
 		velocityText = vltxt->GetComponent<UITextLM>();
 	}
 	lastPos = tr->GetPosition();
-	tr->AddChild(carBillboard->GetTransform());
 	tr->AddChild(carModel->GetTransform());
+	carModel->GetTransform()->AddChild(carBillboard->GetTransform());
 	tr->SetPosition(lastPos);
 }
 
@@ -137,11 +138,11 @@ void PlayerController::Update(float dt)
 	//Air Tilt
 	if (inAir)
 	{
-		if (airTime < 10.0f) airTime += 0.1f;
+		if (airTime < 16.0f) airTime += 0.2f;
 	}
 	else
 	{
-		if (airTime > 0.0f) airTime -= 0.3f;
+		if (airTime > 0.0f) airTime -= 2.0f;
 		else airTime = 0.0f;
 	}
 
@@ -406,7 +407,7 @@ void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Up(),
 		(angularTilt * maxTiltAngle * direction * tiltAmount)));
 	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Right(),
-		(direction * -airTime * 5.0f)));
+		(direction * -airTime * 2.0f)));
 }
 
 
@@ -426,7 +427,6 @@ void PlayerController::LimitMaxAngleVelocity(LMVector3 currentAngularVelocity, i
 
 void PlayerController::AdjustFov()
 {
-	return;
 	// Actualizar el fov
 	LMVector3 localVel = rbComp->GetLinearVelocity();
 	float fovOne = (localVel.Magnitude() / 100);

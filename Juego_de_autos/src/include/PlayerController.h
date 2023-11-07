@@ -134,7 +134,7 @@ namespace JuegoDeAutos {
 		float angularDragForce = .6f;
 		float raycastDistance = 2;//r
 		float angleThreshold = 0.9f;//r
-		float gravityMultiplier = 90;//r
+		float gravityMultiplier = 120;//r
 
 		//Gamepad
 		float joystickDeadzone = .001f;
