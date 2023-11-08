@@ -66,6 +66,10 @@ void PlayerController::Start()
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
 	raceManager = RaceManager::GetInstance();
+	if (raceManager == nullptr) {
+		SetActive(false);
+		return;
+	}
 	//acceleration = 120;// raceManager->GetSpeed();
 	lastUpwardDir = LMVector3(0, 1, 0);
 
@@ -119,13 +123,7 @@ void PlayerController::Start()
 
 void PlayerController::Update(float dt)
 {
-	counter += dt;
-	/*LMVector3 newPos; TEST LERPING
-	newPos = newPos.Lerp(carModel->GetTransform()->GetPosition(),
-		carModel->GetTransform()->GetPosition() + LMVector3(0, 0.1f + 0.2f * _CMATH_::sin(counter / 100.0f * 0.7f), 0),
-		counter/100.0f *0.1f);
-	carModel->GetTransform()->SetPosition(newPos);*/
-
+	if (!activeInput) return;
 	//Set Forward Vector
 	forw = tr->GetRotation().Forward();
 	forw.Normalize();
@@ -154,7 +152,7 @@ void PlayerController::Update(float dt)
 	// Actualizar las posiciones del raceManager
 	if (raceManager != nullptr)
 	{
-		//raceManager->UpdateCarPosition("Player", tr->GetPosition());
+		raceManager->UpdateCarPosition("Player", tr->GetPosition());
 		CheckRespawn();
 	}
 }

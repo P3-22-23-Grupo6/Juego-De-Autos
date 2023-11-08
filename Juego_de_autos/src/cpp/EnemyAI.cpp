@@ -20,7 +20,7 @@ EnemyAI::EnemyAI() {
 	timeStep = 0;
 	enemySpeed = 0;
 	startSeparation = 0;
-	_shouldMove = true;
+	_shouldMove = false;
 	tr = nullptr;
 	lastPos = LMVector3();
 	grounded = false;
@@ -88,7 +88,7 @@ void EnemyAI::Update(float dt) {
 }
 void EnemyAI::MoveEnemy(float dt)
 {
-	SetUpwards();
+	//SetUpwards();
 	LMVector3 finalPos;
 	finalPos = finalPos.Lerp(lastPos, mySpline->Interpolate(timeStep), timeStep);
 	finalPos = finalPos + gameObject->GetTransform()->GetRotation().Right() * startSeparation;
