@@ -276,7 +276,7 @@ void RaceManager::Update(float dt)
 
 
 	// Update timer
-	UpdateTimer(dt);
+	if(!raceCompleted) UpdateTimer(dt);
 }
 
 void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::string>>& params)
