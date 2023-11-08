@@ -322,14 +322,13 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		RegisterCheckpointPosition(result);
 		
 		//Create Waypoint
-		//GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
-		//wayPointTT->AddComponent("Transform");
-		//wayPointTT->AddComponent("MeshRenderer");
-		//wayPointTT->GetComponent<Transform>()->InitRuntime(result);
-		//wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugSphereRed.mesh", "m_Atlas");
-		//wayPointTT->GetTransform()->Start();
+		GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
+		wayPointTT->AddComponent("Transform");
+		wayPointTT->AddComponent("MeshRenderer");
+		wayPointTT->GetComponent<Transform>()->InitRuntime(result, LMVector3(0,0,0), LMVector3(1, (2 * (i / (float)checkpointPositions_pairs.size())) + 1, 1));
+		wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugSphereRed.mesh", "m_Atlas");
 	}
-	return;
+	
 	//Spline MidPoints
 	int maxPoints = 100;
 	for (int i = 0; i < maxPoints; i++)
@@ -340,7 +339,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		midwayPoint->AddComponent("MeshRenderer");
 		midwayPoint->GetComponent<Transform>()->InitRuntime(mainSpline->Interpolate(i / (float)maxPoints));
 		midwayPoint->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeYellow.mesh", "m_Atlas");
-		midwayPoint->GetTransform()->Start();
 	}
 #pragma endregion
 }
@@ -384,14 +382,16 @@ void RaceManager::UpdateCarPosition(std::string carId, LMVector3 newPosition)
 
 bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 {
+	static short distanceToGetCheckpoint = 141;
+
 	int checkpointIndex = carinfo.at(carId).currentCheckpoint;
 
-	LMVector3 targetCheckpointPosition = _checkpoints[checkpointIndex];
+	LMVector3 targetCheckpointPosition = _checkpoints[checkpointIndex % _checkpoints.size()];
 	LMVector3 carPosition = carinfo.at(carId).position;
 
 	float distance = (targetCheckpointPosition - carPosition).Magnitude();
 
-	if (distance < 300)
+	if (distance < distanceToGetCheckpoint)
 		return true;
 	else
 		return false;
@@ -401,7 +401,7 @@ void RaceManager::CheckpointReached(std::string carId)
 {
 	carinfo.at(carId).currentCheckpoint++;
 	std::cout << "\n CHECKPOINT CURRENT: "<< carinfo.at(carId).currentCheckpoint<< "\n";
-	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
+	if (carinfo.at(carId).currentCheckpoint > _checkpoints.size() + 1) {
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
 		std::cout << "\n NEW ROUND" << "\n";
@@ -495,7 +495,7 @@ void RaceManager::UpdateRanking()
 	// Entre los coches que estan en el mismo checkpoint calcular usando distancias cuantos coches estan por delante del jugador
 
 	LMVector3 playerPos = carinfo.at(_playerId).position;
-	LMVector3 checkpointPos = _checkpoints[playerCheckpoint];
+	LMVector3 checkpointPos = _checkpoints[playerCheckpoint % _checkpoints.size()];
 	double playerDistanceToCheckpoint = (playerPos - checkpointPos).Magnitude();
 
 	for (size_t i = 0; i < carsInSameCheckpoint.size(); i++)
@@ -503,7 +503,7 @@ void RaceManager::UpdateRanking()
 		std::string enemyName = carsInSameCheckpoint[i];
 
 		LMVector3 enemyPos = carinfo.at(enemyName).position;
-		LMVector3 enemyCheckpointPos = _checkpoints[carinfo.at(enemyName).currentCheckpoint];
+		LMVector3 enemyCheckpointPos = _checkpoints[carinfo.at(enemyName).currentCheckpoint % _checkpoints.size()];
 		double enemyDistanceToCheckpoint = (enemyPos - enemyCheckpointPos).Magnitude();
 
 		// Si va por delante, a�adirlo a coches que van por delante directamente
