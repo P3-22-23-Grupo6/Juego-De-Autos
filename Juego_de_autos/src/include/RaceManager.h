@@ -61,7 +61,7 @@ namespace JuegoDeAutos {
 		// Accede a la posicion del siguiente Checkpoint del Jugador
 		/// @brief Gets the position of the next checkpoint the player has to reach
 		/// @return The next checkpoint position
-		LocoMotor::LMVector3 GetPlayerLastCheckpointPosition();
+		LocoMotor::LMVector3 GetPlayerLastCheckpointPosition(bool next = false); //arreglo de ultima hora a las 12
 
 		/// @brief Returs true when the starting countdown finishes
 		bool HasCountDownFinished();

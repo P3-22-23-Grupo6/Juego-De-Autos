@@ -442,7 +442,6 @@ void JuegoDeAutos::PlayerController::CheckRespawn()
 	if (tr->GetPosition().GetY() < -200)
 	{
 		KillPlayer();
-		
 	}
 }
 
@@ -503,7 +502,8 @@ void JuegoDeAutos::PlayerController::KillPlayer()
 {
 	if (raceManager == nullptr) return;
 	LMVector3 lastCheckpointPos = raceManager->GetPlayerLastCheckpointPosition();
-	tr->SetPosition(lastCheckpointPos + LMVector3(0, 50, 0));
+	tr->SetPosition(lastCheckpointPos + LMVector3(0, 2, 0));
+	tr->LookAt(raceManager->GetPlayerLastCheckpointPosition(true));
 	rbComp->SetLinearVelocity(LMVector3(0, 0, 0));
 	rbComp->SetAngularVelocity(LMVector3(0, 0, 0));
 }

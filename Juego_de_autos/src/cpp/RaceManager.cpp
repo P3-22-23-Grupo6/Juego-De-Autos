@@ -429,14 +429,10 @@ void RaceManager::CheckpointReached(std::string carId)
 	// Actualizar el siguiente checkpoint
 }
 
-LMVector3 RaceManager::GetPlayerLastCheckpointPosition()
+LMVector3 RaceManager::GetPlayerLastCheckpointPosition(bool next)
 {
 	int checkpointIndex = carinfo.at(_playerId).currentCheckpoint;
-
-	//if (checkpointIndex > 62 && checkpointIndex < 75)
-	//	checkpointIndex = 62;
-
-	checkpointIndex--;
+	if (!next)checkpointIndex--;
 	if (checkpointIndex < 0)
 		checkpointIndex = _checkpoints.size() - 1;
 
