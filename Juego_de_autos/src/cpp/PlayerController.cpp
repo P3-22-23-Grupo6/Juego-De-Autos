@@ -215,11 +215,11 @@ void PlayerController::SetUpwards(float dt)
 	lastUpwardDir = finalDir;
 	inAirLastFrame = inAir;
 	//InAir Check
-	/*if (!inAirLastFrame && inAir)
+	if (!inAirLastFrame && inAir)
 		inputMng->RumbleController(.3, .2f);
 
 	if (inAirLastFrame && !inAir)
-		inputMng->RumbleController(1, .2f);*/
+		inputMng->RumbleController(1, .2f);
 
 
 }
@@ -459,9 +459,9 @@ void PlayerController::UpdateVelocityUI()
 	// Para mostrar la velocidad se redondea la magnitud 
 	// del vector de velocidad y se actualiza el texto
 	if (velocityText == nullptr) return;
-	velocityText->ChangeText(std::to_string(velocityClean / 6) + " KM / H");
+	velocityText->ChangeText(std::to_string(velocityClean) + " KM/H");
 
-	LMVector3 color = LMVector3(0.8f, 0.1f, 0.2f);
+	LMVector3 color = LMVector3(1.0f, 0.0f, 0.265f);
 	velocityText->SetTopColor(color.GetX(), color.GetY(), color.GetZ());
 	velocityText->SetBottomColor(color.GetX(), color.GetY(), color.GetZ());
 

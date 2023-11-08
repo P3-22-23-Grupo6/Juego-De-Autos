@@ -167,15 +167,10 @@ void RaceManager::Update(float dt)
 				{
 					int currentFps = 1000 / ((int)dt + 1);
 					fps->ChangeText(std::to_string(currentFps) + " fps");
-					if (currentFps < 40)
+					if (currentFps < 30)
 					{
 						fps->SetBottomColor(0.9f, 0.1f, 0.1f);
 						fps->SetTopColor(0.9f, 0.1f, 0.1f);
-					}
-					else if (currentFps > 90)
-					{
-						fps->SetBottomColor(0.1f, 0.9f, 0.3f);
-						fps->SetTopColor(0.2f, 0.9f, 0.4f);
 					}
 					else
 					{
@@ -195,7 +190,7 @@ void RaceManager::Update(float dt)
 
 	// Update Laps Text
 	if (lapsText != nullptr) {
-		std::string s = std::to_string(carinfo.at(_playerId).rounds + 1) + " / 3";
+		std::string s = std::to_string(carinfo.at(_playerId).rounds + 1) + "/3 VUELTAS";
 		lapsText->ChangeText(s);
 	}
 
