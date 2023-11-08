@@ -21,6 +21,8 @@ namespace JuegoDeAutos {
 		double CustomLerp(double a, double b, double t);
 	private:
 		float panSpeed;
+		float maxDistance;
+		bool backward;
 		float counter;
 		LocoMotor::Transform* tr;
 		int side;

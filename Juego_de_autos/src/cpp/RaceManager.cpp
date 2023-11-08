@@ -333,13 +333,14 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		RegisterCheckpointPosition(result);
 		
 		//Create Waypoint
-		GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
-		wayPointTT->AddComponent("Transform");
-		wayPointTT->AddComponent("MeshRenderer");
-		wayPointTT->GetComponent<Transform>()->InitRuntime(result);
-		wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugSphereRed.mesh");
-		wayPointTT->GetTransform()->Start();
+		//GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
+		//wayPointTT->AddComponent("Transform");
+		//wayPointTT->AddComponent("MeshRenderer");
+		//wayPointTT->GetComponent<Transform>()->InitRuntime(result);
+		//wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugSphereRed.mesh");
+		//wayPointTT->GetTransform()->Start();
 	}
+	return;
 	//Spline MidPoints
 	int maxPoints = 100;
 	for (int i = 0; i < maxPoints; i++)
