@@ -173,6 +173,8 @@ void PlayerController::SetUpwards(float dt)
 	upVector = upVector * 10.0f;
 	to = from - upVector;
 
+	
+
 	//Grounded
 	if (rbComp->GetRaycastHit(from, to)) {
 		inAir = false;
@@ -188,7 +190,7 @@ void PlayerController::SetUpwards(float dt)
 		tr->SetUpwards(newUpDirection);
 
 		lastUpwardDir = finalDir;
-		inAirLastFrame = inAir;
+		
 
 		LMVector3 hitPos = rbComp->GetraycastHitPoint(from, to);
 		double hoverDist = 1.0f; // 7
@@ -197,6 +199,9 @@ void PlayerController::SetUpwards(float dt)
 		finalPos = finalPos.Lerp(lastPos, newPos, 1.0f);
 		tr->SetPosition(finalPos);
 		lastPos = finalPos;
+		//InAir Check
+		if (inAirLastFrame) inputMng->RumbleController(1, 0.5f);
+		inAirLastFrame = inAir;
 		return;
 	}
 	//Not Grounded
@@ -211,17 +216,10 @@ void PlayerController::SetUpwards(float dt)
 	LMVector3 finalDir;
 	finalDir = finalDir.Lerp(lastUpwardDir, newUpDirection, dt / 100.0f);
 	tr->SetUpwards(finalDir);
+
 	lastPos = finalDir;
 	lastUpwardDir = finalDir;
 	inAirLastFrame = inAir;
-	//InAir Check
-	if (!inAirLastFrame && inAir)
-		inputMng->RumbleController(.3, .2f);
-
-	if (inAirLastFrame && !inAir)
-		inputMng->RumbleController(1, .2f);
-
-
 }
 
 void PlayerController::GetInput()
@@ -229,6 +227,9 @@ void PlayerController::GetInput()
 	
 	accelerate = inputMng->GetKey(LMKS_UP)
 		|| inputMng->GetButton(LMC_A);
+		
+	//BOOST TIPO F_ZERO SIN CONTROL NO IMPLEMENTADO HORSE COCK AND BOLS
+	//if(inputMng->GetButton(LMC_X)) rbComp->AddForce(forw * 6000);
 
 	reverseAccelerate = inputMng->GetKey(LMKS_DOWN)
 		|| inputMng->GetButton(LMC_B);
@@ -459,7 +460,7 @@ void PlayerController::UpdateVelocityUI()
 	// Para mostrar la velocidad se redondea la magnitud 
 	// del vector de velocidad y se actualiza el texto
 	if (velocityText == nullptr) return;
-	velocityText->ChangeText(std::to_string(velocityClean) + " KM/H");
+	velocityText->ChangeText(std::to_string(velocityClean));
 
 	LMVector3 color = LMVector3(1.0f, 0.0f, 0.265f);
 	velocityText->SetTopColor(color.GetX(), color.GetY(), color.GetZ());
@@ -497,6 +498,7 @@ void JuegoDeAutos::PlayerController::SetControllable(bool controllable)
 void JuegoDeAutos::PlayerController::OnCollisionEnter(GameObject* other)
 {
 	gameObject->GetComponent<AudioSource>()->PlayOneShot("Assets/Sounds/lowDown.wav", tr->GetPosition());
+	inputMng->RumbleController(1, 0.5f);
 }
 
 void JuegoDeAutos::PlayerController::KillPlayer()
