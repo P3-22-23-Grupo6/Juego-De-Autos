@@ -268,7 +268,7 @@ void RaceManager::Update(float dt)
 			endTimerCurrent += dt * timeConstant;
 			if (endTimerCurrent - endTimerStart > 5 && !ended) {
 				ended = true;
-				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/menu.lua");
+				ScriptManager::GetInstance()->LoadSceneFromFile("Assets/Scenes/intro.lua");
 			}
 
 		}
@@ -399,12 +399,12 @@ bool RaceManager::HasCarReachedCheckpoint(std::string carId)
 
 void RaceManager::CheckpointReached(std::string carId)
 {
-
 	carinfo.at(carId).currentCheckpoint++;
+	std::cout << "\n CHECKPOINT CURRENT: "<< carinfo.at(carId).currentCheckpoint<< "\n";
 	if (carinfo.at(carId).currentCheckpoint >= _checkpoints.size()) {
 		carinfo.at(carId).currentCheckpoint = 0;
 		carinfo.at(carId).rounds++;
-
+		std::cout << "\n NEW ROUND" << "\n";
 		if (carId == _playerId) {
 			float thislapTime = currentTime - lastlapTime;
 			if (thislapTime < bestlapTime)

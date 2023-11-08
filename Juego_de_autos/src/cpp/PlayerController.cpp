@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "ParticleSystem.h"
 #include "RigidBody.h"
 #include "MeshRenderer.h"
 #include "InputManager.h"
@@ -89,6 +90,10 @@ void PlayerController::Start()
 	carBillboard->AddComponent("MeshRenderer");
 	carBillboard->GetComponent<Transform>()->InitRuntime(tr->GetPosition() + LMVector3(0, 1.f, 0));
 	carBillboard->GetComponent<MeshRenderer>()->InitRuntime("BillboardRacers.mesh");
+	//Create ParticleSyst
+	GameObject* carPartSys = sceneMng->AddObjectRuntime("carPartSys" + std::to_string(playerIndex));
+	carPartSys->AddComponent("ParticleSystem");
+	carPartSys->GetComponent<ParticleSystem>()->InitRuntime("exhaust", "Racers/JetEngine2");
 
 	int carIndexTemp = playerIndex == 0 ? raceManager->carModelPlayerOne : raceManager->carModelPlayerTwo;
 	switch (carIndexTemp)
@@ -116,6 +121,7 @@ void PlayerController::Start()
 	lastPos = tr->GetPosition();
 	tr->AddChild(carModel->GetTransform());
 	carModel->GetTransform()->AddChild(carBillboard->GetTransform());
+	carModel->GetTransform()->AddChild(carPartSys->GetTransform());
 	tr->SetPosition(lastPos);
 }
 
@@ -359,7 +365,7 @@ void PlayerController::ApplyAngularForces(float dt)
 	}
 	// Usar el Joystick
 	else {
-		joystickValue *= .042f;
+		joystickValue *= .035f;
 		// Giro con joystick
 		if (abs(joystickValue) >= joystickDeadzone)
 			rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * angularForce * -joystickValue);

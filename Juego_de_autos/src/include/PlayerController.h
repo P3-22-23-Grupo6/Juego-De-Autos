@@ -11,6 +11,7 @@ namespace LocoMotor {
 	class MeshRenderer;
 	class UITextLM;
 	class Camera;
+	class ParticleSystem;
 }
 
 namespace JuegoDeAutos {
