@@ -10,6 +10,7 @@
 #include "Rotator.h"
 #include "Boost.h"
 #include "CameraPanner.h"
+#include "Water.h"
 #include "EnemyAI.h"
 #include "SceneChangeButton.h"
 using namespace LocoMotor;
@@ -43,6 +44,7 @@ extern "C" __declspec(dllexport) const char* InitJuego(LocoMotor::MotorApi* moto
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<EnemyAI>("EnemyAI");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Rotator>("Rotator");
     LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<CameraPanner>("CameraPanner");
+    LocoMotor::ComponentsFactory::GetInstance()->RegisterComponent<Water>("Water");
 
     motor->RegisterGame("Juego de autos");
 

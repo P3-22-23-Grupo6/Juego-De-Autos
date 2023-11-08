@@ -65,6 +65,7 @@ void PlayerController::Start()
 
 	inputMng = LocoMotor::InputManager::GetInstance();
 	sceneMng = LocoMotor::SceneManager::GetInstance();
+	raceManager = RaceManager::GetInstance();
 	//acceleration = 120;// raceManager->GetSpeed();
 	lastUpwardDir = LMVector3(0, 1, 0);
 
@@ -149,13 +150,13 @@ void PlayerController::Update(float dt)
 	MoveShip(dt);
 
 	TurnShip(dt);
-	// 
-	//// Actualizar las posiciones del raceManager
-	//if (raceManager != nullptr)
-	//{
-	//	raceManager->UpdateCarPosition("Player", tr->GetPosition());
-	//	CheckRespawn();
-	//}
+	 
+	// Actualizar las posiciones del raceManager
+	if (raceManager != nullptr)
+	{
+		//raceManager->UpdateCarPosition("Player", tr->GetPosition());
+		CheckRespawn();
+	}
 }
 
 
@@ -439,12 +440,10 @@ void PlayerController::AdjustFov()
 void JuegoDeAutos::PlayerController::CheckRespawn()
 {
 	// Si la nave se cae al agua, acceder al ultimo chekpoint
-	if (tr->GetPosition().GetY() < -550)
+	if (tr->GetPosition().GetY() < -200)
 	{
-		LMVector3 lastCheckpointPos = raceManager->GetPlayerLastCheckpointPosition();
-		tr->SetPosition(lastCheckpointPos + LMVector3(0, 50, 0));
-		rbComp->SetLinearVelocity(LMVector3(0, 0, 0));
-		rbComp->SetAngularVelocity(LMVector3(0, 0, 0));
+		KillPlayer();
+		
 	}
 }
 
@@ -498,4 +497,13 @@ void JuegoDeAutos::PlayerController::SetControllable(bool controllable)
 void JuegoDeAutos::PlayerController::OnCollisionEnter(GameObject* other)
 {
 	gameObject->GetComponent<AudioSource>()->PlayOneShot("Assets/Sounds/lowDown.wav", tr->GetPosition());
+}
+
+void JuegoDeAutos::PlayerController::KillPlayer()
+{
+	if (raceManager == nullptr) return;
+	LMVector3 lastCheckpointPos = raceManager->GetPlayerLastCheckpointPosition();
+	tr->SetPosition(lastCheckpointPos + LMVector3(0, 50, 0));
+	rbComp->SetLinearVelocity(LMVector3(0, 0, 0));
+	rbComp->SetAngularVelocity(LMVector3(0, 0, 0));
 }

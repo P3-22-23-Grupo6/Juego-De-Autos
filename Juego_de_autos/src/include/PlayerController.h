@@ -108,6 +108,7 @@ namespace JuegoDeAutos {
 
 		void OnCollisionEnter(LocoMotor::GameObject* other) override;
 
+		void KillPlayer();
 	private:
 
 		//CarModel

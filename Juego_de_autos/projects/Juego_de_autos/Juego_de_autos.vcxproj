@@ -28,6 +28,7 @@
     <ClCompile Include="..\..\src\cpp\RaceManager.cpp" />
     <ClCompile Include="..\..\src\cpp\Rotator.cpp" />
     <ClCompile Include="..\..\src\cpp\SceneChangeButton.cpp" />
+    <ClCompile Include="..\..\src\cpp\Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\include\Boost.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="..\..\src\include\RaceManager.h" />
     <ClInclude Include="..\..\src\include\Rotator.h" />
     <ClInclude Include="..\..\src\include\SceneChangeButton.h" />
+    <ClInclude Include="..\..\src\include\Water.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

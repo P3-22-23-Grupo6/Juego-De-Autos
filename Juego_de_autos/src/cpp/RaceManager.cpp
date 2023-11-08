@@ -153,8 +153,8 @@ void RaceManager::Update(float dt)
 		std::string enemyName = "EnemyCar0" + std::to_string(i + 1);
 		UpdateCarPosition(enemyName, enemy->GetTransform()->GetPosition());
 
-		//if (HasCarReachedCheckpoint(enemyName))
-		//	CheckpointReached(enemyName);
+		if (HasCarReachedCheckpoint(enemyName))
+			CheckpointReached(enemyName);
 	}
 	UITextLM* fps = gameObject->GetComponent<UITextLM>();
 	if (fps != nullptr) {
@@ -189,7 +189,6 @@ void RaceManager::Update(float dt)
 		}
 		else fps->ChangeText("");
 	}
-	return;
 	// Comprobar si algun coche ha llegado a algun checkpoint y notificarlo 
 	if (HasCarReachedCheckpoint(_playerId)) CheckpointReached(_playerId);
 	UpdateRanking();
@@ -298,7 +297,6 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		std::string checkpointNumber_ = name.substr(10);
 
 		if (checkName == "checkpoint") {
-
 			try {
 				if (!IsInt(checkpointNumber_))
 					throw std::invalid_argument("Numero de checkpoint no valido");
@@ -308,18 +306,14 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 				std::cerr << "Error: " << e.what() << std::endl;
 			}
 		}
-		
 	}
+
 #pragma endregion
-
-
 	// Ordenar las posiciones de los checkpoints
 	std::sort(checkpointPositions_pairs.begin(), checkpointPositions_pairs.end(), [](const auto& a, const auto& b) {
 		int one = std::stoi(a.first.substr(10));
-	int two = std::stoi(b.first.substr(10));
-	return one < two;
-		});
-
+		int two = std::stoi(b.first.substr(10));
+		return one < two;});
 
 #pragma region Convertir Coordenadas
 	sceneMng = LocoMotor::SceneManager::GetInstance();
@@ -333,14 +327,13 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		RegisterCheckpointPosition(result);
 		
 		//Create Waypoint
-		//GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
-		//wayPointTT->AddComponent("Transform");
-		//wayPointTT->AddComponent("MeshRenderer");
-		//wayPointTT->GetComponent<Transform>()->InitRuntime(result);
-		//wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugSphereRed.mesh");
-		//wayPointTT->GetTransform()->Start();
+		GameObject* wayPointTT = sceneMng->AddObjectRuntime("wayPoint" + std::to_string(i));
+		wayPointTT->AddComponent("Transform");
+		wayPointTT->AddComponent("MeshRenderer");
+		wayPointTT->GetComponent<Transform>()->InitRuntime(result);
+		wayPointTT->GetComponent<MeshRenderer>()->InitRuntime("DebugSphereRed.mesh", "m_Atlas");
+		wayPointTT->GetTransform()->Start();
 	}
-	return;
 	//Spline MidPoints
 	int maxPoints = 100;
 	for (int i = 0; i < maxPoints; i++)
@@ -349,9 +342,8 @@ void RaceManager::CreateCheckpoints(std::vector<std::pair<std::string, std::stri
 		GameObject* midwayPoint = sceneMng->AddObjectRuntime("midwayPoint" + std::to_string(i));
 		midwayPoint->AddComponent("Transform");
 		midwayPoint->AddComponent("MeshRenderer");
-		midwayPoint->GetComponent<Transform>()->InitRuntime(mainSpline->Interpolate(i / (float)maxPoints), 
-			LMVector3(0,0,0), LMVector3(1,1,1));
-		midwayPoint->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeYellow.mesh");
+		midwayPoint->GetComponent<Transform>()->InitRuntime(mainSpline->Interpolate(i / (float)maxPoints));
+		midwayPoint->GetComponent<MeshRenderer>()->InitRuntime("DebugCubeYellow.mesh", "m_Atlas");
 		midwayPoint->GetTransform()->Start();
 	}
 #pragma endregion
@@ -445,8 +437,8 @@ LMVector3 RaceManager::GetPlayerLastCheckpointPosition()
 {
 	int checkpointIndex = carinfo.at(_playerId).currentCheckpoint;
 
-	if (checkpointIndex > 62 && checkpointIndex < 75)
-		checkpointIndex = 62;
+	//if (checkpointIndex > 62 && checkpointIndex < 75)
+	//	checkpointIndex = 62;
 
 	checkpointIndex--;
 	if (checkpointIndex < 0)
