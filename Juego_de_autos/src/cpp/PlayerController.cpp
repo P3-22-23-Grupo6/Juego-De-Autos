@@ -93,18 +93,19 @@ void PlayerController::Start()
 	//Create ParticleSyst
 	GameObject* carPartSys = sceneMng->AddObjectRuntime("carPartSys" + std::to_string(playerIndex));
 	carPartSys->AddComponent("ParticleSystem");
-	carPartSys->GetComponent<ParticleSystem>()->InitRuntime("exhaust", "Racers/JetEngine2");
 
 	int carIndexTemp = playerIndex == 0 ? raceManager->carModelPlayerOne : raceManager->carModelPlayerTwo;
 	switch (carIndexTemp)
 	{
 		default: break;
 		case 0: carModel->GetComponent<MeshRenderer>()->InitRuntime("BlueFalcon.mesh");
-			
-			break;
-		case 1: carModel->GetComponent<MeshRenderer>()->InitRuntime("Eagle.mesh"); break;
-		case 2: carModel->GetComponent<MeshRenderer>()->InitRuntime("Pelican.mesh"); break;
-		case 3: carModel->GetComponent<MeshRenderer>()->InitRuntime("Flamingo.mesh"); break;
+			carPartSys->GetComponent<ParticleSystem>()->InitRuntime("exhaust", "Racers/JetEngine2");break;
+		case 1: carModel->GetComponent<MeshRenderer>()->InitRuntime("Eagle.mesh"); 
+			carPartSys->GetComponent<ParticleSystem>()->InitRuntime("exhaust", "Racers/JetEngineEagle"); break;
+		case 2: carModel->GetComponent<MeshRenderer>()->InitRuntime("Pelican.mesh");
+			carPartSys->GetComponent<ParticleSystem>()->InitRuntime("exhaust", "Racers/JetEngineFlamingo"); break;
+		case 3: carModel->GetComponent<MeshRenderer>()->InitRuntime("Flamingo.mesh"); 
+			carPartSys->GetComponent<ParticleSystem>()->InitRuntime("exhaust", "Racers/JetEngineFlamingo"); break;
 	}
 	std::string materialAssigned = "m_RacerGizmo0" + std::to_string(carIndexTemp);
 	carBillboard->GetComponent<MeshRenderer>()->ChangeMaterial(materialAssigned);
@@ -412,7 +413,7 @@ void PlayerController::SwayShip(float currentAngularVelocity, int direction)
 		(angularTilt * maxTiltAngle  * -direction)));
 	carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Up(),
 		(angularTilt * maxTiltAngle * direction * tiltAmount * 0.2f)));
-	if(airTime > 0.2f) carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Right(),
+	if(airTime > 0.4f) carModel->GetTransform()->SetLocalRotation(carModel->GetTransform()->GetLocalRotation() + tr->GetRotation().Rotate(tr->GetRotation().Right(),
 		(-airTime * 2.0f)));
 }
 
