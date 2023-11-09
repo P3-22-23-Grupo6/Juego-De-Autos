@@ -205,7 +205,7 @@ void PlayerController::SetUpwards(float dt)
 		tr->SetPosition(finalPos);
 		lastPos = finalPos;
 		//InAir Check
-		if (inAirLastFrame) inputMng->RumbleController(1, 0.5f);
+		if (inAirLastFrame) inputMng->RumbleController(playerIndex, 1, 0.5f);
 		inAirLastFrame = inAir;
 		return;
 	}
@@ -229,23 +229,23 @@ void PlayerController::SetUpwards(float dt)
 
 void PlayerController::GetInput()
 {
-	
+	std::cout << "\n PlYAR INDEX = " << playerIndex << "\n";
 	accelerate = inputMng->GetKey(LMKS_UP)
-		|| inputMng->GetButton(LMC_A);
+		|| inputMng->GetButton(playerIndex, LMC_A);
 		
 	//BOOST TIPO F_ZERO SIN CONTROL NO IMPLEMENTADO HORSE COCK AND BOLS
 	//if(inputMng->GetButton(LMC_X)) rbComp->AddForce(forw * 6000);
 
 	reverseAccelerate = inputMng->GetKey(LMKS_DOWN)
-		|| inputMng->GetButton(LMC_B);
+		|| inputMng->GetButton(playerIndex, LMC_B);
 
 	turnRight = inputMng->GetKey(LMKS_RIGHT);
 	turnLeft = inputMng->GetKey(LMKS_LEFT);
 
-	tiltLeft = inputMng->GetButton(LMC_LEFTSHOULDER);
-	tiltRight = inputMng->GetButton(LMC_RIGHTSHOULDER);
+	tiltLeft = inputMng->GetButton(playerIndex, LMC_LEFTSHOULDER);
+	tiltRight = inputMng->GetButton(playerIndex, LMC_RIGHTSHOULDER);
 
-	joystickValue = inputMng->GetJoystickValue(0, InputManager::Horizontal);
+	joystickValue = inputMng->GetJoystickValue(playerIndex, 0, InputManager::Horizontal);
 
 	//accTriggerValue = inputMng->GetTriggerValue(1);
 	//reverseAccTriggerValue = inputMng->GetTriggerValue(0);
@@ -343,7 +343,7 @@ void PlayerController::ApplyAngularForces(float dt)
 		rbComp->ApplyTorqueImpulse(tr->GetRotation().Up() * multiplierRot * angularForce * dt / 100.0f);
 
 	// Activar desactivar Gyroscopio
-	if (inputMng->GetButtonDown(LMC_DPAD_UP))
+	if (inputMng->GetButtonDown(playerIndex, LMC_DPAD_UP))
 	{
 		useGyro = !useGyro;
 		if (useGyro)
@@ -502,7 +502,7 @@ void JuegoDeAutos::PlayerController::SetControllable(bool controllable)
 void JuegoDeAutos::PlayerController::OnCollisionEnter(GameObject* other)
 {
 	gameObject->GetComponent<AudioSource>()->PlayOneShot("Assets/Sounds/lowDown.wav", tr->GetPosition());
-	inputMng->RumbleController(1, 0.5f);
+	inputMng->RumbleController(playerIndex, 1, 0.5f);
 }
 
 void JuegoDeAutos::PlayerController::KillPlayer()

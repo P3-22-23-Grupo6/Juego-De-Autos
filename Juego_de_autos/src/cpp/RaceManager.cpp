@@ -113,6 +113,7 @@ void RaceManager::Start()
 
 	ranking.clear();
 	RegisterPlayerCar("Player");
+	RegisterPlayerCar("playerTwo");
 
 	carinfo.at(_playerId).rounds = 0;
 
@@ -130,6 +131,10 @@ void RaceManager::Start()
 	if (gameObject->GetScene()->GetObjectByName("coche") != nullptr) {
 		player = gameObject->GetScene()->GetObjectByName("coche");
 		player->GetComponent<PlayerController>()->SetControllable(false);
+	}
+	if (gameObject->GetScene()->GetObjectByName("cocheDos") != nullptr) {
+		playerTwo = gameObject->GetScene()->GetObjectByName("cocheDos");
+		playerTwo->GetComponent<PlayerController>()->SetControllable(false);
 	}
 
 	if (gameObject->GetComponent<AudioSource>() != nullptr) {
@@ -212,6 +217,8 @@ void RaceManager::Update(float dt)
 				countdownText->ChangeText("GO!");
 				if (player != nullptr)
 					player->GetComponent<PlayerController>()->SetControllable(true);
+				if (playerTwo != nullptr)
+					playerTwo->GetComponent<PlayerController>()->SetControllable(true);
 				if (enemies.size() > 0)
 					for (size_t i = 0; i < enemies.size(); i++) {
 						EnemyAI* ai = enemies[i]->GetComponent<EnemyAI>();

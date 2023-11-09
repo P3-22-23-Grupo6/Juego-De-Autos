@@ -154,6 +154,7 @@ namespace JuegoDeAutos {
 
 		//Player reference
 		LocoMotor::GameObject* player;
+		LocoMotor::GameObject* playerTwo;
 
 		int playerRacePos = 0;
 
