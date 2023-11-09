@@ -96,7 +96,7 @@ namespace JuegoDeAutos {
 
 		static RaceManager* _instance;
 		// The number of rounds to complete the race
-		const int _totalRounds = 1;
+		const int _totalRounds = 3;
 		// The total number of checkpoint per round
 		int _totalCheckpointsPerRound;
 		// The checkpoints in the circuit

@@ -132,8 +132,10 @@ void RaceManager::Start()
 		player->GetComponent<PlayerController>()->SetControllable(false);
 	}
 
-	if (gameObject->GetComponent<AudioSource>() != nullptr)
+	if (gameObject->GetComponent<AudioSource>() != nullptr) {
 		gameObject->GetComponent<AudioSource>()->Set2D();
+		gameObject->GetComponent<AudioSource>()->LoadSound("Assets/Sounds/success.wav");
+	}
 
 	
 }
@@ -190,7 +192,8 @@ void RaceManager::Update(float dt)
 
 	// Update Laps Text
 	if (lapsText != nullptr) {
-		std::string s = std::to_string(carinfo.at(_playerId).rounds + 1) + "/3 VUELTAS";
+		int currentLap = std::min(carinfo.at(_playerId).rounds + 1, _totalRounds);
+		std::string s = std::to_string(currentLap) + "/" + std::to_string(_totalRounds) + " VUELTAS";
 		lapsText->ChangeText(s);
 	}
 
@@ -596,8 +599,11 @@ bool RaceManager::HasCountDownFinished()
 }
 
 void RaceManager::OnLastLap() {
-	if (gameObject->GetComponent<AudioSource>() != nullptr)
+	if (gameObject->GetComponent<AudioSource>() != nullptr) {
 		gameObject->GetComponent<AudioSource>()->SetFreq(1.05f);
+		gameObject->GetComponent<AudioSource>()->Play("Assets/Sounds/success.wav");
+	}
+		
 }
 
 float RaceManager::GetSpeed() {

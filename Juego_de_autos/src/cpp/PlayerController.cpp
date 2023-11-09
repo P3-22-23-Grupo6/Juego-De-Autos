@@ -459,7 +459,7 @@ void PlayerController::UpdateVelocityUI()
 	int velocityClean = round(rbComp->GetLinearVelocity().Magnitude());
 	AudioSource* auSrc = gameObject->GetComponent<AudioSource>();
 	if (auSrc)
-		auSrc->SetFreq((rbComp->GetLinearVelocity().Magnitude() / ((1300.f + acceleration * .75f) + (acceleration * -1)) + 0.85f));
+		auSrc->SetFreq((rbComp->GetLinearVelocity().Magnitude() / (acceleration * .5f) + 0.8f));
 
 	// Para mostrar la velocidad se redondea la magnitud 
 	// del vector de velocidad y se actualiza el texto
