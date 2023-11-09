@@ -55,9 +55,11 @@ namespace JuegoDeAutos {
 		LocoMotor::UITextLM* _speedText;
 		//Tracks
 		int trackIndex;
+		int speedIndex;
 		LocoMotor::UIImageLM* _trackArrowLeftButton;
 		LocoMotor::UIImageLM* _trackArrowRightButton;
 		LocoMotor::UIImageLM* _selectTrackButton;
+		LocoMotor::UIImageLM* _selectSpeedButton;
 		LocoMotor::UIImageLM* _trackPortraitImg;
 		LocoMotor::MeshRenderer* trackMesh00;
 		LocoMotor::MeshRenderer* trackMesh01;

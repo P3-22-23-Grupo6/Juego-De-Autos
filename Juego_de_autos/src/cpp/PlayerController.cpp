@@ -71,7 +71,7 @@ void PlayerController::Start()
 		SetActive(false);
 		return;
 	}
-	//acceleration = 120;// raceManager->GetSpeed();
+	acceleration = raceManager->GetSpeed();
 	lastUpwardDir = LMVector3(0, 1, 0);
 
 	forw = tr->GetRotation().Forward();

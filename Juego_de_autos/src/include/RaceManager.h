@@ -71,7 +71,7 @@ namespace JuegoDeAutos {
 		
 		float GetSpeed();
 
-		enum SpeedMode { low, middle, high };
+		enum SpeedMode { middle, high };
 		enum CarModel { Falcon, Eagle, Pelican, Flamingo };
 		static SpeedMode speedMode;
 		static CarModel carModelPlayerOne, carModelPlayerTwo;
@@ -150,7 +150,7 @@ namespace JuegoDeAutos {
 		LocoMotor::Spline* mainSpline;
 
 		// SpeedModes
-		int speeds[3] = { 500, 1000, 2000 };
+		int speeds[3] = { 150, 220 };
 
 		//Player reference
 		LocoMotor::GameObject* player;
